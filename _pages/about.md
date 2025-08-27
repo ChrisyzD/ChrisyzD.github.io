@@ -7,14 +7,12 @@ redirect_from:
   - /about.html
 ---
 
-# About Me
-
-Hello! I'm **Yizhe Dai**, a dual-degree student from the prestigious **Shanghai Jiao Tong University - University of Michigan Joint Institute**. My academic journey represents a unique blend of engineering disciplines, transitioning from electrical and computer engineering to industrial and operations research.
+Hello! I'm **Yizhe Dai(Chris)**, a dual-degree student from **Shanghai Jiao Tong University - University of Michigan Joint Institute**. My academic journey represents a unique blend of engineering disciplines, transitioning from electrical and computer engineering(ECE) to industrial and operational engineering(IOE).
 
 ## Educational Background
 🎓 **Dual Bachelor's Degree**
-- **Electrical and Computer Engineering** - Shanghai Jiao Tong University (2021–2023)  
-- **Industrial and Operations Engineering** - University of Michigan (2023–2025)
+- **Electrical and Computer Engineering** - Shanghai Jiao Tong University (2022.8–2024.8)  
+- **Industrial and Operations Engineering** - University of Michigan (2024.8–2026.5)
 
 My educational experience spans two continents and combines the rigorous engineering foundation from SJTU with the innovative operations research methodologies from U-M, providing me with a comprehensive understanding of both technical systems and optimization principles.
 
@@ -30,8 +28,7 @@ My research interests lie at the intersection of engineering and operations rese
 - **Programming Languages**: Python, R, MATLAB, C++  
 - **Optimization Tools**: Gurobi, CPLEX, Solver  
 - **Data Analysis**: Pandas, NumPy, Scikit-learn  
-- **Electrical Engineering**: Circuit Design, Signal Processing  
-- **Statistical Software**: R, SPSS, Minitab  
+- **Simulation Tools**: ProModel
 
 ### Languages
 - **Chinese** (Native)  
@@ -51,7 +48,7 @@ Beyond academics, I enjoy exploring new technologies, traveling, and learning ab
 ## Contact Information
 
 📧 **Email**: yizhed7@gmail.com  
-💼 **LinkedIn**: [Connect with me](https://linkedin.com/in/your-profile)  
-🔗 **GitHub**: [Daiyzd](https://github.com/Daiyzd)  
+💼 **LinkedIn**: [Connect with me](https://www.linkedin.com/in/%E4%BB%A5%E5%96%86-%E6%88%B4-61b83a369/)  
+🔗 **GitHub**: [Daiyzd](https://github.com/ChrisyzD)  
 
 Feel free to reach out if you'd like to discuss research opportunities, collaborate on projects, or simply connect!
