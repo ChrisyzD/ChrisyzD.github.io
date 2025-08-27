@@ -14,7 +14,7 @@ redirect_from:
 **University of Michigan, Ann Arbor**  
 *Bachelor of Science in Industrial and Operations Engineering*  
 2024 - 2026 (Expected)  
-- Cumulative GPA: 4.0/4.0
+- Cumulative GPA: 3.94/4.0
 
 **Shanghai Jiaotong University, Shanghai**  
 *Bachelor of Electrical and Computer Engineering*  
@@ -31,17 +31,23 @@ redirect_from:
 ### Technical Areas
 * Data Analysis & Visualization
 * Machine Learning & Statistical Modeling
-* Database Management
 * Engineering Design & Optimization
-* Rehabilitation Robotics
+* AI prompting and AI agents for database
 
 ## Research Experience
 
 **NeuRRo Lab - Rehabilitation Robotics Data Analysis**  
-*University of Michigan* | 2024 - Present
+*University of Michigan* | 2024.10 - Present
 * Conducted advanced data analysis on rehabilitation robots used for stroke patients, focusing on re-establishing muscle coordination through mechanical assistance
 * Applied non-negative matrix factorization (NMF) algorithms to identify latent patterns in muscle coordination recovery
 * Collaborated with interdisciplinary teams to optimize therapeutic strategies and improve patient rehabilitation outcomes
+
+**Summer Undergraduate Research Experience (SURE) program - Patient-Tailored Cardiac Rehab Discharge Policies via Operations Research Methods**
+*University of Michigan* | 2025.5 - Present
+* Conducted cluster analysis of patients by k-means algorithm to study the data trajectory of daily step counts
+* Applied statistical modeling techniques including feature engineering to characterize recovery pathways across different patient demographics
+* Analyzed variability in step count data from cardiac rehabilitation patients to understand individual recovery patterns and define objective criteria for "stable recovery"
+
 
 ## Projects
 
@@ -69,6 +75,8 @@ redirect_from:
 * **China Undergraduate Mathematical Contest in Modeling** - Third Prize (2023)
 * **Engineering Design Project** - Best Technical Award (2023)
 * **Enterprise Simulation Operation Competition** - School Second Prize (2023)
+* **Dean’s Honor List** - 24Fall&25Winter
+* **Myun Lee Scholarship** - 2024
 
 ## Contact Information
 
