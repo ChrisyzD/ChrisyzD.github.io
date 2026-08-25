@@ -1737,6 +1737,10 @@
      the browser grows the document's own scrollable area instead. */
   body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   #dc-root > .sc-host > div { min-width: 1400px; }
+  /* The exit back to the site was a 15px line of type inside a 50px bar. The bar
+     already centres its children, so giving the link the site's 44px touch height
+     changes nothing visible — on a phone it just becomes hittable. */
+  #mf-back { display: inline-flex; align-items: center; min-height: 44px; }
 }
 </style>
 </head>

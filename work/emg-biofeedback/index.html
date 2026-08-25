@@ -22,8 +22,37 @@ University of Michigan · MATLAB, Python/PyTorch, Unity, C#</p>
 loop, the on-device optimizer port, and the MATLAB synergy pipeline. The experiments and the
 clinical questions are the lab's; nothing participant-level appears on this page.</p>
 
+<figure class="wide clip">
+  <video src="/assets/video/emg-task-loop.mp4"
+         poster="/assets/img/emg-biofeedback.png"
+         width="1280" height="694"
+         autoplay muted loop playsinline controls preload="metadata" data-clip
+         aria-label="Eight seconds of the biofeedback system running: a yellow cursor driven by
+         muscle activity travels across the canvas to the target on the left, the target turns
+         green as the cursor arrives, the reach counter goes from 0 to 1, and the red EMG trace
+         in the Delsys panel on the right rises off its baseline through the reach and goes flat
+         again afterwards."></video>
+  <figcaption>
+    <p>Eight seconds of the loop actually running: the yellow dot is a cursor driven by muscle
+      activity and nothing else — no mouse, no keyboard — and the reach counter at the top left
+      is the entire score.</p>
+    <p><span class="look">Watch two places at once:</span> the target on the left turns green as
+      the cursor arrives and the counter ticks 0 → 1, while on the right the red trace in the
+      Delsys panel rises off its baseline through the reach and goes flat again once the target
+      is hit.</p>
+    <p>That rise is small against the panel's 0–1 axis because what is plotted is the smoothed
+      envelope the controller actually reads rather than raw EMG — and the distance between
+      those two things is the band-pass filtering, envelope extraction, EMA smoothing and MVC
+      calibration described below, which is what makes the cursor move like a limb instead of
+      twitching at noise.</p>
+    <p class="bound">This session ran a two-channel differential configuration rather than the
+      sixteen channels the system supports, which is why the panel is plotting two traces. No
+      participant is visible and no participant identifiers appear in any frame.</p>
+  </figcaption>
+</figure>
+
 <section>
-  <h2>What &amp; why</h2>
+  <h2>Why this is a real-time problem</h2>
   <p>Biofeedback rests on one move: make the muscle itself the controller. Activity from the arm
   drives a cursor, the cursor has to reach a target, and effort that would otherwise be invisible
   becomes something on screen that either moves or does not.</p>
@@ -53,25 +82,10 @@ clinical questions are the lab's; nothing participant-level appears on this page
   </ul>
 
   <figure>
-    <a href="/assets/img/emg-biofeedback.png" target="_blank" rel="noopener">
-    <img src="/assets/img/emg-biofeedback.png" width="1400" height="758"
-         alt="The biofeedback game: a yellow cursor driven by muscle activity sitting inside a grey target, with a reach counter and timer on the left and the live EMG acquisition panel on the right.">
-    </a>
-    <figcaption>What to look at: one frame contains the whole chain — the reach counter and
-      reaching time on the left, the yellow cursor inside the grey target in the middle, and the
-      live signal panel on the right. The system supports up to 16 channels at 2 kHz; this
-      session ran a two-channel differential configuration, which is why most signal slots are
-      empty. <span class="src">No participant is visible and no participant identifiers appear
-      in this frame.</span></figcaption>
-  </figure>
-
-  <figure>
-    <a href="/assets/img/fig-6-reaching-task.svg" target="_blank" rel="noopener">
     <img src="/assets/img/fig-6-reaching-task.svg" width="800" height="680" loading="lazy"
          alt="Schematic of the center-out reaching paradigm: a start position at the center, eight evenly spaced targets on a ring, and one illustrative path from center to the active target.">
-    </a>
-    <figcaption>What to look at: the task itself. Hold at the center, reach to one lit target,
-      return — the recorded path on each trial is what gets quantified.
+    <figcaption>The center-out paradigm the protocol is built on: hold at the center, reach to
+      whichever target is lit, return. The recorded path on each trial is what gets quantified.
       <span class="src">Schematic only; no recorded participant data is shown.</span></figcaption>
   </figure>
 </section>
@@ -134,6 +148,8 @@ clinical questions are the lab's; nothing participant-level appears on this page
     <a href="/">Home</a></p>
   <p>Last updated 25 August 2026.</p>
 </footer>
+
+<script src="/assets/js/video.js" defer></script>
 
 </body>
 </html>

@@ -43,12 +43,10 @@ It bound <em>revenue</em> to the wrong measure. It dropped the time filter. It r
 to look before you commit.</p>
 
 <figure>
-  <a href="/assets/img/fig-1-ir-path.svg" target="_blank" rel="noopener">
   <img src="/assets/img/fig-1-ir-path.svg" width="800" height="540"
        alt="Two answering paths compared. The upper path goes from question straight to one opaque SQL step and then to a number, with no place to inspect. The lower path inserts a readable relational intermediate representation between the question and the SQL.">
-  </a>
-  <figcaption>What to look at: the only difference between the two paths is one box you are
-    allowed to read. That box is the entire argument of this section.</figcaption>
+  <figcaption>The only difference between the two paths is one box you are allowed to read.
+    That box is the entire argument of this section.</figcaption>
 </figure>
 
 <h2>2. Build the ruler before the feature</h2>
@@ -69,12 +67,10 @@ Contract as test.</p>
 downstream of it.</p>
 
 <figure>
-  <a href="/assets/img/fig-2-goldcase-grid.svg" target="_blank" rel="noopener">
   <img src="/assets/img/fig-2-goldcase-grid.svg" width="800" height="420" loading="lazy"
        alt="A grid of twenty gold-case scenarios across five pipeline stages, with one cell marked to show where a schema change surfaced.">
-  </a>
-  <figcaption>What to look at: the marked cell. A failure does not report “something broke” —
-    it reports which stage, on which case.</figcaption>
+  <figcaption>The marked cell. A failure does not report “something broke” — it reports which
+    stage, on which case.</figcaption>
 </figure>
 
 <h2>3. The one thing you cannot automate</h2>
@@ -119,12 +115,11 @@ all-correct rate from 39.9% to 60.0%.</p>
 what made the eleven functions visible at all.</p>
 
 <figure>
-  <a href="/assets/img/fig-3-closed-loop.svg" target="_blank" rel="noopener">
   <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
        alt="A four-step cycle — measure, locate, fix, add a guardrail — running clockwise around a shared ruler at the center, annotated with the MetaFlow gold-case suite and the capstone data flywheel as two instances.">
-  </a>
-  <figcaption>What to look at: the arrow from <em>add a guardrail</em> back into the ruler at the
-    center. Without it the cycle is just maintenance; with it the ruler grows on its own.</figcaption>
+  <figcaption>The arrow that matters runs from <em>add a guardrail</em> back into the ruler at
+    the center. Without it the cycle is just maintenance; with it the ruler grows on its
+    own.</figcaption>
 </figure>
 
 <h2>5. One second on stage, a thousand lines backstage</h2>
@@ -159,12 +154,10 @@ stage has a station underneath holding it up.</p>
 day.</p>
 
 <figure>
-  <a href="/assets/img/fig-4-one-second-six-stations.svg" target="_blank" rel="noopener">
   <img src="/assets/img/fig-4-one-second-six-stations.svg" width="800" height="736" loading="lazy"
        alt="A layered diagram: a certified answer returned in about a second sits on a narrow bar at the top, above six widening layers — audit, definition decision, repair, semantic asset, contract, and daily re-verification.">
-  </a>
-  <figcaption>What to look at: the proportions. The visible part is the top bar; everything below
-    it is what makes the top bar safe to show.</figcaption>
+  <figcaption>The proportions are the argument: the visible part is the top bar, and everything
+    below it is what makes the top bar safe to show.</figcaption>
 </figure>
 
 <h2>What I take from this</h2>
@@ -174,7 +167,8 @@ infrastructure, and I am not going to pretend otherwise. What transfers is the h
 ruler before the feature, write down what the words mean, and make every fix into a guardrail so
 the ruler grows on its own.</p>
 
-<p>If an answer cannot be checked, it is not an answer. It is a guess with formatting.</p>
+<p class="pull">If an answer cannot be checked, it is not an answer. It is a guess with
+formatting.</p>
 
 <hr>
 

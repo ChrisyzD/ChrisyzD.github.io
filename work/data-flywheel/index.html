@@ -24,7 +24,7 @@ regeneration. The figures below are end-to-end system numbers; the pillar I owne
 into them. Done part-time, alongside the Lark internship over the same summer.</p>
 
 <section>
-  <h2>What &amp; why</h2>
+  <h2>Why measuring comes first</h2>
   <p>When an assistant is weak, the reflex is to generate more training data. That scales cost
   linearly and quality barely at all, because most of the new data lands where the model was
   already fine.</p>
@@ -53,30 +53,41 @@ into them. Done part-time, alongside the Lark internship over the same summer.</
   </ul>
 
   <figure>
-    <a href="/assets/img/fig-5-data-flywheel.svg" target="_blank" rel="noopener">
     <img src="/assets/img/fig-5-data-flywheel.svg" width="800" height="776"
          alt="Diagram of a six-step training-data flywheel: simulate, roll out, judge, locate the eleven highest-error functions, regenerate, re-evaluate.">
-    </a>
-    <figcaption>What to look at: the step that does the work is <em>locate</em>. The judge's
-      value was not the score — it was the error breakdown that made eleven functions visible,
-      so regeneration could be aimed instead of sprayed.</figcaption>
+    <figcaption>The step that does the work is <em>locate</em>. The judge's value was not the
+      score — it was the error breakdown that made eleven functions visible, so regeneration
+      could be aimed instead of sprayed.</figcaption>
   </figure>
 </section>
 
 <section>
   <h2>Results &amp; boundary</h2>
-  <ul>
-    <li><strong>17,200</strong> verified (reward = 1) fine-tuning dialogues came out of the
-      pipeline.</li>
-    <li>Fine-tuning on that corpus raised judge-adjusted answer acceptance
-      <strong>72.8% → 82.7%</strong>.</li>
-    <li>The strict multi-turn all-correct rate went <strong>39.9% → 60.0%</strong>.</li>
-    <li>No-tool false positives — the assistant answering when it should have called a tool —
-      fell <strong>4,424 → 1,410</strong>.</li>
-    <li><strong>Boundary:</strong> this is an undergraduate thesis, not production. Every figure
-      above is scored by an LLM judge, which is exactly the thing I am least comfortable with;
-      see below.</li>
-  </ul>
+
+  <p><strong>17,200</strong> verified (reward = 1) dialogues came out of the pipeline. Fine-tuning
+  the assistant on that corpus moved three end-to-end numbers:</p>
+
+  <dl class="stack deltas">
+    <div>
+      <dt>Judge-adjusted answer acceptance</dt>
+      <dd><span class="was">72.8%</span><span class="to">→</span><strong>82.7%</strong></dd>
+    </div>
+    <div>
+      <dt>Strict multi-turn all-correct rate</dt>
+      <dd><span class="was">39.9%</span><span class="to">→</span><strong>60.0%</strong></dd>
+    </div>
+    <div>
+      <dt>No-tool false positives</dt>
+      <dd><span class="was">4,424</span><span class="to">→</span><strong>1,410</strong></dd>
+    </div>
+  </dl>
+
+  <p class="note">A no-tool false positive is the assistant answering out of its own head when it
+  should have called a tool; that row is the only one where down is the good direction.</p>
+
+  <p><strong>Boundary.</strong> This is an undergraduate thesis, not production. Every figure
+  above is scored by an LLM judge, which is exactly the thing I am least comfortable with; see
+  below.</p>
 </section>
 
 <section class="thoughts">

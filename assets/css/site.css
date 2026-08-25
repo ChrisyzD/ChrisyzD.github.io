@@ -1,5 +1,9 @@
-/* chrisyzd.github.io — one stylesheet, no framework, no webfonts.
-   Spacing scale is fixed at 4 / 8 / 16 / 24 / 40 / 64px; nothing else is allowed.
+/* chrisyzd.github.io — one stylesheet, no framework, no webfonts, and one 50-line
+   JavaScript file that only two pages load (assets/js/video.js — everything it
+   does is an improvement on a page that already works without it).
+   Spacing scale is fixed at 4 / 8 / 16 / 24 / 40 / 64px; nothing else is allowed,
+   with one standing exception: 20px is the page gutter (body padding-inline), so
+   anything cancelling or mirroring that gutter uses 20 too.
    No dark mode in v1 on purpose: every figure on this site is a white-background
    chart, and on a dark page those become glaring white rectangles. Doing it
    properly means re-cutting every figure, so it is deliberately not started
@@ -34,7 +38,7 @@ body.essay { max-width: 34em; }     /* narrower measure for long-form reading */
 
 /* ---------- type ---------- */
 
-h1 { font-size: 28px; line-height: 1.2; margin: 0 0 16px; letter-spacing: -0.01em; }
+h1 { font-size: 30px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.015em; }
 
 h2 {
   font-size: 13px;
@@ -66,7 +70,12 @@ strong { font-weight: 600; }
 code, .mono { font-family: var(--font-mono); font-size: .92em; }
 
 .meta { color: var(--meta); font-size: 14px; margin: 0 0 8px; }
-.lead { font-size: 18px; margin-bottom: 16px; }
+
+/* The lead used to be set at the body size, which meant every page opened with
+   two paragraphs of identical grey and no first fixation point. It is the one
+   sentence a visitor is guaranteed to read, so it gets its own step on the
+   scale: bigger than body, tighter than body, still the text colour. */
+.lead { font-size: 19px; line-height: 1.5; margin-bottom: 16px; }
 
 a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
 a:hover { text-decoration-thickness: 2px; }
@@ -79,7 +88,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; }
 
 /* ---------- layout ---------- */
 
-header.site { margin-bottom: 40px; }
+/* The nav belongs to the header block, not to the space between the header and
+   the work. Forty pixels of air made it read as an orphan and cost the second
+   row of project cards the same forty pixels of first screen. */
+header.site { margin-bottom: 24px; }
 nav.top { font-size: 15px; margin-bottom: 24px; color: var(--meta); }
 /* 44px touch target on phones, where this nav is the only way to reach Experience
    without scrolling three thousand pixels. The visual height does not change. */
@@ -144,13 +156,18 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 .card h3 a::after { content: ""; position: absolute; inset: 0; }
 .card h3 a:focus-visible { outline: none; }
 .card:hover h3 a { color: var(--link); text-decoration: underline; }
+/* The arrow lives in the title, not on a line of its own. Four cards each
+   ending with an identical "Read the case →" was four lines of chrome saying
+   what the border, the cursor and the title already said. */
+.card h3 .arw { color: var(--meta); font-weight: 400; }
+.card:hover h3 .arw { color: var(--link); }
 .card p { font-size: 16px; margin-bottom: 0; }
 .card .role { margin-bottom: 8px; }
+/* Only a card with a second, different destination keeps this row. */
 .card .go { padding-top: 12px; font-size: 15px; }
-/* Real links, above the title's full-card overlay — so a card can offer a second
-   exit (the demo) without the overlay swallowing it. */
+/* A real link, above the title's full-card overlay — so the demo is reachable
+   without the overlay swallowing it. */
 .card .go a { position: relative; z-index: 1; }
-.card .go .sep { color: var(--meta); margin: 0 4px; }
 
 /* Every "→" exit on the home page is a 44px row on a phone, not an 18px line of
    text. iOS asks for 44; these were 18–21. The visual size of the type does not
@@ -175,6 +192,12 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
   font-size: 16px;
 }
 .tryit .note { display: block; margin-top: 4px; }
+/* The most important call to action on the site was an 18px line of text on a
+   phone while the site's own rule said 44px. On desktop it goes back to inline. */
+.tryit a, .note a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* The 404 list is the only place a bare <ul> of links is the whole page. */
+.linklist a { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* Further thoughts: marginalia, marked as such. No standing header above it —
    these sections used to open with a line announcing how many points were coming,
@@ -189,9 +212,41 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 /* ---------- figures ---------- */
 
 figure { margin: 24px 0; }
-figure img, figure svg { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 2px; }
+figure img, figure svg, figure video { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 2px; }
 figcaption { font-size: 13px; line-height: 1.55; color: var(--meta); margin-top: 8px; }
 figcaption .src { display: block; margin-top: 4px; }
+
+/* Images are shown at the size that makes them readable and that is the end of
+   it. There is no click-to-open-the-original anywhere on this site: sending a
+   reader into a browser tab containing a bare PNG, with no caption, no back
+   context and no way to know what they are looking at, is not a zoom feature —
+   it is losing them. Anything that needed a second look got re-cropped instead. */
+
+/* ---------- clips ---------- */
+/* Two pages have a video, and on both of them it is the primary evidence, so it
+   sits above the argument rather than inside it. It is muted, it loops, it has
+   no sound track at all, and it carries controls so a reader who wants it to
+   stop can stop it without JavaScript. */
+
+/* Full-bleed on a phone. 350px of a dense console is small enough already;
+   the 20px of body padding on each side was 11% of the clip for nothing, and
+   an edge-to-edge frame is also the one place this layout changes shape
+   between phone and desktop instead of just getting narrower.
+   Negative margins rather than 100vw: vw units include the scrollbar and put a
+   horizontal overflow on narrow desktop windows. */
+.clip { margin: 24px -20px 40px; }
+.clip video { background: #f5f6f7; border-left: 0; border-right: 0; border-radius: 0; }
+/* The clip breaks the prose measure; its explanation does not. A wide frame
+   over a normal column of text reads as one object with a caption, not as two
+   competing widths. */
+.clip figcaption { font-size: 15px; line-height: 1.6; color: var(--text); margin-top: 16px;
+                   max-width: 42rem; margin-inline: auto; padding: 0 20px; }
+.clip figcaption p { margin: 0 0 8px; }
+.clip figcaption p:last-child { margin-bottom: 0; }
+/* Third beat of the caption: the boundary, in the same grey as every other
+   caveat on the site. */
+.clip figcaption .bound { color: var(--meta); font-size: 14px; }
+.clip figcaption .look { font-weight: 600; }
 
 /* Screenshots of a dense UI carry 12–13px type of their own. At the 42rem prose
    measure they land at roughly half scale and stop being evidence. Prose stays at
@@ -217,6 +272,22 @@ figcaption .src { display: block; margin-top: 4px; }
 .stack dt { font-weight: 600; font-size: 14px; }
 .stack dd { margin: 4px 0 0; font-size: 15px; color: var(--text); }
 
+/* Same ruled-list idiom, used for before → after pairs. Three numbers buried
+   mid-sentence in three separate bullets are three numbers nobody compares;
+   ruled and set in mono they can be read as a column. Same two-ends-on-desktop,
+   stacked-on-a-phone treatment as .row above, and for the same reason: a real
+   table is the classic 375px failure. */
+.deltas dt { font-weight: 400; font-size: 15px; }
+.deltas dd { margin: 4px 0 0; font-family: var(--font-mono); font-size: 14px;
+             white-space: nowrap; }
+.deltas dd .was { color: var(--meta); }
+.deltas dd .to { color: var(--meta); padding: 0 4px; }
+.deltas + .note { margin-top: -8px; }
+
+/* One line in the essay is its conclusion. It was set as body text in the
+   middle of a stack of body text. */
+.pull { font-size: 21px; line-height: 1.4; letter-spacing: -0.01em; margin: 40px 0; }
+
 /* ---------- footer ---------- */
 
 footer.site { border-top: 1px solid var(--rule); padding-top: 24px; font-size: 14px; color: var(--meta); }
@@ -229,33 +300,42 @@ footer.site a { color: var(--link); }
 
 @media (min-width: 44rem) {
   body { font-size: 18px; line-height: 1.7; padding-top: 64px; }
-  h1 { font-size: 34px; }
+  h1 { font-size: 38px; }
   h3 { font-size: 19px; }
+  .lead { font-size: 21px; line-height: 1.45; }
   .meta, .role, .row .when { font-size: 15px; }
   figcaption { font-size: 14px; }
+  .clip figcaption { font-size: 16px; }
+  .pull { font-size: 25px; }
   .row { flex-direction: row; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .deltas div { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+  .deltas dd { margin: 0; }
   .contact a { min-height: 0; }
   nav.top a, .pager a, footer.site a { display: inline; min-height: 0; }
-  .card .go a, .golink a { display: inline; min-height: 0; }
+  .card .go a, .golink a, .tryit a, .note a, .linklist a { display: inline; min-height: 0; }
+  .clip { margin-inline: 0; }
+  .clip video { border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
+                border-radius: 2px; }
+  .clip figcaption { padding: 0; }
   .cards { grid-template-columns: 1fr 1fr; }
-  /* The figure trails the sentence it illustrates and bottom-aligns across the
-     row, so the four titles and their exits all sit above the fold. */
-  .card .go { margin-bottom: 16px; }
-  .card .thumb { margin-top: auto; }
+  /* The demo row sits at the bottom of its card so the four titles line up
+     across the grid regardless of which card carries it. */
+  .card .go { margin-top: auto; margin-bottom: 0; }
   .pager { display: flex; flex-wrap: wrap; gap: 8px 24px; }
   .pager li { margin-bottom: 0; }
 }
 
-/* The index cards hold the only figures on the home page. At the prose measure a
-   two-up grid gave each thumbnail 270px — narrower than the same figure gets on a
-   phone. The card block, and only the card block, gets the wider column. */
+/* Four index cards two-up at the prose measure gave each one a 320px column and
+   a title that wrapped to three lines. The card block, and only the card block,
+   gets the wider column. */
 @media (min-width: 60rem) {
   .cards { width: min(94vw, 960px); margin-inline: calc(50% - min(47vw, 480px)); }
 }
 
 /* ---------- motion ---------- */
-/* There is no animation anywhere on this site, so this rule is a declaration,
-   not a fix. */
+/* There is still no animation anywhere on this site. The two clips are the only
+   moving pixels, and CSS cannot stop a video from autoplaying — that is handled
+   in assets/js/video.js, which is also what makes this rule honest. */
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
@@ -271,8 +351,12 @@ footer.site a { color: var(--link); }
   figure, .card { break-inside: avoid; }
   figure.wide, .cards { width: auto; margin-inline: 0; }
   .card { border: 0; padding: 0; }
-  .card .thumb, .card .go { display: none; }   /* on paper the card is just an entry */
+  .card .go { display: none; }   /* on paper the card is just an entry */
   .cards { gap: 16px; }
+  /* A video does not print. Its caption says what it showed, so the caption is
+     what survives; the line below tells a reader on paper where to watch it. */
+  .clip video { display: none; }
+  .clip figcaption::before { content: "[Video — chrisyzd.github.io] "; color: #444; }
   .thoughts-body, .scope { border-left: 0; padding-left: 0; }
   section { margin-bottom: 24px; }
 }

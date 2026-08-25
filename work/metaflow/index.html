@@ -23,15 +23,45 @@ the gold-case regression suite, the contracts endpoint and the React/TypeScript 
 end; my collaborator owns the NL→IR→SQL engine core. I am not naming them here without their
 say-so.</p>
 
+<figure class="wide clip">
+  <video src="/assets/video/metaflow-demo.mp4"
+         poster="/assets/img/metaflow-demo-poster.png"
+         width="1280" height="832"
+         autoplay muted loop playsinline controls preload="metadata" data-clip
+         aria-label="Twenty-five seconds of the MetaFlow prototype running its own four-act demo:
+         a business question returns an explicit MISS because the certification it needs does not
+         exist, the refusal becomes ticket T-0087 and an analyst answers it off the uncertified
+         path with a caveat attached, a data engineer runs a lineage impact analysis and a
+         transactional dry run and gets owner approval OD006, and the same question is asked
+         again and comes back certified at $340,955.56 with every provenance check green."></video>
+  <figcaption>
+    <p>Twenty-five seconds, nobody driving: the same question is asked at the start and at the
+      end. The first time it comes back as an explicit <strong>MISS</strong> — the certification
+      it needs does not exist — and in between, the refusal becomes a ticket, an analyst answers
+      it off the uncertified path with the caveat attached and files a backfill request, and an
+      engineer closes the gap through a lineage impact analysis, a dry run and an owner
+      approval.</p>
+    <p><span class="look">Watch the right-hand column.</span> It holds each act's verdict, and
+      reading only that column is the short version of the whole argument: <em>No certified
+      capability matched</em> in the first act, the lineage tree the analyst has to work against
+      in the second, the owner's approval card in the third — and in the last, <em>All
+      provenance checks green</em>, with the source asset, the metric version, the definition and
+      a re-computed checksum attached to a number that had no certified answer twenty-five
+      seconds earlier.</p>
+    <p class="bound">Nothing here is clicked by a human — this is the prototype's own demo mode
+      running unattended. It is a design prototype rather than the running system, and the data
+      is the synthetic <code>jaffle_shop</code> demo set.</p>
+  </figcaption>
+</figure>
+
 <p class="tryit"><a href="/demos/metaflow-prototype-en.html"><strong>Try the interactive
-prototype →</strong></a><span class="note">The studio prototype, in English, running in your
-browser: ask a question, watch it get refused, then follow the fix through lineage analysis and
-owner approval. Built for a desktop window — on a phone it scrolls sideways. The screens below
-are a design prototype rather than the running system. There is also the
+prototype →</strong></a><span class="note">The same studio, in English, running in your browser —
+so you can ask the question yourself instead of watching it get asked. Built for a desktop
+window; on a phone it scrolls sideways. There is also the
 <a href="/demos/metaflow-prototype.html">original Chinese version</a>.</span></p>
 
 <section>
-  <h2>What &amp; why</h2>
+  <h2>Why an IR instead of SQL</h2>
   <p>Most natural-language-to-SQL systems generate a query and run it. When the number that
   comes back is wrong, nothing tells you where it went wrong: you read the SQL top to bottom
   and guess which clause betrayed you.</p>
@@ -41,12 +71,10 @@ are a design prototype rather than the running system. There is also the
   runs, and something a machine can check. A wrong answer stops being a mood and becomes an
   address: this field bound to the wrong measure, that filter dropped.</p>
   <figure>
-    <a href="/assets/img/fig-1-ir-path.svg" target="_blank" rel="noopener">
     <img src="/assets/img/fig-1-ir-path.svg" width="800" height="540"
          alt="Two answering paths compared. The upper path goes from question straight to one opaque SQL step and then to a number, with no place to inspect. The lower path inserts a readable relational intermediate representation between the question and the SQL.">
-    </a>
-    <figcaption>What to look at: the only structural difference is one box you are allowed to
-      read before it executes.</figcaption>
+    <figcaption>The only structural difference between the two paths is one box you are allowed
+      to read before it executes.</figcaption>
   </figure>
 </section>
 
@@ -64,12 +92,10 @@ are a design prototype rather than the running system. There is also the
   rule I wrote down is a rule that runs. Contract as test.</p>
 
   <figure>
-    <a href="/assets/img/fig-2-goldcase-grid.svg" target="_blank" rel="noopener">
     <img src="/assets/img/fig-2-goldcase-grid.svg" width="800" height="420" loading="lazy"
          alt="A grid of twenty gold-case scenarios across five pipeline stages, with one cell marked to show where a schema change surfaced.">
-    </a>
-    <figcaption>What to look at: the marked cell — a failure reports which stage, on which
-      case, not just that something is red.</figcaption>
+    <figcaption>The marked cell is the point: a failure reports which stage, on which case — not
+      just that something is red.</figcaption>
   </figure>
 
   <p><strong>The studio.</strong> Interface, annotations and data are all English.
@@ -81,24 +107,10 @@ are a design prototype rather than the running system. There is also the
   fix behind a refusal goes through lineage analysis, a dry run and an explicit owner approval
   before it ships.</p>
 
-  <figure class="wide">
-    <a href="/assets/img/metaflow-provenance.png" target="_blank" rel="noopener">
-    <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-provenance-mobile.png"
-              width="720" height="1710">
-      <img src="/assets/img/metaflow-provenance.png" width="1920" height="832" loading="lazy"
-         alt="The provenance card the prototype attaches to every answer, with its five fields
-         numbered and glossed: source asset, metric version, definition binding, certification
-         status with row count, and a re-verified checksum.">
-    </picture>
-    </a>
-    <figcaption>What to look at: this card ships with every answer. It names the certified table
-      the number came from, the metric version, and the definition the answer was bound to — so
-      “where did this number come from” has an answer that is not a conversation.</figcaption>
-  </figure>
+  <p>Two of those four are worth stopping the clip on, because the annotations say what a
+  moving screen cannot.</p>
 
   <figure class="wide">
-    <a href="/assets/img/metaflow-miss-ticket.png" target="_blank" rel="noopener">
     <picture>
       <source media="(max-width: 899px)" srcset="/assets/img/metaflow-miss-ticket-mobile.png"
               width="720" height="2272">
@@ -107,36 +119,28 @@ are a design prototype rather than the running system. There is also the
          and handing off to the analyst triage queue as ticket T-0087. Four numbered annotations
          mark the refusal, the handoff button, the ticket toast and the blocked-by field.">
     </picture>
-    </a>
-    <figcaption>What to look at: the refusal. A question outside the certified surface returns an
+    <figcaption>The refusal is the feature. A question outside the certified surface returns an
       explicit MISS that names the blocker — 8,611 orders with no historical tier coverage — and
-      turns into a ticket in the analyst queue instead of a plausible-looking guess.
-      <span class="only-mobile src">Tap the image to open it at full size.</span></figcaption>
+      turns into a ticket in the analyst queue instead of a plausible-looking guess.</figcaption>
   </figure>
 
   <figure class="wide">
-    <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
     <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-workflow-mobile.png"
-              width="1740" height="678">
-      <img src="/assets/img/metaflow-de-console-workflow.png" width="1728" height="2572" loading="lazy"
-           alt="The engineering console for REQ-0031: requirements and design docs confirmed, a
-           lineage impact analysis marked 1 flagging one downstream capability for
-           recertification, the patch, a transactional dry-run marked 2, five passing validation
-           assertions, and a rollback plan.">
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-provenance-mobile.png"
+              width="720" height="1710">
+      <img src="/assets/img/metaflow-provenance.png" width="1920" height="832" loading="lazy"
+         alt="The provenance card the prototype attaches to every answer, with its five fields
+         numbered and glossed: source asset, metric version, definition binding, certification
+         status with row count, and a re-verified checksum.">
     </picture>
-    </a>
-    <figcaption><span class="only-mobile">What to look at: the impact analysis (1) and the dry-run
-      (2) — the two checks that run before a byte is written. Tap the image to open the whole
-      console at full size.</span>
-      <span class="only-desktop">What to look at: the two checks that run before a byte is
-      written. Both are annotated in the image; tap it to open the whole console, execution log
-      included, at full size.</span></figcaption>
+    <figcaption>The card the clip ends on, here on a different question and with its five fields
+      named. It ships with every answer: the certified table the number came from, the metric
+      version, and the definition the answer was bound to — so “where did this number come from”
+      has an answer that is not a conversation.</figcaption>
   </figure>
 
-  <p><a href="/demos/metaflow-prototype-en.html">Open the interactive prototype →</a>
-    <span class="note">English · desktop width · <a href="/demos/metaflow-prototype.html">original
-    Chinese version</a></span></p>
+  <p class="golink"><a href="/demos/metaflow-prototype-en.html">Open the prototype and ask it
+    something yourself →</a></p>
 </section>
 
 <section>
@@ -193,6 +197,8 @@ are a design prototype rather than the running system. There is also the
     <a href="/">Home</a></p>
   <p>Last updated 25 August 2026.</p>
 </footer>
+
+<script src="/assets/js/video.js" defer></script>
 
 </body>
 </html>
