@@ -81,40 +81,42 @@ into them. Done part-time, alongside the Lark internship over the same summer.</
 
 <section class="thoughts">
   <h2>Further thoughts</h2>
-  <p class="kicker">Working notes — first person, unfinished, and mine to revise. This project
-    produced the best numbers on the site, which is precisely why it needs the most caveats.</p>
+  <p class="kicker">Where the system's numbers stop and my part of them starts — and the two
+    checks I would run first if I picked this up again.</p>
   <div class="thoughts-body">
-    <p>The uncomfortable part is that the judge grades work the judge helped produce.
-    <code>reward = 1</code> is the judge's verdict, the corpus was filtered on that verdict, and
-    the improvement afterwards was scored by a judge rather than by a person. Whether that
-    scoring was independent enough of the filtering is exactly the question I cannot answer from
-    memory — so some fraction of 72.8 → 82.7 is the assistant getting better, some fraction may
-    be the assistant learning what a judge likes, and I cannot give you the split. The check that
-    would settle it is a held-out slice scored by hand, or scored by a judge from a different
-    model family; I cannot point you at one, and a check I cannot point at is not a check I
-    should lean on. Until then the number is a strong internal signal and a weak external claim,
-    and I would rather say so than let it be read as the second thing.</p>
+    <p>Start with the boundary, because it is the thing I get wrong most easily when I talk about
+    this project. “I owned the data pillar” is a convenient phrase and it hides a seam. The four
+    numbers above belong to the whole system; the pillar is one input into them. When I describe
+    this work I try to keep that order — here is what the system did, here is the part of it that
+    was mine — rather than letting the two blur together, because the blurring is effortless and
+    one-directional and always flatters me.</p>
 
-    <p>17,200 is a numerator I can quote and a denominator I cannot. I know how many verified
-    dialogues came out; I cannot put the generated-and-discarded count beside it here. That yield
-    is the interesting quantity — it is what distinguishes a simulator producing usable
-    conversations from a governance layer doing all the filtering downstream of a noisy one. It
-    is the reason I keep this figure as a count of what exists rather than a rate of anything,
-    and it is the first number I would put on the wall if I picked this up again.</p>
+    <p>The first check I owe it is about the judge. <code>reward = 1</code> is the judge's
+    verdict, the corpus was filtered on that verdict, and the improvement afterwards was scored
+    by a judge rather than by a person — so the judge is grading work the judge helped produce.
+    Some fraction of 72.8 → 82.7 is the assistant getting better; some fraction may be the
+    assistant learning what a judge likes; I cannot give you the split.</p>
 
-    <p>“I owned the data pillar” is a convenient phrase and it hides a seam. The four numbers
-    above belong to the whole system; the pillar is one input into them. When I talk about this
-    project I try to keep that order — here is what the system did, here is the part of it that
-    was mine — rather than letting the two blur into each other, because the blurring is
-    effortless and one-directional and always flatters me.</p>
+    <p>What would settle it is a held-out slice scored by hand, or scored by a judge from a
+    different model family. I cannot point you at one, and a check I cannot point at is not a
+    check I should lean on. Until it exists the number is a strong internal signal and a weak
+    external claim, and I would rather say that than let it be read as the second thing.</p>
+
+    <p>The second check is a denominator. 17,200 is a numerator I can quote; the
+    generated-and-discarded count that belongs beside it is not something I can put on this page.
+    That yield is the interesting quantity — it is what separates a simulator that produces
+    usable conversations from a governance layer doing all the filtering downstream of a noisy
+    one. It is why this figure stays a count of what exists rather than a rate of anything, and
+    it is the first number I would put on the wall next time.</p>
   </div>
 </section>
 
 <hr>
 
 <ul class="pager">
-  <li><a href="/writing/closed-loop/">Essay: The loop — the same cycle, written out →</a></li>
   <li><a href="/work/cardiac-rehab/">Next project: Cardiac rehabilitation wearable study →</a></li>
+  <li><a href="/writing/closed-loop/">Essay: The loop — notes on making an NL-to-SQL answer
+    checkable →</a></li>
 </ul>
 
 <footer class="site">

@@ -23,6 +23,12 @@ the gold-case regression suite, the contracts endpoint and the React/TypeScript 
 end; my collaborator owns the NL→IR→SQL engine core. I am not naming them here without their
 say-so.</p>
 
+<p class="tryit"><a href="/demos/metaflow-prototype-en.html"><strong>Try the interactive
+prototype →</strong></a><span class="note">The studio prototype, in English, running in your
+browser: ask a question, watch it get refused, then follow the fix through lineage analysis and
+owner approval. Built for a desktop window — on a phone it scrolls sideways. There is also the
+<a href="/demos/metaflow-prototype.html">original Chinese version</a>.</span></p>
+
 <section>
   <h2>What &amp; why</h2>
   <p>Most natural-language-to-SQL systems generate a query and run it. When the number that
@@ -65,112 +71,101 @@ say-so.</p>
       case, not just that something is red.</figcaption>
   </figure>
 
-  <p><strong>The studio.</strong> The screens below are from the design prototype for the
-  front end, annotated in English. <strong>Design prototype — not the running system.</strong>
-  They show the four ideas the system is organised around: answers are bounded by a certified
-  capability list, every answer carries provenance, anything out of scope is refused explicitly
-  rather than guessed, and the fix behind a refusal goes through lineage analysis, a dry run
-  and an explicit owner approval before it ships.</p>
+  <p><strong>The studio.</strong> The five screens below come from the design prototype for the
+  front end — a mock, not the running system. Interface, annotations and data are all English.
+  The data is the <strong><code>jaffle_shop</code> demo dataset</strong>: synthetic rows
+  generated against dbt's public <code>jaffle_shop</code> schema — 50,000 orders spanning 2022
+  to 2025 — not the toy seed data that ships with dbt. The screens show the four ideas the
+  system is organised around: answers are bounded by a certified capability list, every answer
+  carries provenance, anything out of scope is refused explicitly rather than guessed, and the
+  fix behind a refusal goes through lineage analysis, a dry run and an explicit owner approval
+  before it ships.</p>
 
-  <figure>
+  <figure class="wide">
     <a href="/assets/img/metaflow-provenance.png" target="_blank" rel="noopener">
-    <img src="/assets/img/metaflow-provenance.png" width="1200" height="653" loading="lazy"
-         alt="The provenance envelope panel from the MetaFlow prototype, with each field glossed in English: source asset, metric version, definition binding, certification status and checksum.">
+    <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-provenance-mobile.png">
+      <img src="/assets/img/metaflow-provenance.png" width="1920" height="832" loading="lazy"
+         alt="The provenance card the prototype attaches to every answer, with its five fields
+         numbered and glossed: source asset, metric version, definition binding, certification
+         status with row count, and a re-verified checksum.">
+    </picture>
     </a>
-    <figcaption>What to look at: this card is attached to every answer. It names the certified
-      table the number came from, the metric version, and the definition the answer was bound to
-      — so “where did this number come from” has an answer that is not a conversation.
-      <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
-      testkit.</span></figcaption>
+    <figcaption>What to look at: this card ships with every answer. It names the certified table
+      the number came from, the metric version, and the definition the answer was bound to — so
+      “where did this number come from” has an answer that is not a conversation.</figcaption>
   </figure>
 
-  <figure>
+  <figure class="wide">
     <a href="/assets/img/metaflow-miss-ticket.png" target="_blank" rel="noopener">
-    <img src="/assets/img/metaflow-miss-ticket.png" width="1400" height="725" loading="lazy"
-         alt="The MetaFlow prototype returning a MISS for an out-of-scope question, naming the blocker, and handing off to the analyst diagnosis queue as ticket T-0087.">
+    <img src="/assets/img/metaflow-miss-ticket.png" width="1920" height="1416" loading="lazy"
+         alt="The prototype returning a MISS for an out-of-scope question, naming the blocker,
+         and handing off to the analyst triage queue as ticket T-0087. Four numbered annotations
+         mark the refusal, the handoff button, the ticket toast and the blocked-by field.">
     </a>
-    <figcaption>What to look at: the refusal. A question outside the certified surface returns
-      an explicit MISS that names the blocker — 8,611 orders with no historical tier coverage —
-      and turns into a ticket in the analyst queue instead of a plausible-looking guess.
-      <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
-      testkit.</span></figcaption>
+    <figcaption>What to look at: the refusal. A question outside the certified surface returns an
+      explicit MISS that names the blocker — 8,611 orders with no historical tier coverage — and
+      turns into a ticket in the analyst queue instead of a plausible-looking guess.
+      <span class="only-mobile src">Tap the image to open it at full size.</span></figcaption>
   </figure>
 
-  <figure>
+  <figure class="wide">
     <a href="/assets/img/metaflow-capabilities.png" target="_blank" rel="noopener">
     <picture>
       <source media="(max-width: 899px)" srcset="/assets/img/metaflow-capabilities-mobile.png">
-      <img src="/assets/img/metaflow-capabilities.png" width="1400" height="1341" loading="lazy"
-           alt="MetaFlow prototype capability catalog, marked 1. On wider screens the same
-           figure also shows a box of metrics that failed certification, marked 2, and a
-           certified answer naming its metric, currency and grain, marked 3.">
+      <img src="/assets/img/metaflow-capabilities.png" width="1920" height="2102" loading="lazy"
+           alt="The prototype's certified capability catalog, marked 1; a box of metrics that
+           failed certification and stay unanswerable, marked 2; and a certified answer naming
+           its metric, currency and grain, marked 3.">
     </picture>
     </a>
-    <figcaption><span class="only-mobile">What to look at: this crop shows the certified
-      capability catalog — the whole answerable surface, marked 1. The rest of this figure
-      (marked 2: metrics that failed certification and stay unanswerable; marked 3: a certified
-      answer) only appears at wider widths; tap the image above to open it at full size.</span>
-      <span class="only-desktop">What to look at: the catalog on the left, marked 1, is the
-      whole answerable surface. A question that lands inside it comes back naming its metric,
-      currency and grain, marked 3; the metrics that failed certification sit in the box at the
-      bottom left and stay unanswerable, marked 2.</span>
-      <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
-      testkit.</span></figcaption>
+    <figcaption><span class="only-mobile">What to look at: this crop is the certified capability
+      catalog — five semantic assets, which are the whole answerable surface — with the metrics
+      that failed certification pinned underneath it. Tap the image to open the full screen,
+      which also shows what a certified answer looks like.</span>
+      <span class="only-desktop">What to look at: the catalog on the left, marked 1, is the whole
+      answerable surface. A question that lands inside it comes back naming its metric, currency
+      and grain, marked 3; the metrics that failed certification sit in the box at the bottom
+      left and stay unanswerable, marked 2.</span></figcaption>
   </figure>
 
-  <figure>
+  <figure class="wide">
     <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
     <picture>
       <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-workflow-mobile.png">
-      <img src="/assets/img/metaflow-de-console-workflow.png" width="1142" height="1519" loading="lazy"
-           alt="The DE engineering console for REQ-0031: DRD and DDD confirmed, a lineage
-           impact analysis marked 1 flagging one downstream capability for recertification, a
-           patch, a transactional dry-run marked 2, five passing validation checks, and a
-           rollback plan.">
+      <img src="/assets/img/metaflow-de-console-workflow.png" width="1728" height="2572" loading="lazy"
+           alt="The engineering console for REQ-0031: requirements and design docs confirmed, a
+           lineage impact analysis marked 1 flagging one downstream capability for
+           recertification, the patch, a transactional dry-run marked 2, five passing validation
+           assertions, and a rollback plan.">
     </picture>
     </a>
-    <figcaption><span class="only-mobile">What to look at: the impact analysis (marked 1) and
-      the dry-run (marked 2) — the two checks that run before a byte is written. Tap the image
-      above to open the full console at full size.</span>
-      <span class="only-desktop">What to look at: the impact analysis (marked 1) automatically
-      flags one downstream capability for recertification before the patch can ship; the
-      dry-run (marked 2) proves the row count and a checksum that still matches before anything
-      real is written. Tap the image above to open the full console at full size.</span>
-      <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
-      testkit.</span></figcaption>
+    <figcaption><span class="only-mobile">What to look at: the impact analysis (1) and the dry-run
+      (2) — the two checks that run before a byte is written. Tap the image to open the whole
+      console at full size.</span>
+      <span class="only-desktop">What to look at: the two checks that run before a byte is
+      written. Both are annotated in the image; tap it to open the whole console, execution log
+      included, at full size.</span></figcaption>
   </figure>
 
-  <figure>
+  <figure class="wide">
     <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
-    <img src="/assets/img/metaflow-de-console-approval.png" width="310" height="526" loading="lazy"
-         alt="The Owner Decision approval card for OD006: an explicit owner approval marked 3,
-         and the post-approval action chain — execute the patch, register the capability,
-         notify the business user — marked 4.">
+    <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-approval-mobile.png">
+      <img src="/assets/img/metaflow-de-console-approval.png" width="1920" height="1068" loading="lazy"
+         alt="The Owner Decision approval card for OD006, marked 3, and the post-approval action
+         chain — execute the patch, register the capability, notify the business user — marked 4.">
+    </picture>
     </a>
-    <figcaption>What to look at: the approval. Any write to a certified layer needs an explicit
-      owner sign-off (marked 3), and approval is not the end of the flow — it triggers the
-      write, the registration and the notification back to the business user, all logged
-      (marked 4). Tap the image above to open the full console at full size.
-      <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
-      testkit.</span></figcaption>
+    <figcaption>What to look at: approval is a gate and a trigger. Nothing is written to a
+      certified layer without an owner signing the card, and signing it starts the write, the
+      registration and the notification back to the person who asked the original
+      question.</figcaption>
   </figure>
 
-  <ol class="de-console-notes">
-    <li>Impact analysis automatically flags one downstream capability
-      (<code>semantic_tier_migration</code>) that needs recertification before the patch can
-      ship.</li>
-    <li>A transactional dry-run (<code>BEGIN … ROLLBACK</code>) proves the exact row count and a
-      checksum that still matches on a second, independent recomputation — before anything real
-      is written.</li>
-    <li>Any write to a certified layer needs an explicit owner sign-off, and the approval card
-      carries the dry-run and validation evidence that justified it.</li>
-    <li>Approval is not the end of the flow: it triggers the write, registers the new
-      capability, and notifies the business user whose question started the ticket.</li>
-  </ol>
-
-  <p><a href="/demos/metaflow-prototype-en.html">Open the interactive prototype ↗</a>
-    <span class="note">(English) · <a href="/demos/metaflow-prototype.html">original zh</a> ·
-    data is the public <code>jaffle_shop</code> testkit.</span></p>
+  <p><a href="/demos/metaflow-prototype-en.html">Open the interactive prototype →</a>
+    <span class="note">English · desktop width · <a href="/demos/metaflow-prototype.html">original
+    Chinese version</a></span></p>
 </section>
 
 <section>
@@ -180,49 +175,48 @@ say-so.</p>
       before the features they cover.</li>
     <li>A <strong>PostgreSQL</strong>-backed FastAPI service with a contracts endpoint that
       enforces data-quality rules as executable tests.</li>
-    <li>In development since <strong>March 2026</strong>. The repository is private, so nothing
-      on this page is independently verifiable from a link — the screens above are a design
-      prototype and the numbers are counts of artefacts, not benchmark results.</li>
-    <li><strong>Team boundary:</strong> two people. The NL→IR→SQL engine core is my
-      collaborator's work, not mine.</li>
+    <li>In development since <strong>March 2026</strong>.</li>
+    <li><strong>What this page cannot prove.</strong> Two people built it, and the NL→IR→SQL
+      engine core is my collaborator's work, not mine. The repository is private, the screens
+      above are a design prototype rather than the running system, and every figure here is a
+      count of artefacts rather than a benchmark result — so nothing on this page is
+      independently verifiable from a link. That is the whole caveat, stated once.</li>
   </ul>
 </section>
 
 <section class="thoughts">
   <h2>Further thoughts</h2>
-  <p class="kicker">Working notes — first person, unfinished, and mine to revise. They are here
-    because the argument for a system like this is only as good as its author's willingness to
-    say where it is thin.</p>
+  <p class="kicker">Working notes — first person, unfinished, and mine to revise. Three questions
+    I expect about this page, answered before anyone has to ask them.</p>
   <div class="thoughts-body">
-    <p>The number missing from this page is the engine's pass rate. It would be the most
-    persuasive line here and I am not going to write it, because I have not run that evaluation
-    end to end. The suite I built reports which stage broke on which case; it does not currently
-    produce a headline score I would defend under questioning. I would rather this page be short
-    a number than carry one I reverse-engineered from a feeling.</p>
-
-    <p>The gold cases were written by the same person who built the metadata layer. That is
-    convenient, and it means the suite encodes my blind spots along with my intent. Twenty
-    scenarios pinned across five stages catch regressions against what I already thought to
+    <p><strong>Who wrote the ruler?</strong> I did — the same person who built the metadata layer
+    the suite is meant to police. That is convenient, and it means the twenty scenarios encode my
+    blind spots along with my intent. They catch regressions against what I already thought to
     check; they say nothing about the case I never imagined. So the honest description of the
     ruler is that it grows only when something fails in a way somebody noticed — which is an
-    argument for getting it in front of people who did not build it, not an argument for pinning
+    argument for putting it in front of people who did not build it, not an argument for pinning
     more cases myself.</p>
 
-    <p>I keep the prototype label on those screens for a reason: a good mock is more complete
-    than the system behind it, and on a personal site nobody is checking. The same caution
-    applies to the impact analysis. What it flags is a whole downstream capability — that is the
-    coarse, table-level version of lineage, and it is the version that is tractable. Lineage that
-    tells you <em>which column</em> is affected is a much harder thing to build than the diagram
-    admits, and I would rather say that here than be asked it in a room.</p>
+    <p><strong>How deep does the lineage actually go?</strong> To the table, not the column. What
+    the impact analysis flags is a whole downstream capability, which is the coarse version of
+    lineage and the version that is tractable in a two-person project. Lineage that tells you
+    <em>which column</em> is affected is a much harder thing to build than the diagram admits. I
+    would rather write that down here than be asked it in a room.</p>
+
+    <p><strong>Isn't the prototype more convincing than the system behind it?</strong> Probably,
+    and that is the trap. A good mock is always more complete than the thing it stands in for,
+    it costs a fraction as much, and on a personal site nobody is checking which one they are
+    looking at. Keeping the word <em>prototype</em> on those screens is not modesty; it is the
+    only thing stopping this page from making a claim the repository could not back.</p>
   </div>
 </section>
 
 <hr>
 
 <ul class="pager">
+  <li><a href="/work/data-flywheel/">Next project: LLM data flywheel →</a></li>
   <li><a href="/writing/closed-loop/">Essay: The loop — notes on making an NL-to-SQL answer
     checkable →</a></li>
-  <li><a href="/work/data-flywheel/">Next project: LLM data flywheel →</a></li>
 </ul>
 
 <footer class="site">

@@ -66,5 +66,5 @@
 
   <!-- source note -->
   <line x1="40" y1="684" x2="760" y2="684" stroke="#e3e5e8" stroke-width="0.8"/>
-  <text class="m note" x="40" y="704">FIGURES FROM METAFLOW_JAFFLE_TESTKIT, A PUBLIC DEMO DATASET.</text>
+  <text class="m note" x="40" y="704">FIGURES FROM THE JAFFLE_SHOP DEMO DATASET — SYNTHETIC ROWS ON A PUBLIC SCHEMA.</text>
 </svg>

@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /demos/
 
 Sitemap: https://chrisyzd.github.io/sitemap.xml

@@ -75,15 +75,15 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-ra
 ul, ol { margin: 0 0 16px; padding-left: 20px; }
 li { margin-bottom: 4px; }
 
-.de-console-notes { font-size: 15px; }
-
 hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; }
 
 /* ---------- layout ---------- */
 
 header.site { margin-bottom: 40px; }
 nav.top { font-size: 15px; margin-bottom: 24px; color: var(--meta); }
-nav.top a { margin-right: 16px; }
+/* 44px touch target on phones, where this nav is the only way to reach Experience
+   without scrolling three thousand pixels. The visual height does not change. */
+nav.top a { display: inline-flex; align-items: center; min-height: 44px; margin-right: 16px; }
 
 section { margin-bottom: 64px; }
 section:last-of-type { margin-bottom: 40px; }
@@ -111,7 +111,10 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 .sowhat { margin-top: 16px; }
 .sowhat strong { letter-spacing: .02em; }
 
-.contact { list-style: none; padding: 0; margin: 16px 0 0; }
+/* One row wherever it fits, including on a phone: stacked, these three links ate
+   132px of a 844px first screen and pushed every project name below the fold. */
+.contact { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-wrap: wrap;
+           gap: 0 24px; }
 .contact li { margin: 0; }
 .contact a { display: inline-flex; align-items: center; min-height: 44px; }
 
@@ -130,24 +133,33 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
   border: 1px solid var(--rule);
   border-radius: 2px;
   padding: 16px;
+  cursor: pointer;              /* the whole card is the target; say so */
 }
 .card:hover { border-color: var(--link); }
 .card:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
 
 /* contain, not cover: these are charts and schematics, and cropping a box plot
-   to fill a box turns evidence into decoration */
+   to fill a box turns evidence into decoration. 4/3 rather than 16/10 because
+   three of the four figures are close to square and a wide box letterboxed them
+   down to half the card width. */
 .card .thumb {
   display: block;
   width: 100%;
   height: auto;                 /* let aspect-ratio win over the intrinsic height attr */
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   object-fit: contain;
   background: var(--bg);
   border: 1px solid var(--rule);
   border-radius: 2px;
   padding: 8px;
-  margin-bottom: 16px;
+  margin: 16px 0 0;
 }
+
+/* On a phone the card is read top to bottom, so the title leads and the figure
+   follows the sentence it illustrates. On desktop the grid is scanned, so the
+   figure leads — see the media query below. */
+.card .thumb { order: 1; }
+.card .go    { order: 2; }
 
 .card h3 { margin-bottom: 4px; }
 .card h3 a { color: var(--text); text-decoration: none; }
@@ -157,13 +169,29 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 .card:hover h3 a { color: var(--link); text-decoration: underline; }
 .card p { font-size: 16px; margin-bottom: 0; }
 .card .role { margin-bottom: 8px; }
-.card .go { margin-top: auto; padding-top: 12px; color: var(--link); font-size: 15px; }
+.card .go { margin-top: auto; padding-top: 12px; font-size: 15px; }
+/* Real links, above the title's full-card overlay — so a card can offer a second
+   exit (the demo) without the overlay swallowing it. */
+.card .go a { position: relative; z-index: 1; }
+.card .go .sep { color: var(--meta); margin: 0 4px; }
 
 /* ---------- deep pages ---------- */
 
 /* Team boundary and my own scope, stated once at the top of every project
    page instead of buried in a footnote. */
 .scope { border-left: 2px solid var(--rule); padding-left: 12px; margin-bottom: 0; }
+
+/* The one thing on this site a visitor can actually operate. It gets a door near
+   the top of the page it belongs to, not a link at 79% scroll depth. */
+.tryit {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--link);
+  border-radius: 2px;
+  padding: 12px 16px;
+  margin: 24px 0 0;
+  font-size: 16px;
+}
+.tryit .note { display: block; margin-top: 4px; }
 
 /* Further thoughts: marginalia, marked as such. */
 .thoughts-body { border-left: 2px solid var(--rule); padding-left: 16px; }
@@ -172,6 +200,7 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 
 .pager { list-style: none; padding: 0; margin: 0 0 24px; font-size: 15px; }
 .pager li { margin-bottom: 4px; }
+.pager a, footer.site a { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* ---------- figures ---------- */
 
@@ -179,6 +208,13 @@ figure { margin: 24px 0; }
 figure img, figure svg { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 2px; }
 figcaption { font-size: 13px; line-height: 1.55; color: var(--meta); margin-top: 8px; }
 figcaption .src { display: block; margin-top: 4px; }
+
+/* Screenshots of a dense UI carry 12–13px type of their own. At the 42rem prose
+   measure they land at roughly half scale and stop being evidence. Prose stays at
+   42rem; these break out of it. Nothing else on the site does. */
+@media (min-width: 60rem) {
+  figure.wide { width: min(94vw, 960px); margin-inline: calc(50% - min(47vw, 480px)); }
+}
 
 /* Matches the (max-width: 899px) <source> breakpoint used for the mobile
    capabilities crop: the two crops show different content, so the caption
@@ -214,11 +250,20 @@ footer.site a { color: var(--link); }
   .meta, .role, .row .when { font-size: 15px; }
   figcaption { font-size: 14px; }
   .row { flex-direction: row; justify-content: space-between; align-items: baseline; gap: 16px; }
-  .contact { display: flex; gap: 24px; }
   .contact a { min-height: 0; }
+  nav.top a, .pager a, footer.site a { display: inline; min-height: 0; }
   .cards { grid-template-columns: 1fr 1fr; }
+  .card .thumb { order: 0; margin: 0 0 16px; }
+  .card .go { order: 0; }
   .pager { display: flex; flex-wrap: wrap; gap: 8px 24px; }
   .pager li { margin-bottom: 0; }
+}
+
+/* The index cards hold the only figures on the home page. At the prose measure a
+   two-up grid gave each thumbnail 270px — narrower than the same figure gets on a
+   phone. The card block, and only the card block, gets the wider column. */
+@media (min-width: 60rem) {
+  .cards { width: min(94vw, 960px); margin-inline: calc(50% - min(47vw, 480px)); }
 }
 
 /* ---------- motion ---------- */
@@ -237,6 +282,7 @@ footer.site a { color: var(--link); }
   a[href^="http"]::after,
   a[href^="/"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
   figure, .card { break-inside: avoid; }
+  figure.wide, .cards { width: auto; margin-inline: 0; }
   .card { border: 0; padding: 0; }
   .card .thumb, .card .go { display: none; }   /* on paper the card is just an entry */
   .cards { gap: 16px; }

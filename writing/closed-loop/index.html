@@ -10,12 +10,12 @@
 </head>
 <body class="essay">
 
-<nav class="top"><a href="/">← Yizhe Dai</a></nav>
+<nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
 
 <h1>The loop</h1>
 <p class="lead"><em>Notes on making an NL-to-SQL answer checkable.</em></p>
-<p class="meta">Yizhe Dai · August 2026 · ~9 min · All figures come from
-  <code>metaflow_jaffle_testkit</code>, a public demo dataset.</p>
+<p class="meta">Yizhe Dai · August 2026 · ~9 min · All figures come from the
+  <code>jaffle_shop</code> demo dataset.</p>
 
 <hr>
 
@@ -104,14 +104,16 @@ day. A fix that also becomes a new gold case buys you every day after that. The 
 the failures, and the same mistake does not get to happen twice.</p>
 
 <p>I ran the same loop in a different domain for my undergraduate thesis, on training data for an
-in-vehicle voice assistant. I built a user simulator with 41 persona archetypes and explicit state
-control, produced retrieval-grounded conversation rollouts, and scored them with an LLM judge.</p>
+in-vehicle voice assistant. That was a team system and I owned the data pillar: I built the user
+simulator with 41 persona archetypes and explicit state control, produced retrieval-grounded
+conversation rollouts, and scored them with an LLM judge. The figures below are end-to-end
+system numbers; the pillar I owned is one input into them.</p>
 
 <p>The judge's value was not the score. It was the error breakdown: it showed which eleven
 functions had the highest error rates. Instead of generating more data everywhere, I regenerated
-data aimed at those eleven. Fine-tuning on the resulting 17,200 verified dialogues moved
-judge-adjusted answer acceptance from 72.8% to 82.7%, and the strict multi-turn all-correct rate
-from 39.9% to 60.0%.</p>
+data aimed at those eleven. Fine-tuning on the resulting 17,200 verified dialogues moved the
+system's judge-adjusted answer acceptance from 72.8% to 82.7%, and its strict multi-turn
+all-correct rate from 39.9% to 60.0%.</p>
 
 <p>Generating more data everywhere would have been easier to write and worse. Measuring first is
 what made the eleven functions visible at all.</p>
@@ -177,18 +179,30 @@ the ruler grows on its own.</p>
 <hr>
 
 <div class="note">
-  <p>MetaFlow is a two-person project; my collaborator owns the NL→IR→SQL engine.</p>
-  <p>All figures in this piece come from <code>metaflow_jaffle_testkit</code>, a public demo
-    dataset.</p>
+  <p>MetaFlow is a two-person project; my collaborator owns the NL→IR→SQL engine. The thesis
+    flywheel in §4 is a team system: I owned the data pillar, and the figures quoted there are
+    end-to-end system numbers, with that pillar as one input into them.</p>
+  <p>The <code>jaffle_shop</code> demo dataset is synthetic: 50,000 orders spanning 2022 to
+    2025, generated against dbt's public <code>jaffle_shop</code> schema rather than taken from
+    the toy seed data that ships with dbt. The schema is public; the rows are not real. The
+    repository that generates it is called <code>metaflow_jaffle_testkit</code> — that is a repo
+    name, not a second dataset.</p>
   <p>This piece is about my own projects and how I work — nothing here describes any employer's
     internal plans, products or data.</p>
 </div>
 
 <ul class="pager" style="margin-top:24px">
-  <li><a href="/work/metaflow/">← More on MetaFlow</a></li>
+  <li><a href="/work/metaflow/">MetaFlow, in full →</a></li>
   <li><a href="/work/data-flywheel/">The thesis flywheel, in full →</a></li>
-  <li><a href="/">Back to home</a></li>
 </ul>
+
+<footer class="site">
+  <p>Yizhe Dai · Boston, MA ·
+    <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/">Home</a></p>
+  <p>Last updated 25 August 2026.</p>
+</footer>
 
 </body>
 </html>
