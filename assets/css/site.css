@@ -162,6 +162,13 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 .card .go    { order: 1; }
 .card .thumb { order: 2; }
 
+/* Below 899px a 4/3 thumbnail renders too small to read (chart labels, panel
+   detail) and just adds scroll to an index that is supposed to be scannable
+   in two screens. Desktop keeps the figure; the phone gets the index. */
+@media (max-width: 899px) {
+  .card .thumb { display: none; }
+}
+
 .card h3 { margin-bottom: 4px; }
 .card h3 a { color: var(--text); text-decoration: none; }
 /* the whole card is the click target; the title is the one link that names it */
