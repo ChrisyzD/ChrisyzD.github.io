@@ -42,49 +42,74 @@
 <section id="work">
   <h2>Selected work</h2>
   <p class="meta">Four projects, one page each: what it is, what I built, what the numbers are
-    — and, at the end of every page, what I still think is unresolved about it. The two
-    carrying a frame below open with a clip of the thing actually running.</p>
+    — and, at the end of every page, what I still think is unresolved about it. Every card
+    carries one frame of that project's own material; two of them open with a clip of the
+    thing actually running.</p>
 
   <ul class="cards">
 
     <li class="card">
-      <h3><a href="/work/metaflow/">MetaFlow — metadata-centric NL-to-SQL<span class="arw"
-        aria-hidden="true">&#160;→</span></a></h3>
-      <p class="role">Mar 2026 – present · two-person project</p>
-      <p>A question resolves through an inspectable relational intermediate representation
-        instead of generated SQL, so a wrong answer has an address you can point at.</p>
-      <p class="go"><a href="/demos/metaflow-prototype-en.html">Try the live demo →</a></p>
-      <img class="shot" src="/assets/img/metaflow-card.png" width="872" height="291"
-           alt="The provenance card the MetaFlow clip ends on: a green bar reading “All
-           provenance checks green”, and beneath it the source asset the number was read
-           from, semantic.semantic_gold_customer_revenue_2024.">
+      <div class="ct">
+        <h3><a href="/work/metaflow/">MetaFlow — metadata-centric NL-to-SQL<span class="arw"
+          aria-hidden="true">&#160;→</span></a></h3>
+        <p class="role">Mar 2026 – present · two-person project</p>
+        <p>A question resolves through an inspectable relational intermediate representation
+          instead of generated SQL, so a wrong answer has an address you can point at.</p>
+        <p class="go"><a class="wide" href="/demos/metaflow-prototype-en.html">Try the live
+          demo →</a><a class="narrow" href="/work/metaflow/#annotated">See the four acts,
+          annotated →</a></p>
+      </div>
+      <img class="shot" src="/assets/img/metaflow-card.png" width="1200" height="600"
+           alt="The prototype answering and refusing on the same screen: a governance refusal
+           explaining that the payment-amount metric is not finance-certified, a certified
+           answer with its monthly table below it, and on the right the provenance card —
+           source asset, metric version, definition, row count, certification and a verified
+           checksum.">
     </li>
 
     <li class="card">
-      <h3><a href="/work/data-flywheel/">LLM data flywheel for in-vehicle voice assistants<span class="arw"
-        aria-hidden="true">&#160;→</span></a></h3>
-      <p class="role">Jun – Aug 2026 · undergraduate thesis</p>
-      <p>Measure first, then regenerate only where the failures are — a user simulator, an LLM
-        judge, and 17,200 verified dialogues aimed at eleven functions.</p>
+      <div class="ct">
+        <h3><a href="/work/data-flywheel/">LLM data flywheel for in-vehicle voice assistants<span class="arw"
+          aria-hidden="true">&#160;→</span></a></h3>
+        <p class="role">Jun – Aug 2026 · undergraduate thesis</p>
+        <p>Measure first, then regenerate only where the failures are — a user simulator, an LLM
+          judge, and 17,200 verified dialogues aimed at eleven functions.</p>
+      </div>
+      <img class="shot" src="/assets/img/flywheel-card.png" width="1200" height="667"
+           loading="lazy"
+           alt="The half of the flywheel diagram that carries the argument: judge, then locate
+           the eleven highest-error functions, then regenerate targeted rather than everywhere,
+           all turning around the verified dialogue set at the centre.">
     </li>
 
     <li class="card">
-      <h3><a href="/work/cardiac-rehab/">Cardiac rehabilitation wearable study<span class="arw"
-        aria-hidden="true">&#160;→</span></a></h3>
-      <p class="role">Apr 2025 – Jan 2026 · research assistant, U-M</p>
-      <p>Whether wearable step data can say when a patient has actually stopped improving — and
-        how much that answer depends on what you decide “recovered” means.</p>
+      <div class="ct">
+        <h3><a href="/work/cardiac-rehab/">Cardiac rehabilitation wearable study<span class="arw"
+          aria-hidden="true">&#160;→</span></a></h3>
+        <p class="role">Apr 2025 – Jan 2026 · research assistant, U-M</p>
+        <p>Whether wearable step data can say when a patient has actually stopped improving — and
+          how much that answer depends on what you decide “recovered” means.</p>
+      </div>
+      <img class="shot" src="/assets/img/cardiac-card.png" width="1200" height="1038"
+           loading="lazy"
+           alt="The plateau box plots from the co-authored poster: three definitions of stable
+           recovery on the same cohort, with three visibly different medians and spreads on a
+           day-since-enrollment axis.">
     </li>
 
     <li class="card">
-      <h3><a href="/work/emg-biofeedback/">EMG biofeedback training system<span class="arw"
-        aria-hidden="true">&#160;→</span></a></h3>
-      <p class="role">Oct 2024 – Apr 2026 · NeuRRo Lab, U-M</p>
-      <p>Muscle activity to cursor in real time, with the optimizer hand-ported out of Python so
-        the decoder adapts on-device inside the game loop.</p>
-      <img class="shot" src="/assets/img/emg-card.png" width="872" height="291" loading="lazy"
-           alt="One frame of the EMG clip: the reaching canvas, with the yellow cursor resting
-           against the target it has just reached, which has turned green.">
+      <div class="ct">
+        <h3><a href="/work/emg-biofeedback/">EMG biofeedback training system<span class="arw"
+          aria-hidden="true">&#160;→</span></a></h3>
+        <p class="role">Oct 2024 – Apr 2026 · NeuRRo Lab, U-M</p>
+        <p>Muscle activity to cursor in real time, with the optimizer hand-ported out of Python so
+          the decoder adapts on-device inside the game loop.</p>
+      </div>
+      <img class="shot" src="/assets/img/emg-card.png" width="1200" height="525" loading="lazy"
+           alt="One frame of the EMG clip at the instant of a reach: the reach counter at the
+           top left, the Delsys panel with the smoothed envelope of that reach peaking near
+           0.07 of its nought-to-one axis, and the yellow muscle-driven cursor resting against
+           the lit target below.">
     </li>
 
   </ul>
@@ -163,7 +188,7 @@
       right. This is what I changed in my own projects to make that different, and what it cost:
       an intermediate representation you can read before anything runs, and the step people
       skip — turning each fix into a guardrail so the same mistake cannot happen twice.</p>
-    <figure>
+    <figure class="fig-diagram">
       <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
            alt="A four-step ring — Measure, Locate, Fix, Add a guardrail — turning around a
            dark card labelled “grows with every failure”. The guardrail step is highlighted in

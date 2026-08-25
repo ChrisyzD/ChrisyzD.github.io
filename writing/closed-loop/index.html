@@ -42,7 +42,7 @@ It bound <em>revenue</em> to the wrong measure. It dropped the time filter. It r
 <p>Trust does not come from a model sounding confident. It comes from there being somewhere
 to look before you commit.</p>
 
-<figure>
+<figure class="fig-diagram">
   <img src="/assets/img/fig-1-ir-path.svg" width="800" height="540"
        alt="Two answering paths compared. The upper path goes from question straight to one opaque SQL step and then to a number, with no place to inspect. The lower path inserts a readable relational intermediate representation between the question and the SQL.">
   <figcaption>The only difference between the two paths is one box you are allowed to read.
@@ -66,7 +66,7 @@ Contract as test.</p>
 <p>An untested change to metadata is not a small change. It is a silent change to every answer
 downstream of it.</p>
 
-<figure>
+<figure class="fig-diagram">
   <img src="/assets/img/fig-2-goldcase-grid.svg" width="800" height="420" loading="lazy"
        alt="A grid of twenty gold-case scenarios across five pipeline stages, with one cell marked to show where a schema change surfaced.">
   <figcaption>The marked cell. A failure does not report “something broke” — it reports which
@@ -114,7 +114,7 @@ all-correct rate from 39.9% to 60.0%.</p>
 <p>Generating more data everywhere would have been easier to write and worse. Measuring first is
 what made the eleven functions visible at all.</p>
 
-<figure>
+<figure class="fig-diagram">
   <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
        alt="A four-step cycle — measure, locate, fix, add a guardrail — running clockwise around a shared ruler at the center, annotated with the MetaFlow gold-case suite and the capstone data flywheel as two instances.">
   <figcaption>The arrow that matters runs from <em>add a guardrail</em> back into the ruler at
@@ -153,7 +153,7 @@ stage has a station underneath holding it up.</p>
 <p>The deliverable of data engineering is not SQL. It is a number that gets re-proved every
 day.</p>
 
-<figure>
+<figure class="fig-diagram">
   <img src="/assets/img/fig-4-one-second-six-stations.svg" width="800" height="736" loading="lazy"
        alt="A layered diagram: a certified answer returned in about a second sits on a narrow bar at the top, above six widening layers — audit, definition decision, repair, semantic asset, contract, and daily re-verification.">
   <figcaption>The proportions are the argument: the visible part is the top bar, and everything

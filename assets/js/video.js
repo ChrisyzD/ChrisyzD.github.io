@@ -9,11 +9,13 @@
       carries the point anyway.
    2. Off-screen clips pause. A 25-second loop running three thousand pixels
       above the reader spends a phone battery for nobody.
-   3. One clip is a dense 1280px interface. Below 900px nothing inside it resolves,
-      so below 900px it does not start itself either: the reader gets the poster —
-      the last act, all provenance checks green — and taps to play. Marked in the
-      HTML with data-tap, because that is a fact about that clip's contents, not a
-      rule about videos.
+   3. Both clips are 1280px screen recordings. Below 900px they render at 27% and
+      nothing inside them resolves, so below 900px neither starts itself: the reader
+      gets the poster — for MetaFlow the last act, all provenance checks green; for
+      the EMG loop the reaching canvas with its counter — and taps to play. Marked
+      in the HTML with data-tap, because that is a fact about those clips' contents,
+      not a rule about videos. It is also what keeps the "no animation on this site"
+      claim true on the device most likely to arrive here.
 
    A reader who pauses a clip by hand stays paused: scrolling past and back does
    not overrule them. That is the whole reason for the byUs / userPaused pair. */

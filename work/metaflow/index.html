@@ -23,7 +23,7 @@ the gold-case regression suite, the contracts endpoint and the React/TypeScript 
 end; my collaborator owns the NL→IR→SQL engine core. I am not naming them here without their
 say-so.</p>
 
-<figure class="wide clip clip-inset">
+<figure class="clip fig-clip">
   <video src="/assets/video/metaflow-demo.mp4"
          poster="/assets/img/metaflow-demo-poster.png"
          width="1280" height="832"
@@ -35,7 +35,7 @@ say-so.</p>
          transactional dry run and gets owner approval OD006, and the same question is asked
          again and comes back certified at $340,955.56 with every provenance check green."></video>
   <figcaption>
-    <p class="spec">25 s · four acts · silent · loops<span class="only-mobile"> · a still on a
+    <p class="spec">~25 s · four acts · silent · loops<span class="only-mobile"> · a still on a
       phone; tap to play</span></p>
     <p>Twenty-five seconds, nobody driving: the same question is asked at the start and at the
       end. The first time it comes back as an explicit <strong>MISS</strong> — the certification
@@ -43,26 +43,63 @@ say-so.</p>
       it off the uncertified path with the caveat attached and files a backfill request, and an
       engineer closes the gap through a lineage impact analysis, a dry run and an owner
       approval.</p>
-    <p><span class="look">Watch the right-hand column.</span> It holds each act's verdict, and
-      reading only that column is the short version of the whole argument: <em>No certified
-      capability matched</em> in the first act, the lineage tree the analyst has to work against
-      in the second, the owner's approval card in the third — and in the last, <em>All
-      provenance checks green</em>, with the source asset, the metric version, the definition and
-      a re-computed checksum attached to a number that had no certified answer twenty-five
-      seconds earlier.</p>
+    <p><span class="look">Watch the first act and the last.</span> Both land in the right-hand
+      column, and reading only those two is the short version of the whole argument: <em>No
+      certified capability matched</em> at the start, and at the end <em>All provenance checks
+      green</em>, with the source asset, the metric version, the definition and a re-computed
+      checksum attached to a number that had no certified answer twenty-five seconds earlier.
+      The two acts in between are the repair — an analyst answering off the uncertified path,
+      an engineer closing the gap — and they are the ones the two annotated frames below cover,
+      because that middle stretch is dense enough that the recording's own panels overlap and
+      the annotations say what a moving screen cannot.</p>
     <p class="bound">Nothing here is clicked by a human — this is the prototype's own demo mode
       running unattended. It is a design prototype rather than the running system, and the data
       is the synthetic <code>jaffle_shop</code> demo set.<span class="only-mobile"> This is a
       1280px interface and it does not survive being shrunk to a phone: what you have above is
-      the frame it ends on. The two annotated screenshots further down are the first and the
-      last of those acts, re-cropped for this width — those are the ones to read.</span></p>
+      the frame it ends on. The two annotated screenshots directly below are the first and the
+      last of those acts, re-cropped for this width — those are the ones to read. The full clip
+      is worth a laptop.</span></p>
   </figcaption>
 </figure>
+
+<div class="pair" id="annotated">
+  <figure>
+    <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-miss-ticket-mobile.png"
+              width="720" height="2272">
+      <img src="/assets/img/metaflow-miss-ticket.png" width="1920" height="1416"
+         alt="The prototype returning a MISS for an out-of-scope question, naming the blocker,
+         and handing off to the analyst triage queue as ticket T-0087. Four numbered annotations
+         mark the refusal, the handoff button, the ticket toast and the blocked-by field.">
+    </picture>
+    <figcaption><strong>Act one, stopped.</strong> The refusal is the feature. A question outside
+      the certified surface returns an explicit MISS that names the blocker — 8,611 orders with
+      no historical tier coverage — and turns into a ticket in the analyst queue instead of a
+      plausible-looking guess.</figcaption>
+  </figure>
+
+  <figure>
+    <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-provenance-mobile.png"
+              width="720" height="1710">
+      <img src="/assets/img/metaflow-provenance.png" width="1920" height="832" loading="lazy"
+         alt="The provenance card the prototype attaches to every answer, with its five fields
+         numbered and glossed: source asset, metric version, definition binding, certification
+         status with row count, and a re-verified checksum.">
+    </picture>
+    <figcaption><strong>Act four, stopped.</strong> The card the clip ends on, here on a
+      different question and with its five fields named. It ships with every answer: the
+      certified table the number came from, the metric version, and the definition the answer
+      was bound to — so “where did this number come from” has an answer that is not a
+      conversation.</figcaption>
+  </figure>
+</div>
 
 <p class="tryit"><a href="/demos/metaflow-prototype-en.html"><strong>Try the interactive
 prototype →</strong></a><span class="note">The same studio, in English, running in your browser —
 so you can ask the question yourself instead of watching it get asked. Built for a desktop
-window; on a phone it scrolls sideways. There is also the
+window; on a phone it scrolls sideways, and the two frames above are the readable version of
+those same screens. There is also the
 <a href="/demos/metaflow-prototype.html">original Chinese version</a>.</span></p>
 
 <section>
@@ -75,7 +112,7 @@ window; on a phone it scrolls sideways. There is also the
   is not elegance. It is that an IR is something a person can read <em>before</em> anything
   runs, and something a machine can check. A wrong answer stops being a mood and becomes an
   address: this field bound to the wrong measure, that filter dropped.</p>
-  <figure>
+  <figure class="fig-diagram">
     <img src="/assets/img/fig-1-ir-path.svg" width="800" height="540"
          alt="Two answering paths compared. The upper path goes from question straight to one opaque SQL step and then to a number, with no place to inspect. The lower path inserts a readable relational intermediate representation between the question and the SQL.">
     <figcaption>The only structural difference between the two paths is one box you are allowed
@@ -96,7 +133,7 @@ window; on a phone it scrolls sideways. There is also the
   expectations, and the FastAPI backend exposes a contracts endpoint that enforces them, so a
   rule I wrote down is a rule that runs. Contract as test.</p>
 
-  <figure>
+  <figure class="fig-diagram">
     <img src="/assets/img/fig-2-goldcase-grid.svg" width="800" height="420" loading="lazy"
          alt="A grid of twenty gold-case scenarios across five pipeline stages, with one cell marked to show where a schema change surfaced.">
     <figcaption>The marked cell is the point: a failure reports which stage, on which case — not
@@ -112,37 +149,9 @@ window; on a phone it scrolls sideways. There is also the
   fix behind a refusal goes through lineage analysis, a dry run and an explicit owner approval
   before it ships.</p>
 
-  <p>Two of those four are worth stopping the clip on, because the annotations say what a
-  moving screen cannot.</p>
-
-  <figure class="wide">
-    <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-miss-ticket-mobile.png"
-              width="720" height="2272">
-      <img src="/assets/img/metaflow-miss-ticket.png" width="1920" height="1416" loading="lazy"
-         alt="The prototype returning a MISS for an out-of-scope question, naming the blocker,
-         and handing off to the analyst triage queue as ticket T-0087. Four numbered annotations
-         mark the refusal, the handoff button, the ticket toast and the blocked-by field.">
-    </picture>
-    <figcaption>The refusal is the feature. A question outside the certified surface returns an
-      explicit MISS that names the blocker — 8,611 orders with no historical tier coverage — and
-      turns into a ticket in the analyst queue instead of a plausible-looking guess.</figcaption>
-  </figure>
-
-  <figure class="wide">
-    <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-provenance-mobile.png"
-              width="720" height="1710">
-      <img src="/assets/img/metaflow-provenance.png" width="1920" height="832" loading="lazy"
-         alt="The provenance card the prototype attaches to every answer, with its five fields
-         numbered and glossed: source asset, metric version, definition binding, certification
-         status with row count, and a re-verified checksum.">
-    </picture>
-    <figcaption>The card the clip ends on, here on a different question and with its five fields
-      named. It ships with every answer: the certified table the number came from, the metric
-      version, and the definition the answer was bound to — so “where did this number come from”
-      has an answer that is not a conversation.</figcaption>
-  </figure>
+  <p>The first and the last of those ideas are the two frames at the top of this page: the
+  explicit refusal, and the provenance card that ships with the answer once the gap behind the
+  refusal has been closed.</p>
 
   <p class="golink"><a href="/demos/metaflow-prototype-en.html">Open the prototype and ask it
     something yourself →</a></p>

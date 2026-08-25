@@ -24,7 +24,7 @@ phenotyping and plateau detection built on them. This is supervised research wit
 co-authors — the poster below is the group's work and I am one author on it, not its
 owner.</p>
 
-<dl class="stack deltas">
+<dl class="stack deltas band">
   <div>
     <dt>Raw step records reconciled onto one daily timeline</dt>
     <dd><strong>400K+</strong></dd>
@@ -81,25 +81,32 @@ bottom of this page is why I write it with a tilde.</p>
   minimum wait of eight weeks and a slope condition is, structurally, an admission that v1 could
   call one too early. Both versions stay visible so the change is auditable.</p>
 
-  <figure>
-    <img src="/assets/img/sure-plateau-definitions.png" width="1200" height="1115"
-         alt="Box plots of plateau start day under three different definitions of stable recovery, for the same patient cohort.">
-    <figcaption>Same patients, three definitions of “stable recovery” — three visibly different
-      medians and three different spreads. Choosing the definition <em>is</em>
-      the analysis.
-      <span class="src">From: Dai, Liu, Lavieri, Moosavi &amp; Golbus,
-      <em>Patient-Tailored Cardiac Rehab Discharge Policies via Operations Research
-      Methods</em>, U-M SURE poster, 2025.</span></figcaption>
-  </figure>
+  <div class="plate">
+    <figure class="fig-plate">
+      <img src="/assets/img/sure-plateau-definitions.png" width="1200" height="1115"
+           alt="Box plots of plateau start day under three different definitions of stable recovery, for the same patient cohort.">
+      <figcaption>Plateau 1 / 2 / 3 on the vertical axis are the v1 / v2 / v3 above, reading
+        upwards from the bottom. Same patients, three definitions of “stable recovery” — three
+        visibly different medians and three different spreads. Choosing the definition
+        <em>is</em> the analysis.<span class="only-mobile"> Poster original, printed at
+        1200px; the axis labels resolve at laptop width, not this one.</span></figcaption>
+    </figure>
 
-  <figure>
-    <img src="/assets/img/sure-step-variability.png" width="1200" height="1190" loading="lazy"
-         alt="Box plots of daily step counts across percentiles, split by the dataset's recorded gender field.">
-    <figcaption>The boxes widen sharply from left to right. At the top of each
-      patient's own step distribution, patients differ from one another far more than they do at
-      the median. A fixed 36-session protocol treats all of them the same.
-      <span class="src">Same poster. Presented at the U-M SURE Symposium, 2025.</span></figcaption>
-  </figure>
+    <figure class="fig-plate">
+      <img src="/assets/img/sure-step-variability.png" width="1200" height="1190" loading="lazy"
+           alt="Box plots of daily step counts across percentiles, split by the dataset's recorded gender field.">
+      <figcaption>The boxes widen sharply from left to right. At the top of each
+        patient's own step distribution, patients differ from one another far more than they do
+        at the median. A fixed 36-session protocol treats all of them the same.</figcaption>
+    </figure>
+
+    <span class="src">Both figures are excerpts from one artifact: Dai, Liu, Lavieri, Moosavi
+      &amp; Golbus, <em>Patient-Tailored Cardiac Rehab Discharge Policies via Operations
+      Research Methods</em>, poster presented at the U-M SURE Symposium, 2025. They are
+      reproduced here at the size they were exported at; nothing inside either image has been
+      altered, which is also why one is base R on white and the other is ggplot2 on
+      grey.</span>
+  </div>
 </section>
 
 <section>
