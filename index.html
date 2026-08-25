@@ -28,8 +28,14 @@
   </ul>
 </header>
 
+<!-- Six anchors do not fit one row on a phone, and a wrapped nav costs 44px of a
+     844px first screen — which is what was pushing the first project name under the
+     fold. The three marked .more are the three a phone reader reaches by scrolling
+     anyway; they are shown from 44rem up. -->
 <nav class="top">
-  <a href="#work">Work</a><a href="#writing">Writing</a><a href="#experience">Experience</a><a href="#education">Education</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
+  <a href="#work">Work</a><a href="#experience">Experience</a><a href="#writing">Writing</a><a
+    class="more" href="#education">Education</a><a class="more" href="#skills">Skills</a><a
+    class="more" href="#contact">Contact</a>
 </nav>
 
 <!-- ============================ WORK ============================ -->
@@ -82,21 +88,6 @@
     </li>
 
   </ul>
-</section>
-
-<!-- ============================ WRITING ============================ -->
-<section id="writing">
-  <h2>Writing</h2>
-  <article class="item" style="padding-top:0">
-    <h3><a href="/writing/closed-loop/">The loop — notes on making an NL-to-SQL answer
-      checkable</a></h3>
-    <p class="role">August 2026 · ~9 min</p>
-    <p>Most natural-language-to-SQL demos give you a number and no way to tell whether it is
-      right. This is what I changed in my own projects to make that different, and what it cost:
-      an intermediate representation you can read before anything runs, and the step people
-      skip — turning each fix into a guardrail so the same mistake cannot happen twice.</p>
-    <p class="golink"><a href="/writing/closed-loop/">Read →</a></p>
-  </article>
 </section>
 
 <!-- ============================ EXPERIENCE ============================ -->
@@ -154,6 +145,35 @@
     </article>
 
   </div>
+</section>
+
+<!-- ============================ WRITING ============================ -->
+<!-- Writing sits between the jobs and the credentials, not directly under the cards.
+     Above the cards' last frame the page already changes density twice; below it,
+     experience → education → skills used to run 2,663px (four phone screens) with
+     nothing to look at. This section is the one block in that stretch that owns a
+     figure, so it is the one that breaks it. -->
+<section id="writing">
+  <h2>Writing</h2>
+  <article class="item" style="padding-top:0">
+    <h3><a href="/writing/closed-loop/">The loop — notes on making an NL-to-SQL answer
+      checkable</a></h3>
+    <p class="role">August 2026 · ~9 min</p>
+    <p>Most natural-language-to-SQL demos give you a number and no way to tell whether it is
+      right. This is what I changed in my own projects to make that different, and what it cost:
+      an intermediate representation you can read before anything runs, and the step people
+      skip — turning each fix into a guardrail so the same mistake cannot happen twice.</p>
+    <figure>
+      <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
+           alt="A four-step ring — Measure, Locate, Fix, Add a guardrail — turning around a
+           dark card labelled “grows with every failure”. The guardrail step is highlighted in
+           blue as the one that gets skipped; two dashed cards name the instances it is drawn
+           from, MetaFlow and the capstone flywheel.">
+      <figcaption>The essay's figure: the fourth step is the one that gets skipped, and it is
+        the only one that makes the next run cheaper.</figcaption>
+    </figure>
+    <p class="golink"><a href="/writing/closed-loop/">Read →</a></p>
+  </article>
 </section>
 
 <!-- ============================ EDUCATION ============================ -->

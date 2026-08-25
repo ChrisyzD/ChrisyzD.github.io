@@ -107,6 +107,11 @@ nav.top a { display: inline-flex; align-items: center; min-height: 44px; margin-
    Deep pages keep theirs blue: there the same element is the only way out. */
 nav.top a[href^="#"] { color: var(--meta); }
 nav.top a[href^="#"]:hover { color: var(--link); }
+/* Same arithmetic as .contact below: six anchors measure 398px against a phone's
+   350px, so the row wrapped and cost 44px of the first screen. Education, Skills and
+   Contact are the three a phone reader scrolls to anyway — and #contact was never a
+   destination, it lands you at the page's own bottom. Three anchors measure 193px. */
+nav.top .more { display: none; }
 
 section { margin-bottom: 64px; }
 section:last-of-type { margin-bottom: 40px; }
@@ -134,10 +139,14 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 .sowhat { margin-top: 16px; }
 .sowhat strong { letter-spacing: .02em; }
 
-/* One row wherever it fits, including on a phone: stacked, these three links ate
-   132px of a 844px first screen and pushed every project name below the fold. */
+/* One row wherever it fits, including on a phone. This used to say that and not do
+   it: flex-wrap only permits a row, it does not make one fit, and at the body size
+   with a 24px gap these three links measure 373px against the 350px a 390px phone
+   has — so they wrapped anyway, 88px tall with one orphan on the second line, and
+   the first project name stayed under the fold. At the nav's own 15px with a 16px
+   gap they measure 318px and the row is real. */
 .contact { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-wrap: wrap;
-           gap: 0 24px; }
+           gap: 0 16px; font-size: 15px; }
 .contact li { margin: 0; }
 .contact a { display: inline-flex; align-items: center; min-height: 44px; }
 
@@ -147,7 +156,15 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
    No shadow, no gradient, no hover lift: the only state change is the border
    and the title color. */
 
-.cards { display: grid; gap: 24px; margin: 0; padding: 0; list-style: none; }
+/* align-items: two of the four cards carry a frame and two do not, and a grid row
+   stretches its items to match the tallest. That left the two without one 50% and 52%
+   empty at the bottom — the first thing under the fold on the home page was a pair of
+   half-empty boxes. Cards size to their own content instead. The two that open with a
+   clip are taller because they are carrying something, which is the honest reason to
+   be taller; the alternative was to hand the other two a cropped strip of a co-authored
+   poster plot in a palette this site does not otherwise use. */
+.cards { display: grid; align-items: start; gap: 24px; margin: 0; padding: 0;
+         list-style: none; }
 
 .card {
   position: relative;
@@ -274,26 +291,34 @@ figcaption .src { display: block; margin-top: 4px; }
 .clip { margin: 24px -20px 40px; }
 .clip video { background: #f5f6f7; border-left: 0; border-right: 0; border-radius: 0; }
 
-/* One of the two clips is a 1280px interface with 12px type in it. Full-bleed on a
-   phone hands the site's widest layout slot — the one place the layout changes shape
-   rather than just getting narrower — to the single object a phone cannot resolve,
-   and the only thing left readable in it at that size is the disclaimer burnt into
-   its bottom edge. So this one stays inside the gutter, and below 900px it does not
-   start itself: you get the poster (the last act, all provenance checks green) and a
-   play button, and the two re-cropped screenshots further down the page are what
-   carries the argument at phone width. */
-.clip-dense { margin-inline: 0; }
-.clip-dense video { border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
+/* Full-bleed is a slot, and a slot is a claim about how much the thing in it is worth
+   looking at. Both clips used to get it on a phone, which meant the site's widest slot
+   went to whichever clip happened to be on screen. Neither takes it now:
+   - MetaFlow is a 1280px interface with 11–12px type in it. Full-bleed at 390px hands
+     the widest slot to the one object a phone cannot resolve, and the only thing left
+     readable in it at that size is the disclaimer burnt into its bottom edge. It stays
+     inside the gutter, and below 900px it does not start itself either: you get the
+     poster (the last act, all provenance checks green) and a play button, and the two
+     re-cropped screenshots further down the page carry the argument at phone width.
+     What it gets instead is width where width buys something — see the 1400px rule.
+   - The EMG clip is the least dense object on the site: a grey counter box, a MATLAB
+     trace whose axis ticks do not resolve below ~600px anyway, and a saturated teal
+     gradient that is the one place this site has a colour it does not otherwise use.
+     It was the one getting 390px edge to edge. Inside the gutter it loses 10% of its
+     width on a phone and, having dropped .wide, 34% on a desktop — and the teal loses
+     56% of its area. Nothing in it needed those pixels. */
+.clip-inset { margin-inline: 0; }
+.clip-inset video { border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
                     border-radius: 2px; }
 /* The clip breaks the prose measure; its explanation does not. A wide frame
    over a normal column of text reads as one object with a caption, not as two
    competing widths. */
 .clip figcaption { font-size: 15px; line-height: 1.6; color: var(--text); margin-top: 16px;
                    max-width: 42rem; margin-inline: auto; padding: 0 20px; }
-/* …except this one, which is not full-bleed at any width, so it never needs the
-   gutter cancelled. Without this its caption sits 20px right of every paragraph on
-   the page — the same step this round removed from the desktop layout. */
-.clip-dense figcaption { padding: 0; }
+/* …except these, which are not full-bleed at any width, so they never need the
+   gutter cancelled. Without this the caption sits 20px right of every paragraph on
+   the page — the same step an earlier round removed from the desktop layout. */
+.clip-inset figcaption { padding: 0; }
 .clip figcaption p { margin: 0 0 8px; }
 .clip figcaption p:last-child { margin-bottom: 0; }
 /* Third beat of the caption: the boundary, in the same grey as every other
@@ -317,6 +342,16 @@ figcaption .src { display: block; margin-top: 4px; }
      a third left edge, and 14px grey type running 130 characters to the line. Prose
      is prose: same width, same edge, whatever it is sitting under. */
   figure.wide figcaption { max-width: 42rem; margin-inline: auto; padding: 0 20px; }
+}
+
+/* The MetaFlow clip is the primary evidence on this site and it is a native 1280px
+   screen recording: at the 960 cap it rendered at 75%, which puts its `M001–M004`,
+   `semantic_capability_miss` and `8,611-order temporal coverage gap` at about 8px.
+   A laptop has the room — 94vw at 1440 is 1353 — so above 1400 the cap is the clip's
+   own 1280 plus its two hairline borders, and every pixel in it is one of its own. */
+@media (min-width: 1400px) {
+  figure.wide.clip-inset { width: min(94vw, 1282px);
+                           margin-inline: calc(50% - min(47vw, 641px)); }
 }
 
 /* Matches the (max-width: 899px) <source> breakpoint used for the mobile
@@ -378,8 +413,12 @@ footer.site a { color: var(--link); }
   .row { flex-direction: row; justify-content: space-between; align-items: baseline; gap: 16px; }
   .deltas div { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
   .deltas dd { margin: 0; }
+  /* The row fits at the body size here — 391px of a 632px column — so it goes back
+     to it. The 15px above is a phone measure, not a decision about this row. */
+  .contact { font-size: inherit; gap: 0 24px; }
   .contact a { min-height: 0; }
   nav.top a, .pager a, footer.site a { display: inline; min-height: 0; }
+  nav.top .more { display: inline; }
   .golink a, .tryit a, .note a, .linklist a { display: inline; min-height: 0; }
   /* The one exit that is not the card's own destination keeps a box around it. 18px
      of line meant two pixels of vertical slip landed you on a different page. The
@@ -399,25 +438,28 @@ footer.site a { color: var(--link); }
   .scope { margin-left: -14px; }
   .thoughts-body, .pull { margin-left: -18px; }
   .cards { grid-template-columns: 1fr 1fr; }
-  /* The demo row sits at the bottom of its card so the four titles line up
-     across the grid regardless of which card carries it. */
+  /* Kept for the case where a card is taller than its own content — it never is
+     now that the grid stops stretching them, but a card that grows a fifth line
+     should still not leave its demo row floating in the middle. */
   .card .go { margin-top: auto; margin-bottom: 0; }
   .pager { display: flex; flex-wrap: wrap; gap: 8px 24px; }
   .pager li { margin-bottom: 0; }
 }
 
-/* Four index cards two-up at the prose measure gave each one a 320px column and
-   a title that wrapped to three lines. The work index, and only the work index,
-   gets the wider column — and its heading and its intro go with it. A section rule
-   that stops 164px short of the cards it introduces is not hierarchy, it is a
-   heading that does not govern its content. The intro keeps a prose measure inside
-   the wider block, so the section still has exactly one left edge. */
+/* Four index cards two-up at the prose measure gave each one a 320px column and a
+   title that wrapped to three lines. The work index, and only the work index, gets
+   the wider column. Its heading and its intro used to go with it, which put the
+   SELECTED WORK rule 164px left of and 328px longer than the other four section
+   rules on a page that is otherwise one column — a second left edge, and this site
+   already answered that question the other way: figure.wide breaks the measure and
+   its figcaption does not, because a wide object is a wide object and prose is
+   prose. Same grammar here. The grid breaks out; the words that introduce it stay
+   on the one left edge every other line of the page is on. */
 @media (min-width: 60rem) {
-  .cards, #work > h2, #work > .meta {
+  .cards {
     width: min(94vw, 960px);
     margin-inline: calc(50% - min(47vw, 480px));
   }
-  #work > .meta { max-width: 42rem; margin-right: auto; }
 }
 
 /* ---------- motion ---------- */
@@ -437,8 +479,7 @@ footer.site a { color: var(--link); }
   a[href^="http"]::after,
   a[href^="/"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
   figure, .card { break-inside: avoid; }
-  figure.wide, .cards, #work > h2, #work > .meta { width: auto; max-width: none;
-                                                   margin-inline: 0; }
+  figure.wide, .cards { width: auto; max-width: none; margin-inline: 0; }
   figure.wide figcaption { max-width: none; margin-inline: 0; padding: 0; }
   body.essay > * { max-width: none; }
   .card { border: 0; padding: 0; }
