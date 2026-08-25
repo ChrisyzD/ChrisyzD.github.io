@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="540" viewBox="0 0 800 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-1-ir-path-title fig-1-ir-path-desc">
+  <title id="fig-1-ir-path-title">Two ways to answer a question</title>
+  <desc id="fig-1-ir-path-desc">Two answering paths compared. The upper path goes from question straight to one opaque SQL step and then to a number, with no place to inspect. The lower path inserts a readable relational intermediate representation between the question and the SQL, so a wrong answer has an address.</desc>
+  <defs>
+    <style>
+      .s  { font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; }
+      .m  { font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .ttl{ font-size:26px; font-weight:600; fill:#16181d; letter-spacing:-0.01em; }
+      .sub{ font-size:14px; font-weight:400; fill:#5b6068; }
+      .eyb{ font-size:9px;  font-weight:500; fill:#5b6068; letter-spacing:0.18em; }
+      .nam{ font-size:16px; font-weight:600; fill:#16181d; }
+      .slb{ font-size:10px; font-weight:400; fill:#5b6068; }
+      .off{ fill:#8b9198; }
+      .acc{ fill:#0b5cad; }
+      .asd{ font-size:14px; font-style:italic; fill:#0b5cad; }
+      .lgd{ font-size:10px; fill:#5b6068; }
+    </style>
+    <marker id="f1-arw" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5b6068"/></marker>
+    <marker id="f1-arw-soft" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8b9198"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <!-- header -->
+  <text class="m eyb" x="40" y="48">FIG. 1 · METAFLOW · QUESTION → ANSWER</text>
+  <text class="s ttl" x="40" y="84">Two ways to answer a question</text>
+  <text class="s sub" x="40" y="112">An IR is a structured object that states what the system intends to compute.</text>
+
+  <!-- ============ track A : no checkpoint ============ -->
+  <text class="m eyb off" x="40" y="170">WITHOUT AN IR — WHEN IT IS WRONG, NOTHING TELLS YOU</text>
+
+  <line x1="184" y1="216" x2="232" y2="216" stroke="#8b9198" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#f1-arw-soft)"/>
+  <line x1="568" y1="216" x2="616" y2="216" stroke="#8b9198" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#f1-arw-soft)"/>
+
+  <rect x="40"  y="184" width="144" height="64" rx="6" fill="#ffffff"/>
+  <rect x="40"  y="184" width="144" height="64" rx="6" fill="rgba(22,24,29,0.02)" stroke="rgba(22,24,29,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+  <text class="s nam off" x="112" y="216" text-anchor="middle">Question</text>
+  <text class="m slb off" x="112" y="234" text-anchor="middle">natural language</text>
+
+  <rect x="232" y="184" width="336" height="64" rx="6" fill="#ffffff"/>
+  <rect x="232" y="184" width="336" height="64" rx="6" fill="rgba(22,24,29,0.02)" stroke="rgba(22,24,29,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+  <text class="s nam off" x="400" y="216" text-anchor="middle">SQL</text>
+  <text class="m slb off" x="400" y="234" text-anchor="middle">one opaque step</text>
+
+  <rect x="616" y="184" width="144" height="64" rx="6" fill="#ffffff"/>
+  <rect x="616" y="184" width="144" height="64" rx="6" fill="rgba(22,24,29,0.02)" stroke="rgba(22,24,29,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+  <text class="s nam off" x="688" y="216" text-anchor="middle">Number</text>
+  <text class="m slb off" x="688" y="234" text-anchor="middle">no address</text>
+
+  <!-- ============ track B : one checkpoint ============ -->
+  <text class="m eyb" x="40" y="314">WITH AN IR — A WRONG ANSWER HAS AN ADDRESS</text>
+
+  <line x1="184" y1="360" x2="232" y2="360" stroke="#5b6068" stroke-width="1" marker-end="url(#f1-arw)"/>
+  <line x1="376" y1="360" x2="424" y2="360" stroke="#5b6068" stroke-width="1" marker-end="url(#f1-arw)"/>
+  <line x1="568" y1="360" x2="616" y2="360" stroke="#5b6068" stroke-width="1" marker-end="url(#f1-arw)"/>
+
+  <rect x="40"  y="328" width="144" height="64" rx="6" fill="#ffffff" stroke="#16181d" stroke-width="1"/>
+  <text class="s nam" x="112" y="360" text-anchor="middle">Question</text>
+  <text class="m slb" x="112" y="378" text-anchor="middle">natural language</text>
+
+  <!-- focal : the inspectable checkpoint -->
+  <rect x="232" y="328" width="144" height="64" rx="6" fill="rgba(11,92,173,0.07)" stroke="#0b5cad" stroke-width="1.2"/>
+  <circle cx="288" cy="354" r="8" fill="none" stroke="#0b5cad" stroke-width="1.2"/>
+  <line x1="294" y1="360" x2="300" y2="366" stroke="#0b5cad" stroke-width="1.2" stroke-linecap="round"/>
+  <text class="s nam acc" x="312" y="360" text-anchor="start">IR</text>
+  <text class="m slb acc" x="304" y="380" text-anchor="middle">structured</text>
+
+  <rect x="424" y="328" width="144" height="64" rx="6" fill="#ffffff" stroke="#16181d" stroke-width="1"/>
+  <text class="s nam" x="496" y="360" text-anchor="middle">SQL</text>
+  <text class="m slb" x="496" y="378" text-anchor="middle">compiled from IR</text>
+
+  <rect x="616" y="328" width="144" height="64" rx="6" fill="#ffffff" stroke="#16181d" stroke-width="1"/>
+  <text class="s nam" x="688" y="360" text-anchor="middle">Number</text>
+  <text class="m slb" x="688" y="378" text-anchor="middle">has an address</text>
+
+  <!-- editorial aside -->
+  <path d="M 404 434 Q 350 428 306 398" fill="none" stroke="rgba(11,92,173,0.50)" stroke-width="1" stroke-dasharray="4,3"/>
+  <circle cx="304" cy="396" r="2" fill="#0b5cad"/>
+  <text class="s asd" x="412" y="440">you can read this before it runs</text>
+
+  <!-- legend -->
+  <line x1="40" y1="480" x2="760" y2="480" stroke="#e3e5e8" stroke-width="0.8"/>
+  <text class="m eyb" x="40" y="504" letter-spacing="0.14em">LEGEND</text>
+  <line x1="128" y1="500" x2="156" y2="500" stroke="#8b9198" stroke-width="1" stroke-dasharray="5,4"/>
+  <text class="s lgd" x="164" y="504">no step you can inspect</text>
+  <line x1="336" y1="500" x2="364" y2="500" stroke="#5b6068" stroke-width="1"/>
+  <text class="s lgd" x="372" y="504">step you can inspect</text>
+  <rect x="544" y="493" width="14" height="12" rx="2" fill="rgba(11,92,173,0.07)" stroke="#0b5cad" stroke-width="1"/>
+  <text class="s lgd" x="566" y="504">the checkpoint</text>
+</svg>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="736" viewBox="0 0 800 736" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-4-one-second-six-stations-title fig-4-one-second-six-stations-desc">
+  <title id="fig-4-one-second-six-stations-title">One second on stage, six stations backstage</title>
+  <desc id="fig-4-one-second-six-stations-desc">A certified answer returned in about a second sits on a narrow bar at the top. Below it, six widening layers show the work that holds it up: audit, definition decision, repair, semantic asset, contract, and daily re-verification.</desc>
+  <defs>
+    <style>
+      .s  { font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; }
+      .m  { font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .ttl{ font-size:26px; font-weight:600; fill:#16181d; letter-spacing:-0.01em; }
+      .sub{ font-size:14px; font-weight:400; fill:#5b6068; }
+      .eyb{ font-size:9px;  font-weight:500; fill:#5b6068; letter-spacing:0.18em; }
+      .tag{ font-size:9px;  font-weight:400; fill:#8b9198; letter-spacing:0.08em; }
+      .nam{ font-size:14px; font-weight:600; fill:#16181d; }
+      .slb{ font-size:10px; font-weight:400; fill:#5b6068; }
+      .note{ font-size:9px; fill:#8b9198; letter-spacing:0.04em; }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <!-- header -->
+  <text class="m eyb" x="40" y="48">FIG. 4 · ONE CERTIFIED NUMBER</text>
+  <text class="s ttl" x="40" y="84">One second on stage, six stations backstage</text>
+  <text class="s sub" x="40" y="112">What a chat box returns in about a second, and everything standing behind it.</text>
+
+  <!-- on stage : the focal moment -->
+  <text class="m eyb" x="400" y="150" text-anchor="middle">ON STAGE</text>
+  <rect x="260" y="160" width="280" height="56" rx="6" fill="rgba(11,92,173,0.07)" stroke="#0b5cad" stroke-width="1.4"/>
+  <text class="s" x="400" y="188" text-anchor="middle" font-size="20" font-weight="600" fill="#0b5cad">$340,955.56</text>
+  <text class="m" x="400" y="206" text-anchor="middle" font-size="10" fill="rgba(11,92,173,0.85)">one question &#183; about a second</text>
+
+  <!-- backstage divider -->
+  <text class="m eyb" x="40" y="244">BACKSTAGE &#183; EACH STATION CARRIES THE ONE ABOVE IT</text>
+  <line x1="40" y1="252" x2="760" y2="252" stroke="#e3e5e8" stroke-width="0.8"/>
+
+  <!-- six widening layers -->
+  <rect x="200" y="280" width="400" height="56" rx="6" fill="#ffffff" stroke="rgba(22,24,29,0.28)" stroke-width="1"/>
+  <text class="m tag" x="216" y="314">01</text>
+  <text class="s nam" x="244" y="314">Audit</text>
+  <text class="m slb" x="584" y="314" text-anchor="end">8,611 of 50,000 orders had no tier</text>
+
+  <rect x="176" y="344" width="448" height="56" rx="6" fill="#ffffff" stroke="rgba(22,24,29,0.28)" stroke-width="1"/>
+  <text class="m tag" x="192" y="378">02</text>
+  <text class="s nam" x="220" y="378">Definition decision</text>
+  <text class="m slb" x="608" y="378" text-anchor="end">tier at order time &#183; owner + reason</text>
+
+  <rect x="152" y="408" width="496" height="56" rx="6" fill="#ffffff" stroke="rgba(22,24,29,0.28)" stroke-width="1"/>
+  <text class="m tag" x="168" y="442">03</text>
+  <text class="s nam" x="196" y="442">Repair</text>
+  <text class="m slb" x="632" y="442" text-anchor="end">patch &#183; dry run &#183; verify &#183; rollback</text>
+
+  <rect x="128" y="472" width="544" height="56" rx="6" fill="#ffffff" stroke="rgba(22,24,29,0.28)" stroke-width="1"/>
+  <text class="m tag" x="144" y="506">04</text>
+  <text class="s nam" x="172" y="506">Semantic asset</text>
+  <text class="m slb" x="656" y="506" text-anchor="end">certified table &#183; capability list</text>
+
+  <rect x="104" y="536" width="592" height="56" rx="6" fill="#ffffff" stroke="rgba(22,24,29,0.28)" stroke-width="1"/>
+  <text class="m tag" x="120" y="570">05</text>
+  <text class="s nam" x="148" y="570">Contract</text>
+  <text class="m slb" x="680" y="570" text-anchor="end">expected value &#183; counter-examples</text>
+
+  <rect x="80" y="600" width="640" height="56" rx="6" fill="#ffffff" stroke="rgba(22,24,29,0.28)" stroke-width="1"/>
+  <text class="m tag" x="96" y="634">06</text>
+  <text class="s nam" x="124" y="634">Daily re-verification</text>
+  <text class="m slb" x="704" y="634" text-anchor="end">a failing check takes the number down</text>
+
+  <!-- source note -->
+  <line x1="40" y1="684" x2="760" y2="684" stroke="#e3e5e8" stroke-width="0.8"/>
+  <text class="m note" x="40" y="704">FIGURES FROM METAFLOW_JAFFLE_TESTKIT, A PUBLIC DEMO DATASET.</text>
+</svg>

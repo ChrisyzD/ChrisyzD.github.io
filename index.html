@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yizhe Dai — data engineering &amp; AI evaluation</title>
+<meta name="description" content="Yizhe Dai builds the measurement layer for data and AI systems: evaluation harnesses, metadata contracts, and pipelines that make an answer checkable.">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="canonical" href="https://chrisyzd.github.io/">
+</head>
+<body>
+
+<header class="site">
+  <h1>Yizhe Dai</h1>
+
+  <p class="lead">I build the measurement layer for data and AI systems — evaluation
+  harnesses, metadata contracts, and the pipelines that make an answer checkable before
+  anyone trusts it.</p>
+
+  <p class="meta">M.S. Health Data Science, Harvard (2026–2028) · previously AI Solutions
+  @ Lark, ByteDance · data engineering and AI research at Michigan</p>
+
+  <p class="meta">Seeking Summer 2027 internships — data engineering / AI solutions.
+  F-1, CPT-eligible.</p>
+
+  <ul class="contact">
+    <li><a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a></li>
+    <li><a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a></li>
+    <li><a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a></li>
+  </ul>
+
+  <p style="margin-top:16px">→ Read:
+    <a href="/writing/closed-loop/">The loop — notes on making an NL-to-SQL answer checkable</a></p>
+</header>
+
+<nav class="top">
+  <a href="#work">Work</a><a href="#writing">Writing</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
+</nav>
+
+<!-- ============================ WORK ============================ -->
+<section id="work">
+  <h2>Selected work</h2>
+
+  <!-- 1 -->
+  <article class="item">
+    <h3>MetaFlow — metadata-centric NL-to-SQL</h3>
+    <p class="role">Mar 2026 – present · Two-person project · I own the metadata &amp;
+      evaluation layer; my collaborator owns the NL→IR→SQL engine</p>
+    <p>A system that resolves a natural-language question into SQL through an inspectable
+      relational intermediate representation instead of generating SQL directly — so a wrong
+      answer has an address you can point at.</p>
+    <ul>
+      <li>Own the metadata and evaluation layer: <strong>20 gold-case scenarios</strong> for
+        SQL regression, each pinned across all five pipeline stages as version-controlled
+        expectations, so a metadata or schema change is caught by re-running the suite, not
+        spot-checked by hand.</li>
+      <li>Build the FastAPI backend on <strong>PostgreSQL</strong> — including the contracts
+        endpoint that enforces data-quality rules as contract-as-test — and the
+        React/TypeScript studio front end.</li>
+    </ul>
+
+    <figure>
+      <img src="/assets/img/metaflow-capabilities.png" width="1400" height="1341"
+           alt="MetaFlow prototype: a certified capability catalog on the left, and a question that hits a certified definition returning a monthly revenue table.">
+      <figcaption>What to look at: the catalog on the left is the whole answerable surface.
+        A question that lands inside it comes back naming its metric, currency and grain;
+        the metrics that failed certification sit in the box at the bottom left and stay
+        unanswerable. <strong>Design prototype — not the running system.</strong>
+        <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
+        testkit.</span></figcaption>
+    </figure>
+
+    <p><a href="/work/metaflow/">More on MetaFlow — who did what, how I check it, prototype →</a></p>
+    <p class="sowhat"><strong>So what:</strong> I can design the part of a data system that
+      decides whether an answer is allowed to be trusted, and I test it the way I would test
+      code.</p>
+  </article>
+
+  <!-- 2 -->
+  <article class="item">
+    <h3>LLM Data Flywheel for In-Vehicle Voice Assistants</h3>
+    <p class="role">Jun – Aug 2026 · Undergraduate thesis, UM–SJTU Joint Institute · Python</p>
+    <p>I owned the data pillar of a multi-model in-vehicle voice assistant: instead of
+      generating more training data everywhere, measure first, then regenerate only where the
+      failures are.</p>
+    <ul>
+      <li>Built a user simulator (<strong>41 persona archetypes</strong>, explicit state
+        control) with retrieval-grounded rollouts, LLM-judge scoring and a deterministic
+        governance layer, yielding <strong>17,200</strong> verified (reward = 1) fine-tuning
+        dialogues, with targeted error-regeneration on the <strong>11</strong> highest-error
+        functions.</li>
+      <li>Fine-tuning on this corpus raised judge-adjusted answer acceptance
+        <strong>72.8% → 82.7%</strong>, lifted the strict multi-turn all-correct rate
+        <strong>39.9% → 60.0%</strong>, and cut no-tool false positives
+        <strong>4,424 → 1,410</strong>.</li>
+    </ul>
+
+    <figure>
+      <img src="/assets/img/fig-5-data-flywheel.svg" width="800" height="776" loading="lazy"
+           alt="Diagram of a six-step training-data flywheel: simulate, roll out, judge, locate the eleven highest-error functions, regenerate, re-evaluate.">
+      <figcaption>What to look at: the step that does the work is <em>locate</em>. The judge's
+        value was not the score — it was the error breakdown that made eleven functions
+        visible, so regeneration could be aimed instead of sprayed.</figcaption>
+    </figure>
+
+    <p class="sowhat"><strong>So what:</strong> the same loop as MetaFlow, in a different
+      domain: build the ruler first, and let it tell you where to spend.</p>
+  </article>
+
+  <!-- 3 -->
+  <article class="item">
+    <h3>Cardiac Rehabilitation Wearable Study</h3>
+    <p class="role">Apr 2025 – Jan 2026 · Research assistant (SURE summer program, then
+      continued on the study) · University of Michigan</p>
+    <p>Cardiac rehab is prescribed as a fixed 36-session protocol for everyone. The question
+      was whether wearable data can say when a given patient has actually stopped improving.</p>
+    <ul>
+      <li>Assembled the analysis dataset: reconciled <strong>400K+</strong> raw step records
+        from multiple sources onto one per-patient daily timeline, and set missing-value and
+        cleaning rules that cut 247 enrolled patients to a
+        <strong>191-patient analysis cohort</strong>.</li>
+      <li>Engineered temporal features (rolling averages, trend slope, periodicity) feeding
+        K-means/PCA phenotyping and plateau detection against the standard 36-session model;
+        <strong>~68%</strong> of that cohort had suboptimal discharge timing.</li>
+    </ul>
+
+    <dl class="stack">
+      <div><dt>Cleaning</dt><dd>DateTime standardization · type unification · missing-value
+        marking · exercise-time capping (&gt; 300 min) · step-count anomaly detection</dd></div>
+      <div><dt>Features</dt><dd>2-week / 4-week moving averages · week-over-week change rate ·
+        trend slope · coefficient of variation · stable-week count</dd></div>
+      <div><dt>Plateau detection</dt><dd>v1: change rate &lt; 20%, CV &lt; 0.30, duration
+        ≥ 3 weeks → v2: minimum wait 8 weeks, moving-average slope &lt; 200, change rate
+        &lt; 25%, multi-metric. Later extended with a Kalman-filter approach.</dd></div>
+      <div><dt>Phenotyping</dt><dd>K-means (k = 2): higher-baseline / stable-progression /
+        later-plateau <strong>vs</strong> lower-baseline / slower-progress /
+        earlier-plateau</dd></div>
+    </dl>
+
+    <figure>
+      <img src="/assets/img/sure-plateau-definitions.png" width="1200" height="1115" loading="lazy"
+           alt="Box plots of plateau start day under three different definitions of stable recovery, for the same patient cohort.">
+      <figcaption>What to look at: same patients, three definitions of “stable recovery”.
+        Different plateau definitions can lead to a 2× difference in estimated plateau timing
+        (50 vs 100 days). Choosing the definition <em>is</em> the analysis.
+        <span class="src">From: Dai, Liu, Lavieri, Moosavi &amp; Golbus,
+        <em>Patient-Tailored Cardiac Rehab Discharge Policies via Operations Research
+        Methods</em>, U-M SURE poster, 2025.</span></figcaption>
+    </figure>
+
+    <figure>
+      <img src="/assets/img/sure-step-variability.png" width="1200" height="1190" loading="lazy"
+           alt="Box plots of daily step counts across percentiles, split by sex.">
+      <figcaption>What to look at: variability grows sharply at the top end. A fixed
+        36-session protocol treats all of these patients the same.
+        <span class="src">Same poster. Presented at the U-M SURE Symposium, 2025.</span></figcaption>
+    </figure>
+
+    <p class="sowhat"><strong>So what:</strong> the hard part was not the model, it was
+      deciding what “recovered” means and then showing how much that decision moves the
+      answer.</p>
+  </article>
+
+  <!-- 4 -->
+  <article class="item">
+    <h3>EMG biofeedback training system</h3>
+    <p class="role">Oct 2024 – Apr 2026 · Research assistant (part-time), NeuRRo Lab,
+      University of Michigan · MATLAB, Python/PyTorch, Unity, C#</p>
+    <p>A real-time system that turns a patient's own muscle activity into a cursor in a
+      reaching game, plus the muscle-synergy analysis pipeline behind it. Both are used in the
+      lab's clinical experiments.</p>
+    <ul>
+      <li>Built the real-time acquisition and control loop: up to 16 EMG channels at 2 kHz
+        driving an on-screen cursor, with an 11-stage experiment protocol built into the
+        software.</li>
+      <li>Hand-ported the optimizer from PyTorch into Unity C#, removing the external
+        dependency so the decoder adapts on-device inside the game loop.</li>
+      <li>Wrote roughly a thousand lines of MATLAB for the NNMF/NNR muscle-synergy pipeline,
+        producing between-group statistics across 18 participants.</li>
+    </ul>
+
+    <figure>
+      <img src="/assets/img/emg-biofeedback.png" width="1400" height="758" loading="lazy"
+           alt="The biofeedback game: a yellow cursor driven by muscle activity sitting inside a grey target, with a reach counter and timer on the left and the live EMG acquisition panel on the right.">
+      <figcaption>What to look at: one frame contains the whole chain — the reach counter and
+        reaching time on the left, the yellow cursor inside the grey target in the middle, and
+        the live signal panel on the right. The system supports up to 16 channels at 2 kHz;
+        this session ran a two-channel differential configuration, which is why most signal
+        slots are empty. <span class="src">No participant is visible and no participant
+        identifiers appear in this frame.</span></figcaption>
+    </figure>
+
+    <figure>
+      <img src="/assets/img/fig-6-reaching-task.svg" width="800" height="680" loading="lazy"
+           alt="Schematic of the center-out reaching paradigm: a start position at the centre, eight evenly spaced targets on a ring, and one illustrative path from centre to the active target.">
+      <figcaption>What to look at: the task itself. Hold at the centre, reach to one lit
+        target, return — the recorded path on each trial is what gets quantified.
+        <span class="src">Schematic only; no recorded participant data is shown.</span></figcaption>
+    </figure>
+
+    <p class="sowhat"><strong>So what:</strong> nineteen months on one system, ending in a
+      real clinical deployment — including the unglamorous part, moving a model out of Python
+      so it could meet a real-time deadline.</p>
+  </article>
+</section>
+
+<!-- ============================ WRITING ============================ -->
+<section id="writing">
+  <h2>Writing</h2>
+  <article class="item">
+    <h3><a href="/writing/closed-loop/">The loop — notes on making an NL-to-SQL answer
+      checkable</a></h3>
+    <p class="role">August 2026 · ~9 min</p>
+    <p>Most natural-language-to-SQL demos give you a number and no way to tell whether it is
+      right. This is what I changed in my own projects to make that different, and what it
+      cost.</p>
+    <ul>
+      <li>An intermediate representation you can read before anything runs turns “the answer
+        is wrong” into “this field is wrong”.</li>
+      <li>Build the ruler before the feature: twenty gold cases pinned across five stages,
+        and contracts written as tests that actually run.</li>
+      <li>The step people skip is turning each fix into a guardrail, so the ruler grows on its
+        own and the same mistake cannot happen twice.</li>
+    </ul>
+    <p><a href="/writing/closed-loop/">Read →</a></p>
+  </article>
+</section>
+
+<!-- ============================ EXPERIENCE ============================ -->
+<section id="experience">
+  <h2>Experience</h2>
+
+  <article class="item">
+    <div class="row"><h3>Lark, ByteDance (enterprise collaboration &amp; AI suite)</h3>
+      <span class="when">May 2026 – Aug 2026</span></div>
+    <p class="role">AI Solutions Intern · Shanghai, China · Python, Flask, React, TypeScript,
+      Node.js, Playwright/CDP</p>
+    <ul>
+      <li>Designed a unified <strong>trace schema</strong> that made two enterprise AI agents
+        comparable on real user tasks: drove both Electron clients over Chrome DevTools
+        Protocol to extract their telemetry, mapped two incompatible event vocabularies onto
+        one field set, and scored the normalized runs side by side.</li>
+      <li>Ran discovery and technical qualification for enterprise accounts adopting Lark's AI
+        product suite; productized it into a citation-backed research tool with source-linked
+        findings, used by the region's account teams.</li>
+      <li>Built the pre-sales enablement stack: a searchable hub of <strong>800+</strong>
+        assets with one-click deck assembly (sole developer), plus a customer-facing demo site
+        (11 demos, 13 case studies) that non-engineers edit themselves via low-code tables.</li>
+    </ul>
+  </article>
+
+  <article class="item">
+    <div class="row"><h3>Shenzhen Legion Technology Co., Ltd.</h3>
+      <span class="when">Apr 2025 – Oct 2025</span></div>
+    <p class="role">Data Engineering &amp; AI Intern, Project Manager (part-time) · Remote,
+      China · Python, SQL, dbt, RAG</p>
+    <ul>
+      <li>Built the <strong>evaluation framework</strong> for a RAG data-governance copilot
+        serving dbt pipelines and lineage: structured cases across its three question classes
+        (catalog, SQL, data-QA), each graded on whether retrieval returned the right
+        catalog/lineage objects and whether the answer met governance rules, so prompt and
+        retrieval changes were re-scored on the same cases, not eyeballed.</li>
+      <li>Designed the copilot's prompt architecture: the classifier behind those classes,
+        entity extraction, and embedding-based search.</li>
+    </ul>
+  </article>
+
+  <article class="item">
+    <div class="row"><h3>University of Michigan — Cardiac Rehabilitation Wearable Study</h3>
+      <span class="when">Apr 2025 – Jan 2026</span></div>
+    <p class="role">Research Assistant (part-time) — SURE summer program, then continued on
+      the study · Ann Arbor, Michigan</p>
+    <ul>
+      <li>Assembled the cardiac-rehabilitation analysis dataset: reconciled 400K+ raw step
+        records from multiple sources onto one per-patient daily timeline and set
+        missing-value and cleaning rules that cut 247 enrolled patients to a
+        <strong>191-patient analysis cohort</strong>.</li>
+      <li>Engineered temporal features (rolling averages, trend slope, periodicity) feeding
+        K-means/PCA phenotyping and plateau detection against the standard 36-session model;
+        <strong>~68%</strong> of that 191-patient cohort had suboptimal discharge timing.</li>
+    </ul>
+  </article>
+
+  <article class="item">
+    <div class="row"><h3>NeuRRo Lab, University of Michigan</h3>
+      <span class="when">Oct 2024 – Apr 2026</span></div>
+    <p class="role">Research Assistant (part-time) · Ann Arbor, Michigan · MATLAB,
+      Python/PyTorch, Unity, C#</p>
+    <ul>
+      <li>Built the lab's real-time EMG biofeedback system and MATLAB muscle-synergy analysis
+        code, both used in clinical experiments.</li>
+    </ul>
+  </article>
+</section>
+
+<!-- ============================ EDUCATION ============================ -->
+<section id="education">
+  <h2>Education</h2>
+
+  <article class="item">
+    <div class="row"><h3>Harvard University</h3><span class="when">Aug 2026 – Expected May 2028</span></div>
+    <p class="role">M.S. Health Data Science, T.H. Chan School of Public Health · Boston, Massachusetts</p>
+  </article>
+
+  <article class="item">
+    <div class="row"><h3>University of Michigan, Ann Arbor</h3><span class="when">Aug 2024 – May 2026</span></div>
+    <p class="role">B.S.E. Industrial and Operations Engineering; Minor in Computer Science · Ann Arbor, Michigan</p>
+  </article>
+
+  <article class="item">
+    <div class="row"><h3>UM–SJTU Joint Institute, Shanghai Jiao Tong University</h3>
+      <span class="when">Sep 2022 – Aug 2026</span></div>
+    <p class="role">B.S.E. Electrical and Computer Engineering · Shanghai, China</p>
+  </article>
+
+  <div class="note" style="margin-top:24px">
+    <p><strong>Dual degree:</strong> Michigan and SJTU are one joint program; the dates
+      overlap by design.</p>
+    <p>GPA (U-M) 3.94/4.00 cumulative, 4.00/4.00 major.</p>
+    <p>Dean's Honor List (2024, 2025) · Myun Lee Scholarship (2025).</p>
+    <p>Coursework: Database Systems, Data Structures &amp; Algorithms, Engineering Data
+      Analytics, Probability &amp; Statistics.</p>
+  </div>
+</section>
+
+<!-- ============================ SKILLS ============================ -->
+<section id="skills">
+  <h2>Skills</h2>
+  <p><strong>Languages</strong> — Python, SQL, TypeScript</p>
+  <p><strong>Data &amp; databases</strong> — PostgreSQL · dbt (metadata &amp; lineage
+    tooling) · gold-case SQL regression and contract tests · time-series feature engineering,
+    missing-value imputation, cleaning rules for high-volatility series</p>
+  <p><strong>Frameworks &amp; tools</strong> — FastAPI, Flask, React, Playwright/CDP, Git</p>
+</section>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="site" id="contact">
+  <p>Yizhe Dai · Boston, MA ·
+    <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a></p>
+  <p>Last updated 25 August 2026.</p>
+</footer>
+
+</body>
+</html>

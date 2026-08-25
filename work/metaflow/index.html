@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MetaFlow — metadata-centric NL-to-SQL · Yizhe Dai</title>
+<meta name="description" content="MetaFlow resolves natural-language questions into SQL through an inspectable relational IR. What it is, who did what, how I check it, and an interactive design prototype.">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="canonical" href="https://chrisyzd.github.io/work/metaflow/">
+</head>
+<body>
+
+<nav class="top"><a href="/">← Yizhe Dai</a></nav>
+
+<h1>MetaFlow</h1>
+<p class="lead">A metadata-centric natural-language-to-SQL system: questions are resolved
+through an inspectable relational intermediate representation instead of generating SQL
+directly, so an answer arrives with its source, its definition and its verification
+attached.</p>
+<p class="meta">March 2026 – present · Python, FastAPI, PostgreSQL, React, TypeScript</p>
+
+<section>
+  <h2>Who did what</h2>
+  <p>MetaFlow is a <strong>two-person project</strong>. Putting the boundary second on this
+  page rather than in a footnote is deliberate — you should not have to hunt for it.</p>
+  <ul>
+    <li><strong>I own</strong> the metadata layer, the gold-case regression suite, the
+      contracts endpoint, and the React/TypeScript studio front end.</li>
+    <li><strong>My collaborator owns</strong> the NL→IR→SQL engine core.</li>
+  </ul>
+  <p class="note">I am not naming my collaborator here without their say-so.</p>
+</section>
+
+<section>
+  <h2>The idea</h2>
+  <p>A question first lands in a relational intermediate representation — a structured object
+  that states what the system intends to compute — and SQL is compiled from that. The reason
+  is not elegance. It is that an IR is something a person can read <em>before</em> anything
+  runs, and something a machine can check.</p>
+  <p>When SQL is generated directly, a wrong answer is a debugging problem: you read the query
+  top to bottom and guess which clause betrayed you. When there is an IR, a wrong answer has an
+  address — this field bound to the wrong measure, that filter dropped. Wrongness stops being a
+  mood and becomes a location.</p>
+  <figure>
+    <img src="/assets/img/fig-1-ir-path.svg" width="800" height="540"
+         alt="Two answering paths compared. The upper path goes from question straight to one opaque SQL step and then to a number, with no place to inspect. The lower path inserts a readable relational intermediate representation between the question and the SQL.">
+    <figcaption>What to look at: the only structural difference is one box you are allowed to
+      read before it executes.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>How I check it</h2>
+  <p>Before we built features, we pinned <strong>20 gold-case scenarios</strong>. Each is
+  pinned across all <strong>five pipeline stages</strong>, with the expected output at every
+  stage, kept in version control. When a schema moves or a definition changes, I do not have to
+  ask whether something broke — I re-run the suite and it names the stage and the case.</p>
+  <p>Data quality works the same way. Contracts are written as executable expectations, and the
+  FastAPI backend exposes a contracts endpoint that enforces them, so a rule I wrote down is a
+  rule that runs. Contract as test.</p>
+  <figure>
+    <img src="/assets/img/fig-2-goldcase-grid.svg" width="800" height="420" loading="lazy"
+         alt="A grid of twenty gold-case scenarios across five pipeline stages, with one cell marked to show where a schema change surfaced.">
+    <figcaption>What to look at: the marked cell — a failure reports which stage, on which
+      case, not just that something is red.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Prototype</h2>
+  <p>These are screens from the design prototype for the studio, annotated in English. They
+  show the three ideas the system is built around: answers are bounded by a certified
+  capability list, every answer carries provenance, and anything out of scope is refused
+  explicitly rather than guessed.</p>
+
+  <figure>
+    <img src="/assets/img/metaflow-provenance.png" width="1200" height="653"
+         alt="The provenance envelope panel from the MetaFlow prototype, with each field glossed in English: source asset, metric version, definition binding, certification status and checksum.">
+    <figcaption>What to look at: this card is attached to every answer. It names the certified
+      table the number came from, the metric version, and the definition the answer was bound to
+      — so “where did this number come from” has an answer that is not a conversation.
+      <strong>Design prototype — not the running system.</strong>
+      <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
+      testkit.</span></figcaption>
+  </figure>
+
+  <figure>
+    <img src="/assets/img/metaflow-miss-ticket.png" width="1400" height="725" loading="lazy"
+         alt="The MetaFlow prototype returning a MISS for an out-of-scope question, naming the blocker, and handing off to the analyst diagnosis queue as ticket T-0087.">
+    <figcaption>What to look at: the refusal. A question outside the certified surface returns
+      an explicit MISS that names the blocker — 8,611 orders with no historical tier coverage —
+      and turns into a ticket in the analyst queue instead of a plausible-looking guess.
+      <strong>Design prototype — not the running system.</strong>
+      <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
+      testkit.</span></figcaption>
+  </figure>
+
+  <figure>
+    <img src="/assets/img/metaflow-capabilities.png" width="1400" height="1341" loading="lazy"
+         alt="MetaFlow prototype: a certified capability catalog on the left, and a question that hits a certified definition returning a monthly revenue table.">
+    <figcaption>What to look at: the catalog on the left is the whole answerable surface, and
+      the metrics that failed certification are listed too — visible, and still unanswerable.
+      <strong>Design prototype — not the running system.</strong>
+      <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
+      testkit.</span></figcaption>
+  </figure>
+
+  <p><a href="/demos/metaflow-prototype.html">Open the interactive prototype ↗</a><br>
+    <span class="note">UI is in Chinese; data is the public <code>jaffle_shop</code> testkit.
+    It is a design prototype, not the running system.</span></p>
+</section>
+
+<section>
+  <h2>Stack &amp; status</h2>
+  <p>Python · FastAPI · PostgreSQL · React · TypeScript. In development since March 2026;
+  the repository is private.</p>
+</section>
+
+<hr>
+
+<p><a href="/writing/closed-loop/">Read the essay: The loop — notes on making an NL-to-SQL
+  answer checkable →</a></p>
+
+<footer class="site">
+  <p>Yizhe Dai · Boston, MA ·
+    <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/">Home</a></p>
+  <p>Last updated 25 August 2026.</p>
+</footer>
+
+</body>
+</html>

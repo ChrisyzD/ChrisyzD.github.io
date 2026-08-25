@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The loop — notes on making an NL-to-SQL answer checkable · Yizhe Dai</title>
+<meta name="description" content="What it takes to make a natural-language-to-SQL answer checkable: an inspectable intermediate representation, a gold-case suite built before the features, and turning every fix into a guardrail.">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="canonical" href="https://chrisyzd.github.io/writing/closed-loop/">
+</head>
+<body class="essay">
+
+<nav class="top"><a href="/">← Yizhe Dai</a></nav>
+
+<h1>The loop</h1>
+<p class="lead"><em>Notes on making an NL-to-SQL answer checkable.</em></p>
+<p class="meta">Yizhe Dai · August 2026 · ~9 min · All figures come from
+  <code>metaflow_jaffle_testkit</code>, a public demo dataset.</p>
+
+<hr>
+
+<p>Most natural-language-to-SQL demos work the same way. You ask a question, a model writes
+SQL, the SQL runs, a number comes back. When the number is wrong, nothing tells you. When it
+is right, you don't know why.</p>
+
+<p>I have been building MetaFlow since March 2026 with one collaborator. It is a two-person
+project: I own the metadata layer, the evaluation suite and the studio front end; my
+collaborator owns the query engine. The first design decision we made was not to generate
+SQL.</p>
+
+<h2>1. It starts with not trusting the answer</h2>
+
+<p>A question first lands in a relational intermediate representation. The IR spells out what
+the system intends to compute, as a structured object rather than prose or SQL. You can read
+it before anything executes, and so can a machine.</p>
+
+<p>That one move changes what “wrong” means. A wrong SQL string is a debugging problem: you
+read it top to bottom and try to guess which clause betrayed you. A wrong IR has an address.
+It bound <em>revenue</em> to the wrong measure. It dropped the time filter. It resolved
+<em>gold customers</em> against the wrong table. You can point at the field.</p>
+
+<p>Trust does not come from a model sounding confident. It comes from there being somewhere
+to look before you commit.</p>
+
+<figure>
+  <img src="/assets/img/fig-1-ir-path.svg" width="800" height="540"
+       alt="Two answering paths compared. The upper path goes from question straight to one opaque SQL step and then to a number, with no place to inspect. The lower path inserts a readable relational intermediate representation between the question and the SQL.">
+  <figcaption>What to look at: the only difference between the two paths is one box you are
+    allowed to read. That box is the entire argument of this section.</figcaption>
+</figure>
+
+<h2>2. Build the ruler before the feature</h2>
+
+<p>Before we built features, we pinned twenty gold-case scenarios. Each one is pinned across
+all five pipeline stages, from the natural-language input through to the final design, with
+the expected output at every stage, in version control.</p>
+
+<p>The point is not test coverage. The point is that the ruler exists before the thing it
+measures. When a schema moves or a definition changes, I don't have to ask whether something
+broke. I re-run the suite and it tells me which stage broke, on which case.</p>
+
+<p>The same idea covers data quality. Contracts are written as executable expectations and the
+backend has an endpoint that enforces them, so a rule I wrote down is a rule that runs.
+Contract as test.</p>
+
+<p>An untested change to metadata is not a small change. It is a silent change to every answer
+downstream of it.</p>
+
+<figure>
+  <img src="/assets/img/fig-2-goldcase-grid.svg" width="800" height="420" loading="lazy"
+       alt="A grid of twenty gold-case scenarios across five pipeline stages, with one cell marked to show where a schema change surfaced.">
+  <figcaption>What to look at: the marked cell. A failure does not report “something broke” —
+    it reports which stage, on which case.</figcaption>
+</figure>
+
+<h2>3. The one thing you cannot automate</h2>
+
+<p>Here is a real question from the demo dataset: what was net revenue from gold-tier customers
+in 2024?</p>
+
+<p>It has two defensible answers. Gold at the time of the order, or gold as of today? Two source
+tables disagree, because they were built to answer different questions. No amount of modeling
+resolves this. Someone has to decide.</p>
+
+<p>So the decision is treated as an asset instead of a conversation. It is recorded with an id,
+the chosen rule — tier at order time — and the reason. Every answer that depends on it points
+back to it. When someone disagrees six months later, they are arguing with a record, not with a
+memory.</p>
+
+<p>This is the only step in the chain that cannot be automated, and it is why I say metadata is
+the source of truth rather than the database. The ceiling on answer quality is not the model. It
+is whether anyone wrote down what the words mean.</p>
+
+<h2>4. The loop</h2>
+
+<p>Measure, locate, fix, turn the fix into a guardrail, measure again.</p>
+
+<p>The fourth step is the one that gets skipped. A fix that only fixes today's bug buys you one
+day. A fix that also becomes a new gold case buys you every day after that. The ruler grows with
+the failures, and the same mistake does not get to happen twice.</p>
+
+<p>I ran the same loop in a different domain for my undergraduate thesis, on training data for an
+in-vehicle voice assistant. I built a user simulator with 41 persona archetypes and explicit state
+control, produced retrieval-grounded conversation rollouts, and scored them with an LLM judge.</p>
+
+<p>The judge's value was not the score. It was the error breakdown: it showed which eleven
+functions had the highest error rates. Instead of generating more data everywhere, I regenerated
+data aimed at those eleven. Fine-tuning on the resulting 17,200 verified dialogues moved
+judge-adjusted answer acceptance from 72.8% to 82.7%, and the strict multi-turn all-correct rate
+from 39.9% to 60.0%.</p>
+
+<p>Generating more data everywhere would have been easier to write and worse. Measuring first is
+what made the eleven functions visible at all.</p>
+
+<figure>
+  <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
+       alt="A four-step cycle — measure, locate, fix, add a guardrail — running clockwise around a shared ruler at the centre, annotated with the MetaFlow gold-case suite and the capstone data flywheel as two instances.">
+  <figcaption>What to look at: the arrow from <em>add a guardrail</em> back into the ruler at the
+    centre. Without it the cycle is just maintenance; with it the ruler grows on its own.</figcaption>
+</figure>
+
+<h2>5. One second on stage, a thousand lines backstage</h2>
+
+<p>Someone types a question into a chat box and gets <strong>$340,955.56</strong> back in about a
+second: certified net revenue from gold-tier customers in 2024.</p>
+
+<p>Not long before, that question had no answer. Six stations stand behind the one second:</p>
+
+<ul>
+  <li><strong>Audit.</strong> 8,611 of 50,000 orders had no resolvable customer tier.</li>
+  <li><strong>The definition decision.</strong> Tier at order time, recorded with an owner and a
+    reason.</li>
+  <li><strong>Repair.</strong> A temporal join closed the gap. The patch shipped as four things,
+    not one: the patch, a dry run, a verification, and a rollback plan.</li>
+  <li><strong>Semantic asset.</strong> The repaired result became a certified table you can query
+    directly, registered in a capability list so the system knows what it is allowed to
+    answer.</li>
+  <li><strong>Contract.</strong> Intent, the bound decision, the expected value, a fingerprint of
+    the result — and counter-examples showing the wrong ways to compute it.</li>
+  <li><strong>Daily re-verification.</strong> An automated check suite re-proves the number every
+    day. When a check fails, the number comes down instead of quietly going wrong.</li>
+</ul>
+
+<p>Together that is roughly a thousand lines of code and rules, and about five person-days.</p>
+
+<p>Two things follow. The foundation is a one-time cost and metrics are marginal after it — the
+second certified metric on the same base costs a fraction of the first. And every light moment on
+stage has a station underneath holding it up.</p>
+
+<p>The deliverable of data engineering is not SQL. It is a number that gets re-proved every
+day.</p>
+
+<figure>
+  <img src="/assets/img/fig-4-one-second-six-stations.svg" width="800" height="736" loading="lazy"
+       alt="A layered diagram: a certified answer returned in about a second sits on a narrow bar at the top, above six widening layers — audit, definition decision, repair, semantic asset, contract, and daily re-verification.">
+  <figcaption>What to look at: the proportions. The visible part is the top bar; everything below
+    it is what makes the top bar safe to show.</figcaption>
+</figure>
+
+<h2>What I take from this</h2>
+
+<p>Both of these systems are small. A two-person project and a thesis are not production
+infrastructure, and I am not going to pretend otherwise. What transfers is the habit: build the
+ruler before the feature, write down what the words mean, and make every fix into a guardrail so
+the ruler grows on its own.</p>
+
+<p>If an answer cannot be checked, it is not an answer. It is a guess with formatting.</p>
+
+<hr>
+
+<div class="note">
+  <p>MetaFlow is a two-person project; my collaborator owns the NL→IR→SQL engine.</p>
+  <p>All figures in this piece come from <code>metaflow_jaffle_testkit</code>, a public demo
+    dataset.</p>
+  <p>This piece is about my own projects and how I work — nothing here describes any employer's
+    internal plans, products or data.</p>
+</div>
+
+<p style="margin-top:24px"><a href="/work/metaflow/">← More on MetaFlow</a> ·
+  <a href="/">Back to home</a></p>
+
+</body>
+</html>

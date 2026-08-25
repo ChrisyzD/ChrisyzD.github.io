@@ -1,0 +1,160 @@
+/* chrisyzd.github.io — one stylesheet, no framework, no webfonts.
+   Spacing scale is fixed at 4 / 8 / 16 / 24 / 40 / 64px; nothing else is allowed.
+   No dark mode in v1 on purpose: every figure on this site is a white-background
+   chart, and on a dark page those become glaring white rectangles. Doing it
+   properly means re-cutting every figure, so it is deliberately not started
+   rather than half-done. */
+
+:root {
+  --bg:   #ffffff;
+  --text: #16181d;            /* not pure black: #000 is too hard on white */
+  --meta: #5b6068;            /* 5.9:1 on white — passes AA */
+  --rule: #e3e5e8;
+  --link: #0b5cad;            /* identical to the resume's linkblue (HTML 0B5CAD) */
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding: 40px 20px 64px;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.65 var(--font-sans);
+  max-width: 42rem;                 /* ≈720px */
+  margin-inline: auto;
+}
+
+body.essay { max-width: 34em; }     /* narrower measure for long-form reading */
+
+/* ---------- type ---------- */
+
+h1 { font-size: 28px; line-height: 1.2; margin: 0 0 16px; letter-spacing: -0.01em; }
+
+h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-weight: 700;
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);   /* mirrors \scshape + \titlerule in the resume */
+}
+
+/* the essay uses numbered prose headings, not the resume's section rule */
+.essay h2 {
+  font-size: 20px;
+  text-transform: none;
+  letter-spacing: normal;
+  border: 0;
+  padding: 0;
+  margin: 40px 0 16px;
+  line-height: 1.3;
+}
+
+h3 { font-size: 18px; font-weight: 600; margin: 0 0 4px; line-height: 1.35; }
+
+p { margin: 0 0 16px; }
+
+strong { font-weight: 600; }
+
+code, .mono { font-family: var(--font-mono); font-size: .92em; }
+
+.meta { color: var(--meta); font-size: 14px; margin: 0 0 8px; }
+.lead { font-size: 18px; margin-bottom: 16px; }
+
+a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 2px; }
+
+ul { margin: 0 0 16px; padding-left: 20px; }
+li { margin-bottom: 4px; }
+
+hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; }
+
+/* ---------- layout ---------- */
+
+header.site { margin-bottom: 40px; }
+nav.top { font-size: 15px; margin-bottom: 24px; color: var(--meta); }
+nav.top a { margin-right: 16px; }
+
+section { margin-bottom: 64px; }
+section:last-of-type { margin-bottom: 40px; }
+/* deep pages open with prose, not a nav block, so the first section needs its own
+   air above the rule under its heading */
+h1 ~ p + section, .meta + section { margin-top: 40px; }
+
+.item { padding-top: 24px; }
+.item + .item { margin-top: 40px; border-top: 1px solid var(--rule); }
+
+/* "title ——— dates": two ends on desktop, stacked on mobile.
+   Deliberately not a <table>: tables are the classic 375px failure mode. */
+.row { display: flex; flex-direction: column; margin-bottom: 8px; }
+.row .when { color: var(--meta); font-size: 14px; }
+.role { color: var(--meta); font-size: 14px; margin: 0 0 8px; }
+
+.sowhat { margin-top: 16px; }
+.sowhat strong { letter-spacing: .02em; }
+
+.contact { list-style: none; padding: 0; margin: 16px 0 0; }
+.contact li { margin: 0; }
+.contact a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* ---------- figures ---------- */
+
+figure { margin: 24px 0; }
+figure img, figure svg { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 2px; }
+figcaption { font-size: 13px; line-height: 1.55; color: var(--meta); margin-top: 8px; }
+figcaption .src { display: block; margin-top: 4px; }
+
+/* ---------- small table (SURE pipeline) ---------- */
+
+.stack { border-top: 1px solid var(--rule); margin: 16px 0; }
+.stack div { border-bottom: 1px solid var(--rule); padding: 8px 0; }
+.stack dt { font-weight: 600; font-size: 14px; }
+.stack dd { margin: 4px 0 0; font-size: 15px; color: var(--text); }
+
+/* ---------- footer ---------- */
+
+footer.site { border-top: 1px solid var(--rule); padding-top: 24px; font-size: 14px; color: var(--meta); }
+footer.site a { color: var(--link); }
+
+.note { font-size: 14px; color: var(--meta); }
+.note p { margin-bottom: 8px; }
+
+/* ---------- desktop ---------- */
+
+@media (min-width: 44rem) {
+  body { font-size: 18px; line-height: 1.7; padding-top: 64px; }
+  h1 { font-size: 34px; }
+  h3 { font-size: 19px; }
+  .meta, .role, .row .when { font-size: 15px; }
+  figcaption { font-size: 14px; }
+  .row { flex-direction: row; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .contact { display: flex; gap: 24px; }
+  .contact a { min-height: 0; }
+}
+
+/* ---------- motion ---------- */
+/* There is no animation anywhere on this site, so this rule is a declaration,
+   not a fix. */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* ---------- print ---------- */
+/* Recruiters really do print pages and save them as PDF. */
+@media print {
+  body { max-width: none; font-size: 11pt; color: #000; padding: 0; }
+  nav.top, .contact { display: none; }
+  a { color: #000; text-decoration: none; }
+  a[href^="http"]::after,
+  a[href^="/"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
+  figure { break-inside: avoid; }
+  section { margin-bottom: 24px; }
+}

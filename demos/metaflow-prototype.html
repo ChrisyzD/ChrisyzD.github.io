@@ -1,0 +1,2946 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with `cd dc-runtime && bun run build`.
+"use strict";
+(() => {
+  var __defProp = Object.defineProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+  // src/react.ts
+  function getReact() {
+    const R = window.React;
+    if (!R) throw new Error("dc-runtime: window.React is not available yet");
+    return R;
+  }
+  function getReactDOM() {
+    const RD = window.ReactDOM;
+    if (!RD) throw new Error("dc-runtime: window.ReactDOM is not available yet");
+    return RD;
+  }
+  var h = ((...args) => getReact().createElement(
+    ...args
+  ));
+
+  // src/parse.ts
+  function parseDcDocument(doc) {
+    const dc = doc.querySelector("x-dc");
+    if (!dc) return null;
+    const scriptEl = doc.querySelector("script[data-dc-script]");
+    const { props, preview } = parseDataProps(
+      scriptEl?.getAttribute("data-props") ?? null
+    );
+    return {
+      template: dc.innerHTML,
+      js: scriptEl ? scriptEl.textContent || "" : "",
+      props,
+      preview
+    };
+  }
+  function parseDcText(src) {
+    const openMatch = /<x-dc(?:\s[^>]*)?>/.exec(src);
+    if (!openMatch) return null;
+    const close = src.lastIndexOf("</x-dc>");
+    if (close === -1 || close < openMatch.index) return null;
+    const template = src.slice(openMatch.index + openMatch[0].length, close);
+    const doc = new DOMParser().parseFromString(src, "text/html");
+    const scriptEl = doc.querySelector("script[data-dc-script]");
+    const { props, preview } = parseDataProps(
+      scriptEl?.getAttribute("data-props") ?? null
+    );
+    return {
+      template,
+      js: scriptEl ? scriptEl.textContent || "" : "",
+      props,
+      preview
+    };
+  }
+  function parseDataProps(raw) {
+    if (!raw) return { props: null, preview: null };
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return { props: null, preview: null };
+    }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return { props: null, preview: null };
+    }
+    const obj = parsed;
+    const preview = obj.$preview && typeof obj.$preview === "object" ? obj.$preview : null;
+    const rest = {};
+    for (const k of Object.keys(obj)) {
+      if (k[0] !== "$") rest[k] = obj[k];
+    }
+    return { props: Object.keys(rest).length ? rest : null, preview };
+  }
+  function dcNameFromPath(pathname) {
+    let p = pathname || "";
+    try {
+      p = decodeURIComponent(p);
+    } catch {
+    }
+    const base = p.split("/").pop() || "Root";
+    return base.replace(/\.dc\.html$/, "").replace(/\.html?$/, "") || "Root";
+  }
+
+  // src/boot.ts
+  var BASE_CSS = `
+    .sc-placeholder{background:color-mix(in srgb,currentColor 8%,transparent);
+      border:1px solid color-mix(in srgb,currentColor 50%,transparent);
+      border-radius:2px;box-sizing:border-box;overflow:hidden}
+    @keyframes sc-shine{0%{background-position:100% 50%}100%{background-position:0% 50%}}
+    html.sc-dc-streaming .sc-placeholder,
+    html.sc-dc-streaming .sc-interp.sc-missing{position:relative;
+      background:color-mix(in srgb,currentColor 5%,transparent);
+      border-color:transparent}
+    html.sc-dc-streaming .sc-placeholder::before,
+    html.sc-dc-streaming .sc-interp.sc-missing::before{content:'';
+      position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(90deg,rgba(217,119,87,0) 25%,rgba(247,225,211,.95) 37%,rgba(217,119,87,0) 63%);
+      background-size:400% 100%;animation:sc-shine 1.4s ease infinite}
+    html.sc-dc-streaming .sc-placeholder:nth-child(n+9 of .sc-placeholder)::before,
+    html.sc-dc-streaming .sc-interp.sc-missing:nth-child(n+9 of .sc-interp.sc-missing)::before{animation:none;
+      background:color-mix(in srgb,currentColor 8%,transparent)}
+    .sc-placeholder-error{padding:4px 8px;font:11px/1.4 ui-monospace,monospace;
+      color:color-mix(in srgb,currentColor 70%,transparent);word-break:break-word}
+    .sc-interp.sc-missing{display:inline-block;width:2em;height:1em;overflow:hidden;
+      vertical-align:text-bottom;background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.5);
+      border-radius:2px;box-sizing:border-box;color:transparent;
+      user-select:none}
+    .sc-interp.sc-unresolved{font-family:ui-monospace,monospace;font-size:.85em;
+      color:color-mix(in srgb,currentColor 50%,transparent);
+      background:color-mix(in srgb,currentColor 10%,transparent);border-radius:3px;
+      padding:0 3px}
+    .sc-host.sc-has-error{position:relative}
+    .sc-logic-error{position:absolute;top:8px;left:8px;z-index:2147483647;max-width:60ch;
+      padding:6px 10px;background:#b00020;color:#fff;font:12px/1.4 ui-monospace,monospace;
+      border-radius:4px;white-space:pre-wrap;pointer-events:none}
+    /* Mirrors PRINT_BASELINE_CSS in apps/web deck-stage-export.ts \u2014 keep both
+       in sync until dc-runtime regains a build step. */
+    @media print {
+      @page { margin: 0.5cm; }
+      figure, table { break-inside: avoid; }
+      #dc-root, #dc-root > .sc-host { height: auto; }
+      *, *::before, *::after {
+        print-color-adjust: exact; -webkit-print-color-adjust: exact;
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+        animation-delay: -99s !important; animation-duration: .001s !important;
+        animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+        animation-play-state: running !important; transition-duration: 0s !important;
+      }
+    }
+  `;
+  var FULL_PAGE_CSS = "html,body{height:100%;margin:0}#dc-root,#dc-root>.sc-host{height:100%}";
+  function rootNameForDocument(doc, loc) {
+    let bootPath = loc.pathname || "";
+    if (!/\.dc\.html?$/i.test(safeDecode(bootPath))) {
+      try {
+        bootPath = new URL(doc.baseURI || "/").pathname;
+      } catch {
+      }
+    }
+    return dcNameFromPath(bootPath);
+  }
+  function safeDecode(s) {
+    try {
+      return decodeURIComponent(s);
+    } catch {
+      return s;
+    }
+  }
+  function boot(runtime, doc = document) {
+    const parsed = parseDcDocument(doc);
+    if (!parsed) return null;
+    const React = getReact();
+    const rootName = rootNameForDocument(doc, location);
+    runtime.markFetched(rootName);
+    runtime.setRootName(rootName);
+    runtime.adoptParsed(rootName, parsed);
+    if (!window.__resources) {
+      fetch(location.href).then((res) => res.ok ? res.text() : "").then((t) => {
+        const raw = t ? parseDcText(t) : null;
+        if (raw?.template) runtime.updateHtml(rootName, raw.template);
+      }).catch(() => {
+      });
+    }
+    const dc = doc.querySelector("x-dc");
+    const hostEl = doc.createElement("div");
+    hostEl.id = "dc-root";
+    dc.replaceWith(hostEl);
+    if (!parsed.preview) {
+      const s = doc.createElement("style");
+      s.textContent = FULL_PAGE_CSS;
+      doc.head.appendChild(s);
+    }
+    const Root = runtime.getDC(rootName);
+    const entry = runtime.registry.get(rootName);
+    function StandaloneRoot() {
+      const [, setTick] = React.useState(0);
+      React.useEffect(() => {
+        const sub = () => setTick((n) => n + 1);
+        entry.subs.add(sub);
+        return () => {
+          entry.subs.delete(sub);
+        };
+      }, []);
+      const defaults = React.useMemo(() => {
+        const d = {};
+        for (const k in entry.propsMeta || {}) {
+          const v = entry.propsMeta?.[k]?.default;
+          if (v !== void 0) d[k] = v;
+        }
+        return d;
+      }, [entry.propsMeta]);
+      return h(Root, { ...defaults, ...entry.propOverrides || {} });
+    }
+    const ReactDOM = getReactDOM();
+    if (ReactDOM.createRoot)
+      ReactDOM.createRoot(hostEl).render(h(StandaloneRoot));
+    else ReactDOM.render(h(StandaloneRoot), hostEl);
+    return rootName;
+  }
+
+  // src/expr.ts
+  var IDENT_RE = /^[A-Za-z_$][A-Za-z0-9_$]*/;
+  var NUMBER_RE = /^-?\d+(\.\d+)?$/;
+  function resolve(vals, src) {
+    const expr = String(src).trim();
+    if (!expr) return void 0;
+    if (expr[0] === "(" && expr[expr.length - 1] === ")" && parensWrapWhole(expr)) {
+      return resolve(vals, expr.slice(1, -1));
+    }
+    const eq = findTopLevelEquality(expr);
+    if (eq) {
+      const lv = resolve(vals, expr.slice(0, eq.index));
+      const rv = resolve(vals, expr.slice(eq.index + eq.op.length));
+      switch (eq.op) {
+        case "===":
+          return lv === rv;
+        case "!==":
+          return lv !== rv;
+        case "==":
+          return lv == rv;
+        default:
+          return lv != rv;
+      }
+    }
+    if (expr[0] === "!") return !resolve(vals, expr.slice(1));
+    if (expr === "true") return true;
+    if (expr === "false") return false;
+    if (expr === "null") return null;
+    if (expr === "undefined") return void 0;
+    if (NUMBER_RE.test(expr)) return Number(expr);
+    if (expr.length >= 2 && (expr[0] === '"' || expr[0] === "'") && expr[expr.length - 1] === expr[0]) {
+      return expr.slice(1, -1);
+    }
+    return resolvePath(vals, expr);
+  }
+  function parensWrapWhole(expr) {
+    let depth = 0;
+    for (let i = 0; i < expr.length - 1; i++) {
+      if (expr[i] === "(") depth++;
+      else if (expr[i] === ")") {
+        depth--;
+        if (depth === 0) return false;
+      }
+    }
+    return true;
+  }
+  function findTopLevelEquality(expr) {
+    let depth = 0;
+    for (let i = 0; i < expr.length; i++) {
+      const c = expr[i];
+      if (c === "[" || c === "(") depth++;
+      else if (c === "]" || c === ")") depth--;
+      else if (depth === 0 && (c === "=" || c === "!") && expr[i + 1] === "=") {
+        if (i > 0 && (expr[i - 1] === "=" || expr[i - 1] === "!")) continue;
+        if (!expr.slice(0, i).trim()) continue;
+        const op = expr[i + 2] === "=" ? c + "==" : c + "=";
+        return { index: i, op };
+      }
+    }
+    return null;
+  }
+  function resolvePath(vals, expr) {
+    const head = expr.match(IDENT_RE);
+    if (!head) return void 0;
+    let cur = vals == null ? void 0 : vals[head[0]];
+    let i = head[0].length;
+    while (i < expr.length) {
+      if (expr[i] === ".") {
+        const m = expr.slice(i + 1).match(IDENT_RE) || expr.slice(i + 1).match(/^\d+/);
+        if (!m) return void 0;
+        cur = cur == null ? void 0 : cur[m[0]];
+        i += 1 + m[0].length;
+      } else if (expr[i] === "[") {
+        let depth = 1;
+        let j = i + 1;
+        while (j < expr.length && depth > 0) {
+          if (expr[j] === "[") depth++;
+          else if (expr[j] === "]") {
+            depth--;
+            if (depth === 0) break;
+          }
+          j++;
+        }
+        if (depth !== 0) return void 0;
+        const key = resolve(vals, expr.slice(i + 1, j));
+        cur = cur == null ? void 0 : cur[key];
+        i = j + 1;
+      } else {
+        return void 0;
+      }
+    }
+    return cur;
+  }
+
+  // src/encode.ts
+  var CAMEL_ATTR = "sc-camel-";
+  var INLINE_TEXT_TAGS = new Set(
+    "a abbr b bdi bdo br cite code del dfn em i ins kbd mark q s samp small span strike strong sub sup u var wbr".split(
+      " "
+    )
+  );
+  var RAW_WRAP = {
+    select: "sc-raw-select",
+    table: "sc-raw-table",
+    tbody: "sc-raw-tbody",
+    thead: "sc-raw-thead",
+    tfoot: "sc-raw-tfoot",
+    tr: "sc-raw-tr",
+    td: "sc-raw-td",
+    th: "sc-raw-th",
+    caption: "sc-raw-caption"
+  };
+  var RAW_UNWRAP = Object.fromEntries(
+    Object.entries(RAW_WRAP).map(([k, v]) => [v, k])
+  );
+  var EVENT_MAP = {
+    onclick: "onClick",
+    onchange: "onChange",
+    oninput: "onInput",
+    onsubmit: "onSubmit",
+    onkeydown: "onKeyDown",
+    onkeyup: "onKeyUp",
+    onkeypress: "onKeyPress",
+    onmousedown: "onMouseDown",
+    onmouseup: "onMouseUp",
+    onmouseenter: "onMouseEnter",
+    onmouseleave: "onMouseLeave",
+    onfocus: "onFocus",
+    onblur: "onBlur",
+    ondoubleclick: "onDoubleClick",
+    oncontextmenu: "onContextMenu"
+  };
+  var ATTRS = `(?:[^>"']|"[^"]*"|'[^']*')*`;
+  var IMPORT_SELF_CLOSE_RE = new RegExp(
+    "<(x-import|dc-import)(" + ATTRS + ")/>",
+    "gi"
+  );
+  var CAMEL_ATTR_RE = /(\s)([a-z]+[A-Z][A-Za-z0-9]*)(\s*=)/g;
+  function encodeCase(html) {
+    html = html.replace(
+      IMPORT_SELF_CLOSE_RE,
+      (_, t, a) => "<" + t + a + "></" + t + ">"
+    );
+    html = html.replace(/<helmet(\s|>)/gi, "<sc-helmet$1");
+    html = html.replace(/<\/helmet\s*>/gi, "</sc-helmet>");
+    html = html.replace(
+      CAMEL_ATTR_RE,
+      (_, sp, name, eq) => sp + CAMEL_ATTR + name.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase()) + eq
+    );
+    for (const [real, alias] of Object.entries(RAW_WRAP)) {
+      html = html.replace(
+        new RegExp("(</?)" + real + "(?=[\\s>])", "gi"),
+        "$1" + alias
+      );
+    }
+    return html;
+  }
+  function kebabToCamel(s) {
+    return s.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+  }
+  function cssToObj(css) {
+    const o = {};
+    for (const decl of css.split(";")) {
+      const i = decl.indexOf(":");
+      if (i < 0) continue;
+      const prop = decl.slice(0, i).trim();
+      o[prop.startsWith("--") ? prop : kebabToCamel(prop)] = decl.slice(i + 1).trim();
+    }
+    return o;
+  }
+  function compileAttr(raw) {
+    const whole = raw.match(/^\s*\{\{([\s\S]+?)\}\}\s*$/);
+    if (whole) {
+      const path = whole[1];
+      return (vals) => resolve(vals, path);
+    }
+    if (raw.includes("{{")) {
+      const parts = raw.split(/\{\{([\s\S]+?)\}\}/g);
+      return (vals) => parts.map((s, i) => i & 1 ? resolve(vals, s) ?? "" : s).join("");
+    }
+    return () => raw;
+  }
+
+  // src/compile.ts
+  function collectProps(node, kind, host) {
+    const propGetters = [];
+    const pseudoClasses = [];
+    let hintSize = null;
+    for (const { name, value } of [...node.attributes]) {
+      if (name === "sc-name" || name === "data-dc-tpl") continue;
+      let key = name;
+      if (key.startsWith(CAMEL_ATTR))
+        key = kebabToCamel(key.slice(CAMEL_ATTR.length));
+      if (key === "hint-size") {
+        hintSize = value;
+        continue;
+      }
+      if (key.startsWith("style-")) {
+        pseudoClasses.push(host.pseudoClass(key.slice(6), value));
+        continue;
+      }
+      if (kind !== "dom") {
+        if (key.includes("-") && !(kind === "x-import" && (key.startsWith("aria-") || key.startsWith("data-"))))
+          key = kebabToCamel(key);
+      } else {
+        if (key === "class") key = "className";
+        else if (key === "for") key = "htmlFor";
+        else if (key.startsWith("on"))
+          key = EVENT_MAP[key] || "on" + key[2].toUpperCase() + key.slice(3);
+      }
+      propGetters.push([key, compileAttr(value)]);
+    }
+    return { propGetters, pseudoClasses, hintSize };
+  }
+  var HOST_STYLE_PROPS = /* @__PURE__ */ new Set([
+    "position",
+    "left",
+    "right",
+    "top",
+    "bottom",
+    "inset",
+    "width",
+    "height",
+    "z-index",
+    "transform"
+  ]);
+  function hostPositionStyle(style) {
+    const all = typeof style === "string" ? cssToObj(style) : style != null && typeof style === "object" ? style : null;
+    if (!all) return void 0;
+    const out = {};
+    for (const [k, v] of Object.entries(all)) {
+      const kebab = k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase());
+      if (HOST_STYLE_PROPS.has(kebab)) out[k] = v;
+    }
+    return Object.keys(out).length ? out : void 0;
+  }
+  function compileTemplate(html, host) {
+    const tpl = document.createElement("template");
+    //! nosemgrep: direct-inner-html-assignment
+    tpl.innerHTML = encodeCase(html);
+    let tplN = 0;
+    (function stamp(node) {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        node.setAttribute("data-dc-tpl", String(tplN++));
+      }
+      for (const c of node.childNodes) stamp(c);
+    })(tpl.content);
+    const builders = walkChildren(tpl.content, host);
+    const render = ((vals, ctx) => builders.map((b, i) => b(vals || {}, ctx, i)));
+    render.__annotated = tpl.innerHTML;
+    return render;
+  }
+  function walkChildren(node, host) {
+    return [...node.childNodes].map((c) => walk(c, host)).filter((b) => b != null);
+  }
+  function walk(node, host) {
+    if (node.nodeType === Node.TEXT_NODE) return walkText(node);
+    if (node.nodeType !== Node.ELEMENT_NODE) return null;
+    const el = node;
+    const tag = el.tagName.toLowerCase();
+    if (tag === "sc-for") return walkFor(el, host);
+    if (tag === "sc-if") return walkIf(el, host);
+    if (tag === "x-import") return walkXImport(el, host);
+    if (tag === "sc-helmet") return host.helmet(el);
+    if (tag === "dc-import") return walkComponent(el, host);
+    return walkElement(el, host);
+  }
+  var warnedHoles = /* @__PURE__ */ new Set();
+  function warnUnresolved(ctx, what) {
+    const key = (ctx?.__name || "?") + "\0" + what;
+    if (warnedHoles.has(key)) return;
+    warnedHoles.add(key);
+    console.warn("[dc-runtime] " + (ctx?.__name || "template") + ": " + what);
+  }
+  function walkText(node) {
+    const txt = node.nodeValue ?? "";
+    if (!txt.includes("{{")) {
+      if (!txt.trim() && !txt.includes(" ")) return null;
+      return () => txt;
+    }
+    const parts = txt.split(/\{\{([\s\S]+?)\}\}/g);
+    return (vals, ctx, key) => h(
+      getReact().Fragment,
+      { key },
+      ...parts.map((p, i) => {
+        if (!(i & 1)) return p;
+        const v = resolve(vals, p);
+        if (v === void 0) {
+          if (!ctx?.__streamingNow) {
+            if (document.body?.hasAttribute("data-dc-editor-on")) {
+              return h(
+                "span",
+                { key: i, className: "sc-interp sc-unresolved" },
+                "{{ " + p.trim() + " }}"
+              );
+            }
+            warnUnresolved(
+              ctx,
+              "{{ " + p.trim() + " }} never resolved \u2014 rendered as empty"
+            );
+            return null;
+          }
+          return h(
+            "span",
+            { key: i, className: "sc-interp sc-missing" },
+            p.trim()
+          );
+        }
+        if (getReact().isValidElement(v) || Array.isArray(v)) {
+          return h(getReact().Fragment, { key: i }, v);
+        }
+        if (v === null || typeof v === "boolean") return null;
+        return h("span", { key: i, className: "sc-interp" }, String(v));
+      })
+    );
+  }
+  function walkFor(el, host) {
+    const listGet = compileAttr(el.getAttribute("list") || "");
+    const asName = el.getAttribute("as") || "item";
+    const hintN = parseInt(el.getAttribute("hint-placeholder-count") || "0", 10);
+    const kids = walkChildren(el, host);
+    const listSrc = el.getAttribute("list") || "";
+    return (vals, ctx, key) => {
+      let list = listGet(vals);
+      if (!Array.isArray(list)) {
+        if (!ctx?.__streamingNow) {
+          if (list !== void 0 && list !== null) {
+            warnUnresolved(
+              ctx,
+              'sc-for list="' + listSrc + '" is not an array (' + typeof list + ")"
+            );
+          }
+          list = [];
+        } else {
+          list = hintN > 0 ? Array(hintN).fill(void 0) : [];
+        }
+      }
+      return h(
+        getReact().Fragment,
+        { key },
+        list.map((item, i) => {
+          const sub = { ...vals, [asName]: item, $index: i };
+          return h(
+            getReact().Fragment,
+            { key: i },
+            kids.map((b, j) => b(sub, ctx, j))
+          );
+        })
+      );
+    };
+  }
+  function walkIf(el, host) {
+    const valGet = compileAttr(el.getAttribute("value") || "");
+    const hintRaw = el.getAttribute("hint-placeholder-val");
+    const hintGet = hintRaw != null ? compileAttr(hintRaw) : null;
+    const kids = walkChildren(el, host);
+    return (vals, ctx, key) => {
+      let v = valGet(vals);
+      if (v === void 0 && hintGet && ctx?.__streamingNow) v = hintGet(vals);
+      return v ? h(
+        getReact().Fragment,
+        { key },
+        kids.map((b, j) => b(vals, ctx, j))
+      ) : null;
+    };
+  }
+  function walkComponent(el, host) {
+    const name = el.getAttribute("name") || el.getAttribute("component") || "";
+    el.removeAttribute("name");
+    el.removeAttribute("component");
+    const tplId = el.getAttribute("data-dc-tpl");
+    const styleRaw = el.getAttribute("style");
+    el.removeAttribute("style");
+    const styleGet = styleRaw != null ? compileAttr(styleRaw) : null;
+    const { propGetters, hintSize } = collectProps(el, "dc-import", host);
+    const kids = walkChildren(el, host);
+    return (vals, ctx, key) => {
+      const props = {
+        key,
+        __hintSize: hintSize,
+        __tplId: tplId,
+        __hostStyle: styleGet ? hostPositionStyle(styleGet(vals)) : void 0
+      };
+      for (const [k, g] of propGetters) {
+        const v = g(vals);
+        if (k === "dcProps") {
+          if (v && typeof v === "object") Object.assign(props, v);
+          continue;
+        }
+        props[k] = v;
+      }
+      if (kids.length) props.children = kids.map((b, j) => b(vals, ctx, j));
+      return h(host.component(name), props);
+    };
+  }
+  function walkXImport(el, host) {
+    const globalNameGet = compileAttr(
+      el.getAttribute("component-from-global-scope") || ""
+    );
+    const exportNameGet = compileAttr(
+      el.getAttribute("component") || el.getAttribute("name") || ""
+    );
+    const fromRaw = el.getAttribute("from") || (el.getAttribute("component-from-global-scope") ? "" : el.getAttribute("src") || el.getAttribute("import") || "");
+    const urls = fromRaw.trim() ? fromRaw.trim().split(/\s+/) : [];
+    const url = urls.length ? urls[urls.length - 1] : "";
+    const kindOf = (u) => /\.(jsx|tsx)(\?|#|$)/i.test(u) ? "jsx" : "js";
+    const tplId = el.getAttribute("data-dc-tpl");
+    const styleRaw = el.getAttribute("style");
+    el.removeAttribute("style");
+    const styleGet = styleRaw != null ? compileAttr(styleRaw) : null;
+    const wrap = tplId != null || styleGet != null;
+    const { propGetters, hintSize } = collectProps(el, "x-import", host);
+    const hasContent = el.children.length > 0 || !!(el.textContent || "").trim();
+    const kids = hasContent ? walkChildren(el, host) : [];
+    const urlBindable = fromRaw.includes("{{");
+    if (urls.length && !urlBindable) {
+      let prev;
+      for (const u of urls) prev = host.loadExternal(kindOf(u), u, prev);
+    }
+    const evalName = (g, vals) => {
+      const v = g(vals);
+      const s = v == null ? "" : String(v);
+      return s.includes("{{") ? "" : s;
+    };
+    return (vals, ctx, key) => {
+      const globalName = evalName(globalNameGet, vals);
+      const name = globalName || evalName(exportNameGet, vals);
+      const C = !name || urlBindable ? null : globalName ? host.resolveExternalGlobal(url, globalName) : host.resolveExternal(url, name);
+      const hostStyle = styleGet ? hostPositionStyle(styleGet(vals)) : void 0;
+      const wrapper = wrap ? {
+        key,
+        className: "sc-host-x",
+        "data-dc-tpl": tplId,
+        style: hostStyle || { display: "contents" }
+      } : null;
+      if (!C) {
+        const error = urlBindable ? "x-import `from` cannot contain {{ \u2026 }} \u2014 module URLs are resolved at parse time; use a literal URL" : host.resolveExternalError(url, name);
+        const ph = host.placeholder({
+          key: wrapper ? void 0 : key,
+          name,
+          hintSize,
+          error
+        });
+        return wrapper ? h("div", wrapper, ph) : ph;
+      }
+      const props = wrapper ? {} : { key };
+      let unresolvedHole = false;
+      for (const [k, g] of propGetters) {
+        if (k === "component" || k === "componentFromGlobalScope" || k === "from") {
+          continue;
+        }
+        const v = g(vals);
+        if (v === void 0) unresolvedHole = true;
+        if (k === "dcProps") {
+          if (v && typeof v === "object") Object.assign(props, v);
+          continue;
+        }
+        props[k] = v;
+      }
+      if (unresolvedHole && ctx?.__htmlStreamingNow) {
+        const ph = host.placeholder({
+          key: wrapper ? void 0 : key,
+          name,
+          hintSize,
+          error: null
+        });
+        return wrapper ? h("div", wrapper, ph) : ph;
+      }
+      if (kids.length) props.children = kids.map((b, j) => b(vals, ctx, j));
+      return wrapper ? h("div", wrapper, h(C, props)) : h(C, props);
+    };
+  }
+  function contentKey(el) {
+    const clone = el.cloneNode(true);
+    for (const d of clone.querySelectorAll("*")) {
+      while (d.attributes.length) d.removeAttribute(d.attributes[0].name);
+    }
+    const s = clone.innerHTML;
+    let h2 = 5381;
+    for (let i = 0; i < s.length; i++) h2 = (h2 << 5) + h2 + s.charCodeAt(i) | 0;
+    return s.length + "." + (h2 >>> 0).toString(36);
+  }
+  var NEVER_CONTENT_KEYED = new Set(
+    "script style textarea option title select canvas iframe video audio".split(
+      " "
+    )
+  );
+  var NOT_INLINE_SELECTOR = ":not(" + [...INLINE_TEXT_TAGS].join(",") + ")";
+  function walkElement(el, host) {
+    const realTag = RAW_UNWRAP[el.localName] || el.localName;
+    const tplId = el.getAttribute("data-dc-tpl");
+    const inlineOnly = el.childNodes.length > 0 && !NEVER_CONTENT_KEYED.has(realTag) && el.querySelector(NOT_INLINE_SELECTOR) === null;
+    const keySuffix = inlineOnly ? "|" + contentKey(el) : "";
+    const { propGetters, pseudoClasses } = collectProps(el, "dom", host);
+    const kids = walkChildren(el, host);
+    return (vals, ctx, key) => {
+      const props = {
+        key: key + keySuffix,
+        "data-dc-tpl": tplId
+      };
+      for (const [k, g] of propGetters) {
+        let v = g(vals);
+        if (k === "style" && typeof v === "string") v = cssToObj(v);
+        if ((k === "value" || k === "checked") && v === void 0) {
+          v = k === "checked" ? false : "";
+        }
+        props[k] = v;
+      }
+      if (pseudoClasses.length) {
+        props.className = [props.className, ...pseudoClasses].filter(Boolean).join(" ");
+      }
+      return h(realTag, props, ...kids.map((b, j) => b(vals, ctx, j)));
+    };
+  }
+
+  // src/logic.ts
+  var StreamableLogic = class {
+    constructor(props) {
+      __publicField(this, "props");
+      __publicField(this, "state", {});
+      /** Back-pointer to the wrapper component, installed after construction. */
+      __publicField(this, "__host");
+      this.props = props || {};
+    }
+    setState(update, cb) {
+      this.__host && this.__host.__setLogicState(update, cb);
+    }
+    forceUpdate() {
+      this.__host && this.__host.forceUpdate();
+    }
+    componentDidMount() {
+    }
+    componentDidUpdate(_prevProps) {
+    }
+    componentWillUnmount() {
+    }
+    /** The flat object the template renders against (merged over props). */
+    renderVals() {
+      return {};
+    }
+  };
+  function evalDcLogic(src) {
+    //! nosemgrep: eval-and-function-constructor
+    const fn = new Function(
+      "DCLogic",
+      "StreamableLogic",
+      "React",
+      src + '\n;return (typeof Component!=="undefined"&&Component)||undefined;'
+    );
+    return fn(StreamableLogic, StreamableLogic, getReact());
+  }
+
+  // src/component.ts
+  function shallowEqual(a, b) {
+    if (!b) return false;
+    const ak = Object.keys(a).filter((k) => k !== "children");
+    const bk = Object.keys(b).filter((k) => k !== "children");
+    if (ak.length !== bk.length) return false;
+    for (const k of ak) if (a[k] !== b[k]) return false;
+    return true;
+  }
+  function Placeholder({
+    name,
+    hintSize,
+    streaming,
+    error
+  }) {
+    const [w, hgt] = (hintSize || "100%,60px").split(",");
+    return h(
+      "div",
+      {
+        className: "sc-placeholder" + (streaming ? " sc-streaming" : ""),
+        style: { width: w.trim(), height: hgt && hgt.trim() },
+        title: name
+      },
+      error ? h(
+        "div",
+        { className: "sc-placeholder-error" },
+        (name ? name + ": " : "") + error
+      ) : null
+    );
+  }
+  function hintToMin(hint) {
+    if (!hint) return void 0;
+    const [w, hgt] = hint.split(",");
+    return { minWidth: w.trim(), minHeight: hgt && hgt.trim() };
+  }
+  function createComponentFactory(registry, ensureFetched) {
+    const React = getReact();
+    const AncestorContext = React.createContext([]);
+    class StreamableComponent extends React.Component {
+      constructor(props) {
+        super(props);
+        __publicField(this, "__name");
+        __publicField(this, "__sub");
+        __publicField(this, "__needsDidMount", false);
+        /** Snapshot of the registry's streaming flags taken at render time —
+         *  builders read it off the RenderCtx (this) to pick placeholder vs
+         *  render-nothing for unresolved values. */
+        __publicField(this, "__streamingNow", false);
+        __publicField(this, "__htmlStreamingNow", false);
+        /** When a construct throws, remember the (class, registry.ver, props)
+         *  triple so render-time reconcile doesn't re-attempt it on every parent
+         *  re-render. A registry bump (new class, template, external module
+         *  resolving via bumpAll) changes `ver` and breaks the memo so an
+         *  env-dependent constructor can self-heal. */
+        __publicField(this, "__failedLogic", null);
+        __publicField(this, "__failedUserProps", null);
+        __publicField(this, "__failedVer", -1);
+        /** Per-instance constructor error — kept here (not on the registry entry)
+         *  so one instance's successful construct can't hide a sibling's failure,
+         *  and a construct can never wipe an eval error `updateJs` recorded on
+         *  `r.logicError`. */
+        __publicField(this, "__ctorError", null);
+        __publicField(this, "logic");
+        this.__name = props.__name;
+        this.state = { __v: 0, __err: null };
+        this.__sub = () => {
+          if (this.state.__err) this.setState({ __err: null });
+          this.forceUpdate();
+        };
+        this.__makeLogic(registry.get(this.__name).Logic, null);
+        ensureFetched(this.__name);
+      }
+      /** Error-boundary hook: a render crash anywhere in this DC's subtree
+       *  (its own template, an x-import'd component, a child DC without its
+       *  own deeper boundary) lands here instead of unmounting the page. */
+      static getDerivedStateFromError(e) {
+        return { __err: e instanceof Error && e.message ? e.message : String(e) };
+      }
+      componentDidCatch(e, info) {
+        console.error(
+          "[dc-runtime] render error in <" + this.__name + ">:",
+          e,
+          info?.componentStack || ""
+        );
+      }
+      /** Instantiate the logic class (or the no-op base) and adopt `prevState`
+       *  over its initial state — used both at mount and on hot-swap. */
+      __makeLogic(Logic, prevState) {
+        const L = Logic || StreamableLogic;
+        try {
+          this.logic = new L(this.__userProps());
+          this.__failedLogic = null;
+          this.__failedUserProps = null;
+          this.__ctorError = null;
+        } catch (e) {
+          console.error(e);
+          this.__failedLogic = Logic;
+          this.__failedUserProps = this.__userProps();
+          this.__failedVer = registry.get(this.__name).ver;
+          this.__ctorError = this.__name + ": " + (e instanceof Error && e.message ? e.message : String(e));
+          this.logic = new StreamableLogic(
+            this.__userProps()
+          );
+        }
+        this.logic.__host = this;
+        if (prevState)
+          this.logic.state = { ...this.logic.state || {}, ...prevState };
+      }
+      /** The props the author's logic + template see — internal __-prefixed
+       *  wiring stripped. */
+      __userProps() {
+        const { __name, __hintSize, __tplId, __hostStyle, ...rest } = this.props;
+        return rest;
+      }
+      __setLogicState(update, cb) {
+        const prev = this.logic.state;
+        const patch = typeof update === "function" ? update(prev) : update;
+        this.logic.state = { ...prev, ...patch };
+        this.setState((s) => ({ __v: s.__v + 1 }), cb);
+      }
+      /** Swap the logic instance when the registry's Logic class changed
+       *  (streaming completion, hot reload). State carries over; didMount
+       *  re-fires after the swap commits so refs exist. */
+      __reconcileLogic() {
+        const r = registry.get(this.__name);
+        const Next = r.Logic;
+        const Cur = this.logic.constructor;
+        if (Next === Cur || !Next && Cur === StreamableLogic || Next === this.__failedLogic && r.ver === this.__failedVer && shallowEqual(this.__userProps(), this.__failedUserProps)) {
+          return;
+        }
+        if (!this.__needsDidMount) {
+          try {
+            this.logic.componentWillUnmount();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        this.__makeLogic(Next, this.logic.state);
+        this.__needsDidMount = true;
+      }
+      componentDidMount() {
+        registry.get(this.__name).subs.add(this.__sub);
+        try {
+          this.logic.componentDidMount();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      componentDidUpdate(prevProps) {
+        this.logic.props = this.__userProps();
+        if (this.__needsDidMount) {
+          if (this.state.__err || !registry.get(this.__name).tpl) return;
+          this.__needsDidMount = false;
+          try {
+            this.logic.componentDidMount();
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          try {
+            this.logic.componentDidUpdate(prevProps);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+      componentWillUnmount() {
+        registry.get(this.__name).subs.delete(this.__sub);
+        if (!this.__needsDidMount) {
+          try {
+            this.logic.componentWillUnmount();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+      render() {
+        const r = registry.get(this.__name);
+        const cls = "sc-host" + (r.htmlStreaming ? " sc-streaming-html" : "") + (r.jsStreaming ? " sc-streaming-js" : "");
+        const hintStyle = r.htmlStreaming ? hintToMin(this.props.__hintSize) : void 0;
+        const hostStyle = this.props.__hostStyle || hintStyle ? { ...hintStyle || {}, ...this.props.__hostStyle || {} } : void 0;
+        const hostBase = {
+          className: cls,
+          style: hostStyle,
+          "data-sc-name": this.__name,
+          "data-dc-tpl": this.props.__tplId
+        };
+        const chain = Array.isArray(this.context) ? this.context : [];
+        if (chain.includes(this.__name)) {
+          const cycle = [
+            ...chain.slice(chain.indexOf(this.__name)),
+            this.__name
+          ].join(" \u2192 ");
+          return h(
+            "div",
+            { ...hostBase, className: cls + " sc-has-error" },
+            h(Placeholder, {
+              name: this.__name,
+              hintSize: this.props.__hintSize,
+              error: "circular import: " + cycle
+            })
+          );
+        }
+        if (this.state.__err) {
+          return h(
+            "div",
+            { ...hostBase, className: cls + " sc-has-error" },
+            h(
+              "div",
+              { className: "sc-logic-error", "data-omelette-chrome": "" },
+              this.__name + ": " + this.state.__err
+            ),
+            h(Placeholder, {
+              name: this.__name,
+              hintSize: this.props.__hintSize,
+              error: this.state.__err
+            })
+          );
+        }
+        this.__reconcileLogic();
+        if (!r.tpl) {
+          return h(
+            "div",
+            hostBase,
+            h(Placeholder, { name: this.__name, hintSize: this.props.__hintSize })
+          );
+        }
+        const userProps = this.__userProps();
+        this.logic.props = userProps;
+        let vals = userProps;
+        let renderErr = r.logicError || this.__ctorError;
+        try {
+          vals = { ...userProps, ...this.logic.renderVals() || {} };
+        } catch (e) {
+          console.error(e);
+          renderErr = this.__name + ".renderVals(): " + (e instanceof Error && e.message ? e.message : String(e));
+        }
+        this.__streamingNow = !!(r.htmlStreaming || r.jsStreaming);
+        this.__htmlStreamingNow = !!r.htmlStreaming;
+        return h(
+          "div",
+          { ...hostBase, className: cls + (renderErr ? " sc-has-error" : "") },
+          renderErr && h(
+            "div",
+            { className: "sc-logic-error", "data-omelette-chrome": "" },
+            renderErr
+          ),
+          h(
+            AncestorContext.Provider,
+            { value: [...chain, this.__name] },
+            r.tpl(vals, this)
+          )
+        );
+      }
+    }
+    __publicField(StreamableComponent, "contextType", AncestorContext);
+    const named = /* @__PURE__ */ new Map();
+    function getDC(name) {
+      const hit = named.get(name);
+      if (hit) return hit;
+      function Dispatcher(p) {
+        const [, setTick] = React.useState(0);
+        React.useEffect(() => {
+          const sub = () => setTick((n) => n + 1);
+          registry.get(name).subs.add(sub);
+          return () => {
+            registry.get(name).subs.delete(sub);
+          };
+        }, []);
+        ensureFetched(name);
+        return h(StreamableComponent, { ...p, __name: name });
+      }
+      Dispatcher.displayName = name;
+      named.set(name, Dispatcher);
+      return Dispatcher;
+    }
+    return {
+      getDC,
+      StreamableComponent
+    };
+  }
+
+  // src/cdn.ts
+  var REACT_URL = "https://unpkg.com/react@18.3.1/umd/react.production.min.js";
+  var REACT_SRI = "sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z";
+  var REACT_DOM_URL = "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js";
+  var REACT_DOM_SRI = "sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1";
+  var BABEL_URL = "https://unpkg.com/@babel/standalone@7.29.0/babel.min.js";
+  var BABEL_SRI = "sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y";
+  function cdnScriptFor(url, sri) {
+    const res = window.__resources;
+    const v = res ? res[url] : void 0;
+    return typeof v === "string" && v ? { src: v } : { src: url, integrity: sri };
+  }
+
+  // src/external.ts
+  var isCustomElementName = (n) => !n.includes(".") && n.includes("-");
+  function isRenderableType(g) {
+    if (typeof g === "function") return !isElementClass(g);
+    return typeof g === "object" && g !== null && typeof g.$typeof === "symbol";
+  }
+  function resolveDottedPath(root, name) {
+    let cur = root;
+    for (const seg of name.split(".")) {
+      if (cur == null) return void 0;
+      cur = cur[seg];
+    }
+    return cur;
+  }
+  var GLOBAL_POLL_INTERVAL_MS = 50;
+  var GLOBAL_POLL_TIMEOUT_MS = 3e4;
+  function createExternalModules(onResolved) {
+    const cache = /* @__PURE__ */ new Map();
+    let babelLoading = null;
+    const reportedMissing = /* @__PURE__ */ new Map();
+    const polling = /* @__PURE__ */ new Set();
+    function ensureBabel() {
+      if (window.Babel) return Promise.resolve();
+      if (babelLoading) return babelLoading;
+      const babel = cdnScriptFor(BABEL_URL, BABEL_SRI);
+      babelLoading = new Promise((res, rej) => {
+        const s = document.createElement("script");
+        s.src = babel.src;
+        if (babel.integrity) {
+          s.integrity = babel.integrity;
+          s.crossOrigin = "anonymous";
+        }
+        s.onload = () => res();
+        s.onerror = rej;
+        document.head.appendChild(s);
+      });
+      return babelLoading;
+    }
+    const pending = /* @__PURE__ */ new Map();
+    function load(kind, url, after) {
+      const existing = pending.get(url);
+      if (existing) return existing;
+      cache.set(url, null);
+      console.info("[dc-runtime] x-import: loading", url, "(" + kind + ")");
+      const ready = Promise.all([
+        kind === "jsx" ? ensureBabel() : Promise.resolve(),
+        after ?? Promise.resolve()
+      ]);
+      const p = ready.then(() => fetch(url)).then((r) => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text();
+      }).then((src) => {
+        const code = kind === "jsx" ? window.Babel.transform(src, {
+          filename: url,
+          presets: ["react", "typescript"]
+        }).code : src;
+        const module = { exports: {} };
+        const before = new Set(Object.keys(window));
+        //! nosemgrep: eval-and-function-constructor
+        new Function("React", "module", "exports", "require", code)(
+          getReact(),
+          module,
+          module.exports,
+          () => ({})
+        );
+        const globals = {};
+        for (const k of Object.keys(window)) {
+          if (!before.has(k) && typeof window[k] === "function") {
+            globals[k] = window[k];
+          }
+        }
+        cache.set(url, { mod: module.exports, globals });
+        console.info(
+          "[dc-runtime] x-import: loaded",
+          url,
+          "\u2014 exports:",
+          Object.keys(module.exports),
+          "window globals:",
+          Object.keys(globals)
+        );
+        onResolved();
+      }).catch((e) => {
+        cache.set(url, {
+          mod: {},
+          globals: {},
+          error: "failed to load: " + (e instanceof Error && e.message ? e.message : String(e))
+        });
+        console.error(
+          "[dc-runtime] x-import: FAILED to load",
+          url,
+          "(" + kind + ")",
+          e
+        );
+        onResolved();
+      });
+      pending.set(url, p);
+      return p;
+    }
+    function resolve2(url, name) {
+      const entry = cache.get(url);
+      if (!entry) return null;
+      const { mod, globals } = entry;
+      const C = mod && mod[name] || globals && globals[name] || typeof window !== "undefined" && window[name] || mod && mod.default;
+      if (typeof C === "function") return C;
+      const key = url + "\0" + name;
+      if (!reportedMissing.has(key)) {
+        reportedMissing.set(
+          key,
+          entry.error || 'no export named "' + name + '" (has: ' + Object.keys(mod).join(", ") + ")"
+        );
+        console.error(
+          "[dc-runtime] x-import: module",
+          url,
+          "loaded but has no component named",
+          JSON.stringify(name),
+          "\u2014 available exports:",
+          Object.keys(mod),
+          "window globals:",
+          Object.keys(globals),
+          ". The module must `module.exports = {" + name + "}` or set `window." + name + "`."
+        );
+      }
+      return null;
+    }
+    function waitForGlobal(name) {
+      if (polling.has(name)) return;
+      polling.add(name);
+      const started = Date.now();
+      const isCE = isCustomElementName(name);
+      const tick = () => {
+        const found = isCE ? customElements.get(name) : isRenderableType(resolveDottedPath(window, name));
+        if (found) {
+          polling.delete(name);
+          onResolved();
+          return;
+        }
+        if (Date.now() - started >= GLOBAL_POLL_TIMEOUT_MS) {
+          console.warn(
+            "[dc-runtime] x-import: global",
+            JSON.stringify(name),
+            "never appeared on window after " + GLOBAL_POLL_TIMEOUT_MS + "ms"
+          );
+          return;
+        }
+        setTimeout(tick, GLOBAL_POLL_INTERVAL_MS);
+      };
+      setTimeout(tick, GLOBAL_POLL_INTERVAL_MS);
+    }
+    function resolveGlobal(url, name) {
+      const isCE = isCustomElementName(name);
+      if (!url) {
+        if (isCE) {
+          if (customElements.get(name)) return name;
+          waitForGlobal(name);
+          return null;
+        }
+        const g2 = resolveDottedPath(window, name);
+        if (isRenderableType(g2)) return g2;
+        waitForGlobal(name);
+        return null;
+      }
+      const entry = cache.get(url);
+      if (!entry) return null;
+      if (isCE && customElements.get(name)) return name;
+      const g = entry.globals[name] ?? resolveDottedPath(window, name);
+      if (isRenderableType(g)) return g;
+      if (name.includes(".")) return null;
+      const key = url + "\0global\0" + name;
+      if (!reportedMissing.has(key)) {
+        reportedMissing.set(key, null);
+        if (isCE && !customElements.get(name)) {
+          console.warn(
+            "[dc-runtime] x-import:",
+            url,
+            "loaded but no custom element",
+            JSON.stringify(name),
+            "is registered and window." + name + " is not a function \u2014 rendering <" + name + "> as an unknown element."
+          );
+        }
+      }
+      return name;
+    }
+    function getError(url, name) {
+      const entry = cache.get(url);
+      if (entry?.error) return entry.error;
+      return reportedMissing.get(url + "\0" + name) || null;
+    }
+    return { load, resolve: resolve2, resolveGlobal, getError };
+  }
+  function isElementClass(g) {
+    try {
+      return typeof g === "function" && typeof HTMLElement !== "undefined" && g.prototype instanceof HTMLElement;
+    } catch {
+      return false;
+    }
+  }
+
+  // src/atomics.ts
+  var ATOMIC_CSS = (
+    // layout
+    ".fx{display:flex}.col{display:flex;flex-direction:column}.grid{display:grid}.ac{align-items:center}.jc{justify-content:center}.jb{justify-content:space-between}.f1{flex:1}.noshrink{flex-shrink:0}.wrap{flex-wrap:wrap}.fw5{font-weight:500}.fw6{font-weight:600}.fw7{font-weight:700}.fw8{font-weight:800}.fs11{font-size:11px}.fs12{font-size:12px}.fs13{font-size:13px}.fs14{font-size:14px}.fs15{font-size:15px}.fs16{font-size:16px}.fs20{font-size:20px}.fs22{font-size:22px}.upper{text-transform:uppercase}.tc{text-align:center}.nowrap{white-space:nowrap}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}.gap16{gap:16px}.gap24{gap:24px}.m0{margin:0}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}.posrel{position:relative}.posabs{position:absolute}.round{border-radius:50%}.ohide{overflow:hidden}.bbox{box-sizing:border-box}.pointer{cursor:pointer}.w100{width:100%}.b0{border:none}"
+  );
+
+  // src/helmet.ts
+  var DESIGN_DOC_MODE_RE = /<meta\b[^>]*\bname\s*=\s*["']design_doc_mode["'][^>]*\b(?:content|value)\s*=\s*["'](\w+)["']/i;
+  var CANVAS_BG_LIGHT = "#f0eee6";
+  var CANVAS_BG_DARK = "#2e2c26";
+  function createHelmetManager(doc, isStreaming) {
+    const mounted = /* @__PURE__ */ new Set();
+    const live = /* @__PURE__ */ new Map();
+    let designDocMode = null;
+    let canvasStyleEl = null;
+    let appTheme = "light";
+    try {
+      const ds = doc.documentElement.dataset.theme;
+      appTheme = ds === "dark" || ds === "light" ? ds : new URLSearchParams(doc.defaultView?.location.search ?? "").get(
+        "theme"
+      ) === "dark" ? "dark" : "light";
+    } catch {
+    }
+    function applyCanvasBg() {
+      if (!canvasStyleEl) return;
+      const bg = appTheme === "dark" ? CANVAS_BG_DARK : CANVAS_BG_LIGHT;
+      canvasStyleEl.textContent = `html,body{background:${bg}}#dc-root>.sc-host{position:relative}`;
+    }
+    function postDesignMode(mode) {
+      if (window.parent === window) return;
+      try {
+        window.parent.postMessage({ type: "__dc_design_mode", mode }, "*");
+      } catch {
+      }
+    }
+    function setDesignDocMode(mode) {
+      if (mode === designDocMode) return;
+      designDocMode = mode;
+      postDesignMode(mode);
+      if (mode === "canvas") {
+        doc.documentElement.setAttribute("data-dc-canvas", "");
+        canvasStyleEl = doc.createElement("style");
+        canvasStyleEl.setAttribute("data-dc-canvas", "");
+        applyCanvasBg();
+        doc.head.appendChild(canvasStyleEl);
+      } else {
+        doc.documentElement.removeAttribute("data-dc-canvas");
+        canvasStyleEl?.remove();
+        canvasStyleEl = null;
+      }
+    }
+    window.addEventListener("message", (e) => {
+      const type = e.data && e.data.type;
+      if (type === "__dc_theme") {
+        const t = e.data.theme;
+        if (t === "light" || t === "dark") {
+          appTheme = t;
+          doc.documentElement.dataset.theme = t;
+          applyCanvasBg();
+        }
+        return;
+      }
+      if (!designDocMode || type !== "__dc_probe") return;
+      postDesignMode(designDocMode);
+    });
+    function compile(node) {
+      const raw = [...node.children];
+      const helmetClosed = node.nextSibling != null || node.parentNode?.nextSibling != null;
+      if (node.hasAttribute("data-dc-atomics") && !mounted.has("__dc-atomics")) {
+        mounted.add("__dc-atomics");
+        const el = doc.createElement("style");
+        el.id = "__dc-atomics";
+        el.textContent = ATOMIC_CSS;
+        doc.head.appendChild(el);
+      }
+      return (_vals, ctx) => {
+        const name = ctx && ctx.__name || "";
+        const streaming = !!(name && isStreaming(name));
+        for (let i = 0; i < raw.length; i++) {
+          const child = raw[i];
+          const tag = child.tagName;
+          const mayBePartial = streaming && !helmetClosed && i === raw.length - 1;
+          if (tag === "SCRIPT") {
+            if (mayBePartial) continue;
+            const key = "SCRIPT|" + (child.getAttribute("src") || child.textContent || "");
+            if (mounted.has(key)) continue;
+            mounted.add(key);
+            const el = doc.createElement("script");
+            for (const { name: an, value } of [...child.attributes])
+              el.setAttribute(an, value);
+            if (child.textContent) el.textContent = child.textContent;
+            doc.head.appendChild(el);
+          } else if (tag === "LINK" || tag === "META") {
+            if (mayBePartial) continue;
+            const key = tag + "|" + (child.getAttribute("href") || child.getAttribute("src") || child.outerHTML);
+            if (mounted.has(key)) continue;
+            mounted.add(key);
+            doc.head.appendChild(child.cloneNode(true));
+          } else {
+            const key = name + "|" + i;
+            let el = live.get(key);
+            if (!el || el.tagName !== tag) {
+              if (el) el.remove();
+              el = doc.createElement(tag.toLowerCase());
+              live.set(key, el);
+              doc.head.appendChild(el);
+            }
+            for (const { name: an, value } of [...child.attributes]) {
+              if (el.getAttribute(an) !== value) el.setAttribute(an, value);
+            }
+            if (el.textContent !== child.textContent)
+              el.textContent = child.textContent;
+          }
+        }
+        return null;
+      };
+    }
+    return { compile, setDesignDocMode };
+  }
+
+  // src/pseudo.ts
+  function createPseudoSheet(doc) {
+    let el = null;
+    const cache = /* @__PURE__ */ new Map();
+    let n = 0;
+    return (pseudo, css) => {
+      const k = pseudo + "|" + css;
+      const hit = cache.get(k);
+      if (hit) return hit;
+      if (!el) {
+        el = doc.createElement("style");
+        doc.head.appendChild(el);
+      }
+      const cls = "scp" + (n++).toString(36);
+      const sel = pseudo === "before" || pseudo === "after" ? "." + cls + "::" + pseudo : "." + cls + ":" + pseudo;
+      el.sheet.insertRule(sel + "{" + css + "}", el.sheet.cssRules.length);
+      cache.set(k, cls);
+      return cls;
+    };
+  }
+
+  // src/registry.ts
+  function createRegistry() {
+    const entries = /* @__PURE__ */ Object.create(null);
+    function get(name) {
+      return entries[name] || (entries[name] = {
+        html: "",
+        tpl: null,
+        Logic: null,
+        jsStreaming: false,
+        htmlStreaming: false,
+        ver: 0,
+        subs: /* @__PURE__ */ new Set(),
+        fetched: false
+      });
+    }
+    function bump(name) {
+      const r = get(name);
+      r.ver++;
+      for (const fn of r.subs) fn();
+    }
+    return {
+      entries,
+      get,
+      bump,
+      bumpAll() {
+        for (const n in entries) bump(n);
+      }
+    };
+  }
+
+  // src/runtime.ts
+  var COMPONENT_DIR = ".";
+  function createRuntime(doc = document) {
+    const registry = createRegistry();
+    const pseudoClass = createPseudoSheet(doc);
+    const helmet = createHelmetManager(
+      doc,
+      (name) => registry.get(name).htmlStreaming
+    );
+    const external = createExternalModules(() => registry.bumpAll());
+    const factory = createComponentFactory(registry, ensureFetched);
+    const host = {
+      component: (name) => factory.getDC(name),
+      placeholder: (props) => h(Placeholder, props),
+      helmet: (node) => helmet.compile(node),
+      loadExternal: (kind, url, after) => external.load(kind, url, after),
+      resolveExternal: (url, name) => external.resolve(url, name),
+      resolveExternalGlobal: (url, name) => external.resolveGlobal(url, name),
+      resolveExternalError: (url, name) => external.getError(url, name),
+      pseudoClass
+    };
+    function ensureFetched(name) {
+      const r = registry.get(name);
+      if (r.fetched) return;
+      r.fetched = true;
+      const url = COMPONENT_DIR + "/" + encodeURIComponent(name) + ".dc.html";
+      fetch(url).then((res) => {
+        if (!res.ok) {
+          console.error(
+            "[dc-runtime] sibling fetch for <" + name + "/> failed:",
+            url,
+            "returned",
+            res.status,
+            "\u2014 the reference renders as an empty placeholder."
+          );
+          return "";
+        }
+        return res.text();
+      }).then((t) => {
+        if (!t) return;
+        const parsed = parseDcText(t);
+        if (!parsed) {
+          console.error(
+            "[dc-runtime] sibling fetch for <" + name + "/>:",
+            url,
+            "has no <x-dc" + "> block \u2014 not a Design Component."
+          );
+          return;
+        }
+        if (parsed.props) r.propsMeta = parsed.props;
+        if (parsed.preview) r.preview = parsed.preview;
+        if (parsed.template && !r.html) updateHtml(name, parsed.template);
+        if (parsed.js && !r.Logic) updateJs(name, parsed.js);
+      }).catch(
+        (e) => console.error(
+          "[dc-runtime] sibling fetch for <" + name + "/> threw:",
+          url,
+          e
+        )
+      );
+    }
+    let rootName = null;
+    function updateHtml(name, html) {
+      const r = registry.get(name);
+      r.html = html;
+      if (name === rootName) {
+        const mode = DESIGN_DOC_MODE_RE.exec(html)?.[1] ?? null;
+        if (mode || !r.htmlStreaming) helmet.setDesignDocMode(mode);
+      }
+      try {
+        r.tpl = compileTemplate(html, host);
+      } catch (e) {
+        console.error("[dc-runtime] template compile FAILED for", name, e);
+      }
+      registry.bump(name);
+    }
+    function updateJs(name, src) {
+      const r = registry.get(name);
+      const seq = r.jsSeq = (r.jsSeq || 0) + 1;
+      try {
+        const Cls = evalDcLogic(src);
+        if (r.jsSeq !== seq) return;
+        if (typeof Cls !== "function") {
+          r.logicError = name + ".dc.html: <script data-dc-script> must define `class Component extends DCLogic`";
+        } else {
+          r.logicError = null;
+          r.Logic = Cls;
+        }
+      } catch (e) {
+        if (r.jsSeq !== seq) return;
+        console.error(
+          "[dc-runtime] logic class eval FAILED for",
+          name,
+          "\u2014 the template renders with props only.",
+          e
+        );
+        r.logicError = name + ": " + (e instanceof Error && e.message ? e.message : String(e));
+      }
+      registry.bump(name);
+    }
+    function setStreaming(name, kind, on) {
+      const r = registry.get(name);
+      if (kind === "html") r.htmlStreaming = !!on;
+      else r.jsStreaming = !!on;
+      let any = false;
+      for (const n in registry.entries) {
+        const e = registry.entries[n];
+        if (e && (e.htmlStreaming || e.jsStreaming)) {
+          any = true;
+          break;
+        }
+      }
+      doc.documentElement.classList.toggle("sc-dc-streaming", any);
+      registry.bump(name);
+    }
+    function dcUpdate(name, kind, content, streaming) {
+      if (streaming) registry.get(name).fetched = true;
+      if (kind === "html") {
+        setStreaming(name, "html", !!streaming);
+        updateHtml(name, content);
+      } else if (kind === "js") {
+        setStreaming(name, "js", !!streaming);
+        if (!streaming) updateJs(name, content);
+      } else if (kind === "props") {
+        const { props, preview } = parseDataProps(content);
+        const r = registry.get(name);
+        r.propsMeta = props ?? void 0;
+        r.preview = preview;
+        registry.bump(name);
+      }
+    }
+    function setProps(name, overrides) {
+      registry.get(name).propOverrides = overrides && typeof overrides === "object" ? { ...overrides } : null;
+      registry.bump(name);
+    }
+    function adoptParsed(name, parsed) {
+      if (!parsed) return;
+      const r = registry.get(name);
+      if (parsed.props) r.propsMeta = parsed.props;
+      if (parsed.preview) r.preview = parsed.preview;
+      if (parsed.template) updateHtml(name, parsed.template);
+      if (parsed.js) updateJs(name, parsed.js);
+    }
+    return {
+      registry,
+      getDC: factory.getDC,
+      updateHtml,
+      updateJs,
+      dcUpdate,
+      setProps,
+      adoptParsed,
+      setRootName: (name) => {
+        rootName = name;
+      },
+      markFetched: (name) => {
+        registry.get(name).fetched = true;
+      },
+      annotatedTemplate: (name) => {
+        const r = registry.get(name);
+        return r.tpl && r.tpl.__annotated || null;
+      },
+      templateSource: (name) => registry.get(name).html || null,
+      StreamableLogic
+    };
+  }
+
+  // src/stream-state.ts
+  function createStreamTracker(staleMs = 6e4, now = Date.now) {
+    const since = /* @__PURE__ */ new Map();
+    const liveOne = (n) => {
+      const t = since.get(n);
+      if (t === void 0) return false;
+      if (now() - t > staleMs) {
+        since.delete(n);
+        return false;
+      }
+      return true;
+    };
+    return {
+      push(name, streaming, viewportKey) {
+        if (viewportKey === "dc-model") return;
+        if (streaming) since.set(name, now());
+        else since.delete(name);
+      },
+      live(name) {
+        if (name !== void 0) return liveOne(name);
+        for (const n of [...since.keys()]) if (liveOne(n)) return true;
+        return false;
+      }
+    };
+  }
+
+  // src/index.ts
+  function hideRawTemplate() {
+    const s = document.createElement("style");
+    s.textContent = "x-dc{display:none!important}";
+    document.head.appendChild(s);
+  }
+  function loadScript(src, integrity) {
+    return new Promise((resolve2, reject) => {
+      //! nosemgrep: create-script-element
+      const s = document.createElement("script");
+      s.src = src;
+      if (integrity) {
+        s.integrity = integrity;
+        s.crossOrigin = "anonymous";
+      }
+      s.async = false;
+      s.onload = () => resolve2();
+      s.onerror = () => reject(new Error(`failed to load ${src}`));
+      document.head.appendChild(s);
+    });
+  }
+  function loadReactUmd() {
+    const w = window;
+    if (w.React && w.ReactDOM) return Promise.resolve();
+    const react = cdnScriptFor(REACT_URL, REACT_SRI);
+    const reactDom = cdnScriptFor(REACT_DOM_URL, REACT_DOM_SRI);
+    return Promise.all([
+      loadScript(react.src, react.integrity),
+      loadScript(reactDom.src, reactDom.integrity)
+    ]).then(() => void 0);
+  }
+  function init() {
+    const runtime = createRuntime(document);
+    let rootName = "Root";
+    const baseCss = document.createElement("style");
+    baseCss.textContent = BASE_CSS;
+    document.head.prepend(baseCss);
+    const notifyHost = () => {
+      if (window.parent === window) return;
+      const r = runtime.registry.entries[rootName];
+      try {
+        window.parent.postMessage(
+          {
+            type: "__dc_booted",
+            rootName,
+            propsMeta: r && r.propsMeta || null,
+            preview: r && r.preview || null
+          },
+          "*"
+        );
+      } catch {
+      }
+    };
+    const streams = createStreamTracker();
+    const api = {
+      __dcUpdate: (name, kind, content, streaming, viewportKey) => {
+        streams.push(name, streaming, viewportKey);
+        runtime.dcUpdate(name, kind, content, streaming);
+        if (name === rootName && !streaming && kind === "props") notifyHost();
+      },
+      __dcStreaming: (name) => streams.live(name),
+      __dcSetProps: (name, overrides) => runtime.setProps(name, overrides),
+      /** Name of the component currently mounted as the page root — DC tools
+       *  push their template-stream here when targeting "the open page". */
+      __dcRootName: () => rootName,
+      /** Editor bridge — the encoded, `data-dc-tpl`-annotated template source.
+       *  The host editor parses this into its own template DOM so it can map a
+       *  rendered node (carrying the same `data-dc-tpl`) back to the source
+       *  node that emitted it. Returns the encoded form (`<sc-comp>`,
+       *  `sc-camel-*` attrs); the editor decodes on serialize. */
+      __dcAnnotatedTemplate: (name) => runtime.annotatedTemplate(name),
+      /** Editor bridge — the *original* (decoded) template source. */
+      __dcTemplateSource: (name) => runtime.templateSource(name),
+      __dcBoot: () => {
+        rootName = boot(runtime, document) ?? rootName;
+        notifyHost();
+      },
+      __dcRegistry: runtime.registry.entries,
+      getDC: (name) => runtime.getDC(name),
+      // `DCLogic` is the documented base class name; `StreamableLogic` is the
+      // implementation alias kept for any project that already references it.
+      DCLogic: runtime.StreamableLogic,
+      StreamableLogic: runtime.StreamableLogic
+    };
+    Object.assign(window, api);
+    window.__dcContentKeyed = true;
+    if (document.readyState !== "loading") api.__dcBoot();
+    else document.addEventListener("DOMContentLoaded", () => api.__dcBoot());
+  }
+  hideRawTemplate();
+  loadReactUmd().then(init).catch((err) => {
+    console.error("[dc] failed to load React or boot:", err);
+    throw err;
+  });
+})();
+
+</script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+html,body{margin:0;padding:0;height:100%;background:#F5F6F8;font-family:-apple-system,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Segoe UI',sans-serif;color:#1B1E24;font-size:13px;}
+a{color:#4A63D8;text-decoration:none;}
+a:hover{color:#1B1E24;text-decoration:underline;}
+*{box-sizing:border-box;}
+::-webkit-scrollbar{width:9px;height:9px;}
+::-webkit-scrollbar-thumb{background:rgba(27,30,36,.2);border-radius:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+@keyframes mfIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@keyframes mfPulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+@keyframes mfToast{from{opacity:0;transform:translate(-50%,-8px);}to{opacity:1;transform:translate(-50%,0);}}
+</style>
+</helmet>
+<div style="display:flex;flex-direction:column;height:100vh;overflow:hidden;">
+
+  <!-- ═══════ 全局顶栏 · v1.0.1 ═══════ -->
+  <header style="flex:none;height:50px;display:flex;align-items:center;gap:18px;padding:0 16px;background:#191C22;color:#E8EAEE;">
+    <div style="display:flex;align-items:center;gap:9px;">
+      <div style="width:22px;height:22px;border-radius:6px;background:#4A63D8;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;">M</div>
+      <span style="font-weight:700;font-size:14.5px;letter-spacing:.3px;">MetaFlow</span>
+      <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(232,234,238,.4);">jaffle_v3 · testkit</span>
+    </div>
+    <div style="display:flex;gap:2px;background:rgba(255,255,255,.07);border-radius:8px;padding:3px;">
+      <button onClick="{{ goBU }}" style="{{ roleBtnBU }}">BU 业务用户</button>
+      <button onClick="{{ goDA }}" style="{{ roleBtnDA }}">DA 数据分析师</button>
+      <button onClick="{{ goDE }}" style="{{ roleBtnDE }}">DE 数据工程师</button>
+    </div>
+    <div style="flex:1;"></div>
+    <button onClick="{{ toggleDemo }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border:none;border-radius:7px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ demoBtnLabel }}</button>
+    <div style="position:relative;" onMouseEnter="{{ infoEnter }}" onMouseLeave="{{ infoLeave }}">
+      <div style="width:26px;height:26px;border-radius:50%;border:1px solid rgba(232,234,238,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-style:italic;font-family:Georgia,serif;cursor:default;color:rgba(232,234,238,.7);">i</div>
+      <sc-if value="{{ infoOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:34px;right:0;width:320px;background:#fff;color:#1B1E24;border:1px solid rgba(27,30,36,.12);border-radius:10px;box-shadow:0 10px 30px rgba(20,22,28,.18);padding:14px 16px;z-index:60;animation:mfIn .15s ease both;">
+          <div style="font-weight:700;font-size:12.5px;margin-bottom:3px;">{{ infoTitle }}</div>
+          <div style="font-size:11px;color:rgba(27,30,36,.55);margin-bottom:10px;">数据层访问矩阵（约束由 Capability Binder 强制，非提示）</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <sc-for list="{{ infoRows }}" as="r" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;width:92px;flex:none;">{{ r.layer }}</span>
+                <span style="font-size:11.5px;font-weight:600;color:{{ r.c }};">{{ r.tag }}</span>
+                <span style="font-size:11px;color:rgba(27,30,36,.5);">{{ r.note }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </header>
+
+  <!-- ═══════ Toast ═══════ -->
+  <sc-if value="{{ hasNotice }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;top:62px;left:50%;transform:translateX(-50%);z-index:80;background:#191C22;color:#E8EAEE;padding:10px 18px;border-radius:9px;font-size:12.5px;box-shadow:0 8px 24px rgba(20,22,28,.3);animation:mfToast .25s ease both;display:flex;align-items:center;gap:9px;">
+      <span style="width:7px;height:7px;border-radius:50%;background:#3DBC82;flex:none;"></span>
+      <span>{{ noticeText }}</span>
+    </div>
+  </sc-if>
+
+  <div style="flex:1;display:flex;min-height:0;">
+
+  <!-- ════════════════════ BU 界面 ════════════════════ -->
+  <sc-if value="{{ isBU }}" hint-placeholder-val="{{ true }}">
+
+    <aside style="flex:none;width:262px;background:#1F232B;color:#DDE0E6;display:flex;flex-direction:column;min-height:0;">
+      <div style="padding:16px 16px 10px;">
+        <div style="font-size:12.5px;font-weight:700;">已认证能力目录</div>
+        <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(221,224,230,.4);margin-top:3px;">semantic_capability_list.yaml · {{ catalogCount }} assets</div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:2px 10px 12px;display:flex;flex-direction:column;gap:6px;">
+        <sc-for list="{{ buCatalog }}" as="cap" hint-placeholder-count="5">
+          <div style="{{ cap.style }}">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;font-weight:600;color:#fff;">{{ cap.name }}</span>
+              <sc-if value="{{ cap.isNew }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:4px;background:#2AA36B;color:#fff;">NEW</span>
+              </sc-if>
+            </div>
+            <div style="font-size:11px;color:rgba(221,224,230,.55);margin-top:3px;">{{ cap.desc }}</div>
+            <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(221,224,230,.35);margin-top:3px;">{{ cap.metrics }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex:none;margin:0 10px 14px;padding:11px 12px;border:1px dashed rgba(196,68,42,.55);border-radius:9px;background:rgba(196,68,42,.1);">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:#E58A72;margin-bottom:5px;">未通过财务认证</div>
+        <div style="font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(221,224,230,.6);line-height:1.7;">M014 · M140 · M141<br>payment amount · P0 未修</div>
+      </div>
+    </aside>
+
+    <main style="flex:1;display:flex;flex-direction:column;min-width:0;background:#F5F6F8;">
+      <div ref="{{ buScroll }}" style="flex:1;overflow-y:auto;padding:20px 26px 10px;">
+        <div style="max-width:720px;margin:0 auto;">
+          <sc-if value="{{ buEmpty }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:44px 8px 20px;">
+              <div style="font-size:21px;font-weight:700;line-height:1.4;">向 MetaFlow 提出业务问题</div>
+              <p style="font-size:13px;line-height:1.8;color:rgba(27,30,36,.6);max-width:520px;margin:10px 0 0;">回答只来自左侧已认证的 semantic 能力。命中认证口径 → 给出答案与凭证；口径歧义 → 反问澄清；超出认证范围 → 明确 MISS 并可转交 DA 诊断。</p>
+            </div>
+          </sc-if>
+          <sc-for list="{{ buMsgs }}" as="m" hint-placeholder-count="0">
+            <div style="animation:mfIn .25s ease both;">
+              <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;justify-content:flex-end;margin:16px 0 12px;">
+                  <div style="max-width:75%;background:#4A63D8;color:#fff;padding:9px 14px;border-radius:12px 12px 3px 12px;font-size:13px;line-height:1.6;">{{ m.text }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ m.isTyping }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;margin:0 0 14px;">
+                  <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:12px;padding:11px 16px;font-family:'SF Mono',Consolas,monospace;font-size:11px;color:rgba(27,30,36,.45);animation:mfPulse 1.1s ease infinite;">agent 正在检索认证能力…</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ m.isAgent }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:12px;padding:14px 16px;margin:0 0 16px;">
+                  <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+                    <span style="{{ m.pillStyle }}">{{ m.pill }}</span>
+                    <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(27,30,36,.4);">{{ m.category }}</span>
+                  </div>
+                  <div style="font-size:13.5px;line-height:1.75;">{{ m.text }}</div>
+                  <sc-if value="{{ m.hasTable }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:12px;border:1px solid rgba(27,30,36,.09);border-radius:9px;overflow:hidden;">
+                      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                        <thead><tr>
+                          <sc-for list="{{ m.tableHead }}" as="h" hint-placeholder-count="3">
+                            <th style="text-align:left;padding:7px 12px;background:#F0F1F4;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;font-weight:600;color:rgba(27,30,36,.6);">{{ h.t }}</th>
+                          </sc-for>
+                        </tr></thead>
+                        <tbody>
+                          <sc-for list="{{ m.tableRows }}" as="row" hint-placeholder-count="4">
+                            <tr style="border-top:1px solid rgba(27,30,36,.06);">
+                              <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="3">
+                                <td style="{{ c.style }}">{{ c.v }}</td>
+                              </sc-for>
+                            </tr>
+                          </sc-for>
+                        </tbody>
+                      </table>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ m.hasFoot }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:9px;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.45);">{{ m.foot }}</div>
+                  </sc-if>
+                  <sc-if value="{{ m.hasOptions }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+                      <sc-for list="{{ m.options }}" as="o" hint-placeholder-count="2">
+                        <button onClick="{{ o.onPick }}" style="font-family:inherit;font-size:12.5px;padding:8px 14px;border:1px solid rgba(74,99,216,.45);color:#4A63D8;background:#fff;border-radius:99px;cursor:pointer;font-weight:500;" style-hover="background:rgba(74,99,216,.07);">{{ o.label }}</button>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ m.hasHandoff }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(27,30,36,.07);display:flex;align-items:center;gap:12px;">
+                      <button onClick="{{ m.onHandoff }}" style="font-family:inherit;font-size:13px;font-weight:700;padding:10px 20px;border:none;border-radius:9px;background:#C9821B;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(201,130,27,.35);" style-hover="background:#B37317;">{{ m.handoffLabel }}</button>
+                      <span style="font-size:11.5px;color:rgba(27,30,36,.5);">生成 MISS 工单，进入 DA 诊断队列（反馈闭环第 1 步）</span>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="flex:none;padding:10px 26px 16px;background:#F5F6F8;">
+        <div style="max-width:720px;margin:0 auto;">
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px;">
+            <sc-for list="{{ buChips }}" as="c" hint-placeholder-count="3">
+              <button onClick="{{ c.onPick }}" style="font-family:inherit;font-size:12px;padding:6px 12px;border:1px solid rgba(27,30,36,.15);background:#fff;border-radius:99px;cursor:pointer;color:rgba(27,30,36,.75);" style-hover="border-color:#4A63D8;color:#4A63D8;">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ buWarn }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;margin-bottom:8px;border-radius:8px;background:rgba(201,130,27,.13);border:1px solid rgba(201,130,27,.35);font-size:12px;color:#8F5D10;animation:mfIn .2s ease both;">
+              <span style="font-weight:700;">△</span>
+              <span>此问题可能超出已认证范围 —— 未在左侧能力目录中命中，可能返回 MISS</span>
+            </div>
+          </sc-if>
+          <div style="display:flex;gap:9px;">
+            <input value="{{ buInput }}" onChange="{{ buOnInput }}" onKeyDown="{{ buOnKey }}" placeholder="例：2024 年每月确认收入是多少？" style="flex:1;font-family:inherit;font-size:13.5px;padding:11px 14px;border:1px solid rgba(27,30,36,.18);border-radius:9px;background:#fff;outline:none;color:#1B1E24;" style-focus="border-color:#4A63D8;box-shadow:0 0 0 3px rgba(74,99,216,.13);">
+            <button onClick="{{ buSend }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:0 20px;border:none;background:#191C22;color:#fff;border-radius:9px;cursor:pointer;" style-hover="background:#2A2E37;">提问</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside style="flex:none;width:296px;border-left:1px solid rgba(27,30,36,.09);background:#FBFBFC;overflow-y:auto;padding:16px;">
+      <div style="font-size:12.5px;font-weight:700;margin-bottom:3px;">答案凭证卡</div>
+      <div style="font-size:11px;color:rgba(27,30,36,.5);margin-bottom:14px;">Provenance Envelope · 每个答案必附</div>
+      <sc-if value="{{ noCred }}" hint-placeholder-val="{{ true }}">
+        <div style="border:1px dashed rgba(27,30,36,.2);border-radius:10px;padding:22px 16px;text-align:center;font-size:12px;color:rgba(27,30,36,.4);line-height:1.7;">提问后，此处显示答案的<br>来源资产、口径与校验状态</div>
+      </sc-if>
+      <sc-if value="{{ hasCred }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid rgba(27,30,36,.1);border-radius:11px;background:#fff;overflow:hidden;animation:mfIn .25s ease both;">
+          <div style="padding:11px 14px;background:{{ credHeadBg }};display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:{{ credDot }};flex:none;"></span>
+            <span style="font-size:12.5px;font-weight:700;color:{{ credHeadFg }};">{{ credTitle }}</span>
+          </div>
+          <div style="padding:12px 14px;display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ credRows }}" as="r" hint-placeholder-count="5">
+              <div>
+                <div style="font-size:10px;font-weight:600;letter-spacing:.8px;color:rgba(27,30,36,.4);">{{ r.k }}</div>
+                <div style="font-family:'SF Mono',Consolas,monospace;font-size:11.5px;margin-top:2px;color:{{ r.c }};word-break:break-all;">{{ r.v }}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ credChecksum }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(42,163,107,.1);border:1px solid rgba(42,163,107,.3);">
+                <span style="font-weight:700;color:#2AA36B;font-size:13px;">✓</span>
+                <div>
+                  <div style="font-size:11.5px;font-weight:600;color:#20794F;">checksum 校验通过</div>
+                  <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(27,30,36,.45);">{{ credChecksumVal }}</div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </aside>
+  </sc-if>
+
+  <!-- ════════════════════ DA 界面 ════════════════════ -->
+  <sc-if value="{{ isDA }}" hint-placeholder-val="{{ false }}">
+
+    <aside style="flex:none;width:276px;background:#1F232B;color:#DDE0E6;display:flex;flex-direction:column;min-height:0;">
+      <div style="padding:16px 16px 10px;">
+        <div style="font-size:12.5px;font-weight:700;">BU 转交队列</div>
+        <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(221,224,230,.4);margin-top:3px;">MISS handoff tickets</div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:2px 10px 14px;display:flex;flex-direction:column;gap:7px;">
+        <sc-for list="{{ daTickets }}" as="t" hint-placeholder-count="2">
+          <div onClick="{{ t.onOpen }}" style="{{ t.style }}">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;font-weight:600;color:#fff;">{{ t.id }}</span>
+              <span style="{{ t.pillStyle }}">{{ t.status }}</span>
+            </div>
+            <div style="font-size:11.5px;color:rgba(221,224,230,.7);margin-top:5px;line-height:1.5;">{{ t.q }}</div>
+            <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(221,224,230,.35);margin-top:5px;">{{ t.meta }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </aside>
+
+    <main style="flex:1;display:flex;flex-direction:column;min-width:0;background:#F5F6F8;">
+      <div ref="{{ daScroll }}" style="flex:1;overflow-y:auto;padding:18px 24px 14px;">
+        <div style="max-width:760px;margin:0 auto;">
+          <sc-if value="{{ daEmpty }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:44px 8px;">
+              <div style="font-size:20px;font-weight:700;">诊断工作台</div>
+              <p style="font-size:13px;line-height:1.8;color:rgba(27,30,36,.6);max-width:520px;margin:10px 0 0;">从左侧队列点开一个 MISS 工单开始诊断。DA 可 fallback 到 marts / intermediate 出数，但每个非认证答案强制附加 caveat，且不可反向标记为 BU-certified。</p>
+            </div>
+          </sc-if>
+          <sc-for list="{{ daMsgs }}" as="m" hint-placeholder-count="0">
+            <div style="animation:mfIn .25s ease both;">
+              <sc-if value="{{ m.isSys }}" hint-placeholder-val="{{ false }}">
+                <div style="text-align:center;margin:14px 0;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.4);">{{ m.text }}</div>
+              </sc-if>
+              <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;justify-content:flex-end;margin:16px 0 12px;">
+                  <div style="max-width:75%;background:#3B6FD4;color:#fff;padding:9px 14px;border-radius:12px 12px 3px 12px;font-size:13px;line-height:1.6;">{{ m.text }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ m.isTyping }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;margin:0 0 14px;">
+                  <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:12px;padding:11px 16px;font-family:'SF Mono',Consolas,monospace;font-size:11px;color:rgba(27,30,36,.45);animation:mfPulse 1.1s ease infinite;">agent 正在诊断数据链路…</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ m.isAgent }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:12px;padding:14px 16px;margin:0 0 16px;">
+                  <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+                    <span style="{{ m.pillStyle }}">{{ m.pill }}</span>
+                    <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(27,30,36,.4);">{{ m.category }}</span>
+                  </div>
+                  <div style="font-size:13.5px;line-height:1.75;">{{ m.text }}</div>
+                  <sc-if value="{{ m.hasFacts }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:11px;display:flex;flex-direction:column;gap:6px;">
+                      <sc-for list="{{ m.facts }}" as="f" hint-placeholder-count="3">
+                        <div style="display:flex;gap:9px;font-size:12.5px;line-height:1.6;">
+                          <span style="flex:none;font-weight:700;color:{{ f.c }};">{{ f.sym }}</span>
+                          <span style="color:rgba(27,30,36,.8);">{{ f.t }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ m.hasCaveat }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:12px;display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:9px;background:rgba(201,130,27,.12);border:1px solid rgba(201,130,27,.4);">
+                      <span style="flex:none;font-size:11px;font-weight:800;padding:3px 8px;border-radius:5px;background:#C9821B;color:#fff;">⚠ CAVEAT</span>
+                      <span style="font-size:12.5px;line-height:1.65;color:#7A500E;">{{ m.caveat }}</span>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ m.hasActions }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:13px;">
+                      <sc-for list="{{ m.actions }}" as="a" hint-placeholder-count="1">
+                        <button onClick="{{ a.onPick }}" style="{{ a.style }}">{{ a.label }}</button>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="flex:none;padding:10px 24px 14px;background:#F5F6F8;">
+        <div style="max-width:760px;margin:0 auto;">
+          <sc-if value="{{ showPromo }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 13px;margin-bottom:9px;border-radius:9px;background:rgba(74,99,216,.09);border:1px solid rgba(74,99,216,.3);animation:mfIn .2s ease both;">
+              <span style="flex:none;font-size:10px;font-weight:800;letter-spacing:.5px;padding:3px 8px;border-radius:5px;background:#4A63D8;color:#fff;">查询日志挖掘</span>
+              <span style="flex:1;font-size:12px;line-height:1.55;color:rgba(27,30,36,.75);">{{ promoText }}</span>
+              <button onClick="{{ onPromote }}" style="{{ promoBtnStyle }}">{{ promoBtnLabel }}</button>
+            </div>
+          </sc-if>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px;">
+            <sc-for list="{{ daChips }}" as="c" hint-placeholder-count="2">
+              <button onClick="{{ c.onPick }}" style="font-family:inherit;font-size:12px;padding:6px 12px;border:1px solid rgba(27,30,36,.15);background:#fff;border-radius:99px;cursor:pointer;color:rgba(27,30,36,.75);" style-hover="border-color:#3B6FD4;color:#3B6FD4;">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:9px;">
+            <input value="{{ daInput }}" onChange="{{ daOnInput }}" onKeyDown="{{ daOnKey }}" placeholder="DA 自主发起分析 / 对账 / 数据缺口查询…" style="flex:1;font-family:inherit;font-size:13.5px;padding:11px 14px;border:1px solid rgba(27,30,36,.18);border-radius:9px;background:#fff;outline:none;color:#1B1E24;" style-focus="border-color:#3B6FD4;box-shadow:0 0 0 3px rgba(59,111,212,.13);">
+            <button onClick="{{ daSend }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:0 20px;border:none;background:#191C22;color:#fff;border-radius:9px;cursor:pointer;" style-hover="background:#2A2E37;">发起</button>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ daSqlOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:none;max-height:46%;overflow-y:auto;border-top:1px solid rgba(27,30,36,.12);background:#fff;padding:14px 24px 18px;">
+          <div style="max-width:760px;margin:0 auto;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <span style="font-size:12px;font-weight:700;">SQL / 结果面板</span>
+              <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;padding:3px 8px;border-radius:5px;background:rgba(59,111,212,.12);color:#3B6FD4;">source: intermediate + marts</span>
+              <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;padding:3px 8px;border-radius:5px;background:rgba(201,130,27,.13);color:#C9821B;">coverage 82.8%</span>
+              <div style="flex:1;"></div>
+              <button onClick="{{ daCloseSql }}" style="font-family:inherit;font-size:11px;border:none;background:none;color:rgba(27,30,36,.45);cursor:pointer;">收起 ✕</button>
+            </div>
+            <pre style="margin:0 0 12px;padding:14px;background:#191C22;color:#CBD5D0;border-radius:9px;font-family:'SF Mono',Consolas,monospace;font-size:11.5px;line-height:1.65;overflow-x:auto;white-space:pre;">{{ daSql }}</pre>
+            <div style="border:1px solid rgba(27,30,36,.09);border-radius:9px;overflow:hidden;">
+              <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                <thead><tr>
+                  <th style="text-align:left;padding:7px 12px;background:#F0F1F4;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;font-weight:600;color:rgba(27,30,36,.6);">country</th>
+                  <th style="text-align:left;padding:7px 12px;background:#F0F1F4;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;font-weight:600;color:rgba(27,30,36,.6);">net_revenue_usd</th>
+                  <th style="text-align:left;padding:7px 12px;background:#F0F1F4;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;font-weight:600;color:rgba(27,30,36,.6);">gold_customers</th>
+                </tr></thead>
+                <tbody>
+                  <sc-for list="{{ daRows }}" as="r" hint-placeholder-count="5">
+                    <tr style="border-top:1px solid rgba(27,30,36,.06);">
+                      <td style="padding:7px 12px;">{{ r.a }}</td>
+                      <td style="padding:7px 12px;font-family:'SF Mono',Consolas,monospace;font-size:11.5px;">{{ r.b }}</td>
+                      <td style="padding:7px 12px;font-family:'SF Mono',Consolas,monospace;font-size:11.5px;">{{ r.d }}</td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+            <div style="margin-top:8px;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.45);">10 rows · 覆盖 41,389 / 50,000 单（82.8%）· 缺口 8,611 单未计入 · 合计 $282,311.20（非完整口径）</div>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+
+    <aside style="flex:none;width:286px;border-left:1px solid rgba(27,30,36,.09);background:#FBFBFC;overflow-y:auto;padding:16px;">
+      <div style="font-size:12.5px;font-weight:700;margin-bottom:3px;">数据血缘树</div>
+      <div style="font-size:11px;color:rgba(27,30,36,.5);margin-bottom:14px;">lineage_metadata.csv · DA 权限着色</div>
+      <div style="display:flex;flex-direction:column;">
+        <sc-for list="{{ daLineage }}" as="L" hint-placeholder-count="6">
+          <div style="display:flex;gap:11px;">
+            <div style="flex:none;display:flex;flex-direction:column;align-items:center;">
+              <span style="width:11px;height:11px;border-radius:50%;background:{{ L.dot }};border:2px solid #FBFBFC;box-shadow:0 0 0 1px {{ L.dot }};margin-top:3px;"></span>
+              <sc-if value="{{ L.hasLine }}" hint-placeholder-val="{{ true }}">
+                <span style="width:1px;flex:1;background:rgba(27,30,36,.15);min-height:34px;"></span>
+              </sc-if>
+            </div>
+            <div style="padding-bottom:16px;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:12px;font-weight:700;">{{ L.name }}</span>
+                <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:{{ L.tagBg }};color:{{ L.tagFg }};">{{ L.tag }}</span>
+              </div>
+              <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(27,30,36,.45);margin-top:4px;line-height:1.7;">{{ L.tables }}</div>
+              <sc-if value="{{ L.hot }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:5px;font-size:10.5px;color:#C4442A;font-weight:600;">◉ 本工单焦点：8,611 单 coverage gap</div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:6px;padding-top:12px;border-top:1px solid rgba(27,30,36,.08);display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:10.5px;color:rgba(27,30,36,.55);"><span style="width:9px;height:9px;border-radius:50%;background:#2AA36B;flex:none;"></span><span>可用（需 caveat）</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:10.5px;color:rgba(27,30,36,.55);"><span style="width:9px;height:9px;border-radius:50%;background:#C9821B;flex:none;"></span><span>只读诊断</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:10.5px;color:rgba(27,30,36,.55);"><span style="width:9px;height:9px;border-radius:50%;background:#9AA0AA;flex:none;"></span><span>越权 / 特例</span></div>
+      </div>
+    </aside>
+  </sc-if>
+
+  <!-- ════════════════════ DE 界面 ════════════════════ -->
+  <sc-if value="{{ isDE }}" hint-placeholder-val="{{ false }}">
+
+    <aside style="flex:none;width:276px;background:#1F232B;color:#DDE0E6;display:flex;flex-direction:column;min-height:0;">
+      <div style="padding:16px 16px 10px;display:flex;align-items:flex-start;gap:8px;">
+        <div style="flex:1;">
+          <div style="font-size:12.5px;font-weight:700;">工程任务队列</div>
+          <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(221,224,230,.4);margin-top:3px;">补数申请 + DE 自发任务</div>
+        </div>
+        <button onClick="{{ deNewTask }}" title="DE 自主发起数据工程任务" style="font-family:inherit;font-size:11px;font-weight:600;padding:5px 10px;border:1px solid rgba(221,224,230,.3);border-radius:7px;background:transparent;color:#DDE0E6;cursor:pointer;" style-hover="background:rgba(255,255,255,.08);">＋ 新建任务</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:2px 10px 14px;display:flex;flex-direction:column;gap:7px;">
+        <sc-for list="{{ deQueue }}" as="r" hint-placeholder-count="2">
+          <div onClick="{{ r.onOpen }}" style="{{ r.style }}">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;font-weight:600;color:#fff;">{{ r.id }}</span>
+              <span style="{{ r.pillStyle }}">{{ r.status }}</span>
+            </div>
+            <div style="font-size:11.5px;color:rgba(221,224,230,.7);margin-top:5px;line-height:1.5;">{{ r.title }}</div>
+            <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(221,224,230,.35);margin-top:5px;">{{ r.meta }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </aside>
+
+    <main style="flex:1;display:flex;flex-direction:column;min-width:0;background:#F5F6F8;overflow-y:auto;">
+      <sc-if value="{{ deEmpty }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:52px 34px;">
+          <div style="font-size:20px;font-weight:700;">工程控制台</div>
+          <p style="font-size:13px;line-height:1.8;color:rgba(27,30,36,.6);max-width:520px;margin:10px 0 0;">从左侧队列点开一个补数申请。补丁走固定四步流水线：patch_candidate → dry-run（事务内预演）→ validation → rollback 预案。真正 mutation 必须经右侧 Owner Decision 批准。</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ deActive }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:18px 24px 24px;">
+          <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px;">
+            <span style="font-size:16px;font-weight:700;">REQ-0031 · 重建 tier_at_order 覆盖</span>
+            <span style="font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.45);">DRD/DDD 已评审 → patch → dry-run → validation → rollback · from T-0087</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+
+            <!-- step 1 · 数据需求文档 -->
+            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">1</span>
+                <span style="font-size:12.5px;font-weight:700;">数据需求文档 DRD</span>
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:9.5px;color:rgba(27,30,36,.4);">REQ-0031-DRD</span>
+                <span style="{{ drdPill }}">{{ drdTag }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;line-height:1.6;">
+                <div style="display:flex;gap:10px;"><span style="flex:none;width:64px;color:rgba(27,30,36,.45);">需求来源</span><span>DA 诊断报告 T-0087 · BU case S0101（CRM 会员分析师）</span></div>
+                <div style="display:flex;gap:10px;"><span style="flex:none;width:64px;color:rgba(27,30,36,.45);">业务口径</span><span>2024 全年 Gold 客户净收入，按国家分；等级取<b>订单时点</b>（tier_at_order），非当前等级</span></div>
+                <div style="display:flex;gap:10px;"><span style="flex:none;width:64px;color:rgba(27,30,36,.45);">数据缺口</span><span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;">int_customer_tier_at_order 覆盖 41,389/50,000 · 缺 8,611 单</span></div>
+                <div style="display:flex;gap:10px;"><span style="flex:none;width:64px;color:rgba(27,30,36,.45);">验收标准</span><span>50,000/50,000 全覆盖 · checksum 两次重算一致 · step18 契约校验通过</span></div>
+              </div>
+              <sc-if value="{{ showDrdBtn }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ confirmDrd }}" style="margin-top:11px;font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 16px;border:none;border-radius:8px;background:#191C22;color:#fff;cursor:pointer;" style-hover="background:#2A2E37;">确认需求无误（业务口径）→</button>
+              </sc-if>
+            </div>
+
+            <!-- step 2 · 数据设计文档 -->
+            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">2</span>
+                <span style="font-size:12.5px;font-weight:700;">数据设计文档 DDD</span>
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:9.5px;color:rgba(27,30,36,.4);">REQ-0031-DDD</span>
+                <span style="{{ dddPill }}">{{ dddTag }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;line-height:1.6;">
+                <div style="display:flex;gap:10px;"><span style="flex:none;width:64px;color:rgba(27,30,36,.45);">目标资产</span><span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;">重建 intermediate.int_customer_tier_at_order<br>新增 semantic.semantic_gold_customer_revenue_2024</span></div>
+                <div style="display:flex;gap:10px;"><span style="flex:none;width:64px;color:rgba(27,30,36,.45);">权威来源</span><span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;">staging.stg_customer_scd2（SCD2 区间 join：valid_from ≤ order_date &lt; valid_to）</span></div>
+                <div style="display:flex;gap:10px;"><span style="flex:none;width:64px;color:rgba(27,30,36,.45);">指标注册</span><span>M015_v1 · fx_rate_basis=event_date_ecb · 净收入 USD</span></div>
+                <div style="display:flex;gap:10px;"><span style="flex:none;width:64px;color:rgba(27,30,36,.45);">变更方式</span><span>事务内 TRUNCATE + INSERT · 快照备份 · 失败即 ROLLBACK</span></div>
+              </div>
+              <sc-if value="{{ showDddBtn }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ confirmDdd }}" style="margin-top:11px;font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 16px;border:none;border-radius:8px;background:#191C22;color:#fff;cursor:pointer;" style-hover="background:#2A2E37;">确认设计方案 →</button>
+              </sc-if>
+            </div>
+
+            <!-- step 3 · 血缘影响分析 -->
+            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;grid-column:1 / -1;">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">3</span>
+                <span style="font-size:12.5px;font-weight:700;">血缘影响分析</span>
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:9.5px;color:rgba(27,30,36,.4);">lineage_metadata.csv · 变更前强制</span>
+                <span style="{{ impactPill }}">{{ impactTag }}</span>
+              </div>
+              <sc-if value="{{ showImpactBtn }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:12px;color:rgba(27,30,36,.6);margin-bottom:9px;">变更目标：<span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;">intermediate.int_customer_tier_at_order</span> —— 执行前必须分析会波及哪些已认证能力。</div>
+                <button onClick="{{ runImpact }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 16px;border:none;border-radius:8px;background:#3B6FD4;color:#fff;cursor:pointer;" style-hover="background:#3260BC;">运行影响分析</button>
+              </sc-if>
+              <sc-if value="{{ impactDone }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;">
+                  <div style="display:flex;align-items:flex-start;gap:9px;padding:7px 9px;border-radius:7px;background:rgba(201,130,27,.1);">
+                    <span style="flex:none;font-weight:800;font-size:12px;color:#C9821B;">⚠</span>
+                    <span style="font-size:12px;line-height:1.55;"><b>semantic_tier_migration</b>（M061–M062）依赖 tier 历史 → 补丁后<b>需重新认证</b>，已自动加入 OD006 认证范围</span>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:9px;padding:7px 9px;border-radius:7px;background:rgba(59,111,212,.09);">
+                    <span style="flex:none;font-weight:800;font-size:12px;color:#3B6FD4;">◈</span>
+                    <span style="font-size:12px;line-height:1.55;"><b>semantic_gold_customer_revenue_2024</b>（M015_v1）本次新增注册对象</span>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:9px;padding:7px 9px;border-radius:7px;background:rgba(42,163,107,.08);">
+                    <span style="flex:none;font-weight:800;font-size:12px;color:#2AA36B;">✓</span>
+                    <span style="font-size:12px;line-height:1.55;">semantic_revenue · semantic_sales · semantic_campaign_roi · semantic_customer_value 不依赖 tier_at_order，无影响</span>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:9px;padding:7px 9px;border-radius:7px;background:rgba(42,163,107,.08);">
+                    <span style="flex:none;font-weight:800;font-size:12px;color:#2AA36B;">✓</span>
+                    <span style="font-size:12px;line-height:1.55;">上游 staging.stg_customer_scd2 为只读依赖，不发生变更</span>
+                  </div>
+                </div>
+                <div style="margin-top:8px;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.5);">需重新认证下游：1 · 新增注册：1 · 无影响：4 —— 已解锁补丁流水线</div>
+              </sc-if>
+            </div>
+
+            <!-- step 3 -->
+            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">4</span>
+                <span style="font-size:12.5px;font-weight:700;">patch_candidate.sql</span>
+                <span style="{{ step1Pill }}">{{ step1Tag }}</span>
+              </div>
+              <pre style="margin:0;padding:11px 12px;background:#191C22;color:#CBD5D0;border-radius:8px;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;line-height:1.6;overflow-x:auto;white-space:pre;">{{ patchSql }}</pre>
+            </div>
+
+            <!-- step 2 -->
+            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">5</span>
+                <span style="font-size:12.5px;font-weight:700;">dry-run 预演</span>
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:5px;background:rgba(59,111,212,.12);color:#3B6FD4;">BEGIN … ROLLBACK</span>
+                <span style="{{ step2Pill }}">{{ step2Tag }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+                <div style="display:flex;justify-content:space-between;gap:10px;"><span style="color:rgba(27,30,36,.55);">预期写入行数</span><span style="font-family:'SF Mono',Consolas,monospace;font-weight:600;">{{ dryRows }}</span></div>
+                <div style="display:flex;justify-content:space-between;gap:10px;"><span style="color:rgba(27,30,36,.55);">temporal gap 残留</span><span style="font-family:'SF Mono',Consolas,monospace;font-weight:600;">{{ dryGap }}</span></div>
+                <div style="display:flex;justify-content:space-between;gap:10px;"><span style="color:rgba(27,30,36,.55);">预期 checksum</span><span style="font-family:'SF Mono',Consolas,monospace;font-weight:600;">{{ dryChecksum }}</span></div>
+                <div style="display:flex;justify-content:space-between;gap:10px;"><span style="color:rgba(27,30,36,.55);">两次计算</span><span style="font-family:'SF Mono',Consolas,monospace;font-weight:600;color:{{ dryTwiceC }};">{{ dryTwice }}</span></div>
+              </div>
+              <sc-if value="{{ showDryBtn }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ runDry }}" style="margin-top:11px;font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 16px;border:none;border-radius:8px;background:#3B6FD4;color:#fff;cursor:pointer;" style-hover="background:#3260BC;">运行 dry-run</button>
+              </sc-if>
+            </div>
+
+            <!-- step 3 -->
+            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">6</span>
+                <span style="font-size:12.5px;font-weight:700;">validation 逐项断言</span>
+                <span style="{{ step3Pill }}">{{ step3Tag }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <sc-for list="{{ assertions }}" as="a" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:6px;background:{{ a.bg }};">
+                    <span style="flex:none;width:16px;text-align:center;font-weight:800;font-size:12px;color:{{ a.c }};">{{ a.sym }}</span>
+                    <span style="font-size:12px;flex:1;">{{ a.t }}</span>
+                    <span style="font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.5);">{{ a.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- step 4 -->
+            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+                <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">7</span>
+                <span style="font-size:12.5px;font-weight:700;">rollback 预案</span>
+                <span style="{{ step4Pill }}">{{ step4Tag }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;line-height:1.6;color:rgba(27,30,36,.75);">
+                <div style="display:flex;gap:8px;"><span style="flex:none;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.4);">a.</span><span>执行前快照备份 <span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;">bak_int_customer_tier_at_order_20260708</span></span></div>
+                <div style="display:flex;gap:8px;"><span style="flex:none;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.4);">b.</span><span>失败即事务内 ROLLBACK，不产生半态</span></div>
+                <div style="display:flex;gap:8px;"><span style="flex:none;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.4);">c.</span><span>回滚后重跑 step18 契约完整性校验确认基线</span></div>
+                <div style="display:flex;gap:8px;"><span style="flex:none;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:rgba(27,30,36,.4);">d.</span><span>禁止刷新 <span style="font-family:'SF Mono',Consolas,monospace;font-size:11px;">db/jaffle_v3.dump.sql.gz</span></span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 辅助 chat / 执行日志 -->
+          <div style="margin-top:14px;background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:12px 15px;">
+            <div style="font-size:11px;font-weight:700;color:rgba(27,30,36,.55);margin-bottom:8px;">执行日志 · agent 辅助</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <sc-for list="{{ deLog }}" as="l" hint-placeholder-count="1">
+                <div style="font-family:'SF Mono',Consolas,monospace;font-size:11px;line-height:1.6;color:{{ l.c }};">{{ l.t }}</div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+
+    <aside style="flex:none;width:300px;border-left:1px solid rgba(27,30,36,.09);background:#FBFBFC;overflow-y:auto;padding:16px;">
+      <div style="font-size:12.5px;font-weight:700;margin-bottom:3px;">Owner Decision 审批卡</div>
+      <div style="font-size:11px;color:rgba(27,30,36,.5);margin-bottom:14px;">mutation 必须经 owner 批准</div>
+      <sc-if value="{{ deActive }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid rgba(27,30,36,.1);border-radius:11px;background:#fff;overflow:hidden;">
+          <div style="padding:11px 14px;background:{{ odHeadBg }};display:flex;align-items:center;gap:8px;">
+            <span style="font-family:'SF Mono',Consolas,monospace;font-size:11.5px;font-weight:700;color:{{ odHeadFg }};">OD006</span>
+            <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:{{ odHeadFg }};opacity:.7;">关联 OD001</span>
+            <div style="flex:1;"></div>
+            <span style="font-size:11px;font-weight:700;color:{{ odHeadFg }};">{{ odStatusLabel }}</span>
+          </div>
+          <div style="padding:13px 14px;">
+            <div style="font-size:10px;font-weight:600;letter-spacing:.8px;color:rgba(27,30,36,.4);margin-bottom:4px;">决策问题</div>
+            <div style="font-size:12.5px;line-height:1.7;">是否批准重建 <span style="font-family:'SF Mono',Consolas,monospace;font-size:11.5px;">int_customer_tier_at_order</span>（50,000 单全覆盖），并将 <span style="font-family:'SF Mono',Consolas,monospace;font-size:11.5px;">semantic_gold_customer_revenue_2024</span> 注册为 BU 认证能力（M015_v1）？</div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-top:11px;font-size:11.5px;color:rgba(27,30,36,.6);">
+              <div style="display:flex;justify-content:space-between;"><span>申请人</span><span style="font-weight:600;color:#1B1E24;">DE · 数据工程</span></div>
+              <div style="display:flex;justify-content:space-between;"><span>依据</span><span style="font-family:'SF Mono',Consolas,monospace;font-size:10.5px;">dry-run + validation 5/5</span></div>
+              <div style="display:flex;justify-content:space-between;"><span>影响面</span><span style="font-weight:600;color:#1B1E24;">BU case S0101</span></div>
+              <div style="display:flex;justify-content:space-between;gap:12px;"><span style="flex:none;">重新认证</span><span style="font-family:'SF Mono',Consolas,monospace;font-size:10.5px;text-align:right;">semantic_tier_migration（M061–M062）</span></div>
+            </div>
+            <sc-if value="{{ odPending }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:9px;margin-top:14px;">
+                <button onClick="{{ odApprove }}" style="{{ odApproveStyle }}">批准</button>
+                <button onClick="{{ odReject }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 0;border:1px solid rgba(196,68,42,.4);border-radius:8px;background:#fff;color:#C4442A;cursor:pointer;" style-hover="background:rgba(196,68,42,.06);">驳回</button>
+              </div>
+              <sc-if value="{{ odBlocked }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:8px;font-size:11px;line-height:1.7;color:#C9821B;">△ 批准前置条件未满足：① 确认 DRD → ② 确认 DDD → ③ 运行血缘影响分析 → ⑤ 在「dry-run 预演」卡片点【运行 dry-run】（⑥ validation 自动逐项执行）</div>
+              </sc-if>
+            </sc-if>
+          </div>
+        </div>
+        <sc-if value="{{ odApproved }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:12px;border:1px solid rgba(27,30,36,.1);border-radius:11px;background:#fff;padding:13px 14px;animation:mfIn .25s ease both;">
+            <div style="font-size:10px;font-weight:600;letter-spacing:.8px;color:rgba(27,30,36,.4);margin-bottom:9px;">批准后动作链</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <sc-for list="{{ odChain }}" as="c" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="flex:none;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:{{ c.bg }};color:{{ c.fg }};">{{ c.sym }}</span>
+                  <span style="font-size:12px;color:{{ c.tc }};">{{ c.t }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{ deEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px dashed rgba(27,30,36,.2);border-radius:10px;padding:22px 16px;text-align:center;font-size:12px;color:rgba(27,30,36,.4);line-height:1.7;">选择补数申请后<br>此处显示待审批的 OD</div>
+      </sc-if>
+    </aside>
+  </sc-if>
+  </div>
+
+  <!-- ═══════ 演示模式导航 ═══════ -->
+  <sc-if value="{{ demoOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;right:18px;bottom:18px;z-index:70;width:280px;background:#191C22;color:#E8EAEE;border-radius:13px;box-shadow:0 14px 40px rgba(15,17,22,.45);padding:14px 15px;animation:mfIn .25s ease both;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span style="font-size:12.5px;font-weight:700;">反馈闭环演示</span>
+        <span style="font-family:'SF Mono',Consolas,monospace;font-size:9.5px;color:rgba(232,234,238,.4);">MISS → DA → DE → ANSWER</span>
+      </div>
+      <div style="font-size:11px;color:rgba(232,234,238,.5);line-height:1.6;margin-bottom:10px;">S0101 · Gold 客户 2024 净收入按国家</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <sc-for list="{{ demoActs }}" as="a" hint-placeholder-count="4">
+          <button onClick="{{ a.onPlay }}" style="{{ a.style }}">
+            <span style="{{ a.numStyle }}">{{ a.num }}</span>
+            <span style="flex:1;text-align:left;">{{ a.label }}</span>
+            <span style="font-size:10px;color:{{ a.stC }};">{{ a.st }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.3,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;unit&quot;:&quot;×&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;演示&quot;}}">
+class Component extends DCLogic {
+  state = {
+    role: 'BU', infoOpen: false, demoOpen: false, notice: null,
+    playing: false, actsDone: {},
+    // BU
+    buMsgs: [], buInput: '', buCred: null, goldCertified: false, ticketCreated: false,
+    // DA
+    daTickets: [
+      { id:'T-0087', q:'Gold 客户 2024 净收入按国家 —— tier_at_order 未认证', status:'待诊断', meta:'来自 BU · CRM 会员分析师 · S0101' },
+      { id:'T-0084', q:'支付金额对账诊断（M014 P0）', status:'已关闭', meta:'2026-06-28 · payments fanout ×1,500' }
+    ],
+    daMsgs: [], daActiveTicket: null, daSqlOpen: false, daSubmitted: false, daInput: '', daReqSubmitted: false, deSelfCount: 0,
+    // DE
+    deQueue: [
+      { id:'REQ-0031', title:'重建 tier_at_order 覆盖 + 认证 Gold 收入能力', status:'待处理', meta:'来自 T-0087 · 关联 OD001 / OD006' },
+      { id:'REQ-0027', title:'退款分摊修复（refund cap intermediate）', status:'已完成', meta:'OD003 · 2026-06-20' }
+    ],
+    deActive: false, drdConfirmed: false, dddConfirmed: false, impactStatus: 'idle', promoSubmitted: false,
+    dryStatus: 'idle', valProgress: 0, odStatus: 'pending', odBlocked: false,
+    odChainStep: 0, deLog: [{ t:'> 等待操作。补丁四件套已就绪，来源：T-0087 诊断报告。', c:'dim' }]
+  };
+
+  constructor(props) {
+    super(props);
+    this.buScroll = React.createRef();
+    this.daScroll = React.createRef();
+    this.timers = [];
+  }
+  componentWillUnmount(){ this.timers.forEach(clearTimeout); }
+  componentDidUpdate(){
+    [this.buScroll, this.daScroll].forEach(r => { if (r.current) r.current.scrollTop = r.current.scrollHeight; });
+  }
+  later(ms, fn){ const t = setTimeout(fn, ms * (this.props.demoSpeed ?? 1)); this.timers.push(t); return t; }
+  toast(text){ this.setState({notice:text}); this.later(3200, () => this.setState(s => s.notice===text ? {notice:null} : null)); }
+
+  // ─────── 数据 ───────
+  goldTable(){ return [
+    ['US','124,617.70','412'],['CN','58,420.15','233'],['DE','39,882.40','168'],['UK','31,204.88','141'],
+    ['JP','24,616.35','119'],['FR','18,940.22','104'],['CA','15,377.61','96'],['AU','12,208.94','88'],
+    ['BR','8,861.05','67'],['MX','6,826.26','58']
+  ]; }
+  daPrelimRows(){ return [
+    {a:'US',b:'103,183.52',d:'348'},{a:'CN',b:'48,371.88',d:'197'},{a:'DE',b:'33,022.63',d:'139'},
+    {a:'UK',b:'25,837.64',d:'118'},{a:'JP',b:'20,382.33',d:'101'},{a:'…（共 10 行）',b:'',d:''}
+  ]; }
+  currencyTable(){ return [
+    ['USD','1,142.74','1,142.74'],['EUR','663.20','733.72'],['CNY','3,208.00','451.83'],
+    ['GBP','312.44','394.92'],['CAD','402.15','297.85'],['JPY','41,270','262.05'],
+    ['AUD','355.90','236.42'],['CHF','198.30','223.19'],['SEK','1,043.55','104.98']
+  ]; }
+
+  // ─────── BU 状态机 ───────
+  buPush(msg){ this.setState(s => ({ buMsgs: [...s.buMsgs, msg] })); }
+  buReplaceTyping(msg){ this.setState(s => ({ buMsgs: [...s.buMsgs.filter(m => m.kind!=='typing'), msg] })); }
+
+  buAsk(text){
+    this.setState({ buInput:'' });
+    this.buPush({ kind:'user', text });
+    this.buPush({ kind:'typing' });
+    const done = (msg, cred) => this.later(900, () => { this.buReplaceTyping(msg); if (cred !== undefined) this.setState({buCred: cred}); });
+
+    if (/gold/i.test(text) || /等级|tier/i.test(text)) {
+      if (this.state.goldCertified) {
+        done({
+          kind:'agent', status:'ANSWER', pill:'ANSWER', category:'certified_semantic_answer',
+          text:'2024 全年 Gold 客户净收入合计 $340,955.56，覆盖 10 个国家、1,546 名 Gold 客户 / 4,057 单。Top1 美国 $124,617.70。口径：订单时点等级（tier_at_order，SCD2 temporal join），净收入 USD。',
+          table:{ head:['country','net_revenue_usd','gold_customers'], rows:this.goldTable() },
+          foot:'10 rows · Σ $340,955.56 · Gold 1,546 人 / 4,057 单 · 覆盖 50,000/50,000'
+        }, {
+          state:'green', title:'凭证校验全绿',
+          rows:[
+            ['来源资产','semantic.semantic_gold_customer_revenue_2024','#1B1E24'],
+            ['指标版本','M015_v1','#1B1E24'],
+            ['口径','fx_rate_basis=event_date_ecb · tier_at_order','#1B1E24'],
+            ['行数','10','#1B1E24'],
+            ['认证状态','BU-certified · OD006 批准','#20794F']
+          ],
+          checksum:'sha256:7c41e0…b28f9d · 与活库两次重算一致'
+        });
+      } else {
+        done({
+          kind:'agent', status:'MISS', pill:'MISS', category:'semantic_capability_miss',
+          text:'该问题无法在认证范围内回答：历史 tier 归属（tier_at_order）未认证 —— dim_customers.current_tier 是当前等级，不能代表 2024 年订单时点等级；canonical helper int_customer_tier_at_order 存在 8,611 单 temporal coverage gap（状态 needs_rebuild）。',
+          handoff:true, handoffLabel:'转交 DA 诊断 →'
+        }, {
+          state:'red', title:'未命中认证能力',
+          rows:[
+            ['请求口径','Gold 客户 2024 净收入 · 按国家','#1B1E24'],
+            ['缺失能力','tier_at_order 历史归属','#C4442A'],
+            ['阻塞原因','8,611 单 temporal coverage gap','#C4442A'],
+            ['资产状态','int_customer_tier_at_order · needs_rebuild','#C4442A']
+          ], checksum:null
+        });
+      }
+    } else if (/昨天|卖了/.test(text)) {
+      done({
+        kind:'agent', status:'CLARIFY', pill:'CLARIFY', category:'clarification_required',
+        text:'数据截至 2025-12-31（jaffle_v3 覆盖 2022-01-01 至 2025-12-31）。您是指最新可用日，还是自然日昨天（2026-07-07，无数据）？',
+        options:[
+          { label:'最新可用日 2025-12-31', act:'clarify_latest' },
+          { label:'自然日昨天（2026-07-07）', act:'clarify_natural' }
+        ]
+      }, { state:'amber', title:'等待口径澄清', rows:[['歧义点','时间锚点','#C9821B'],['默认锚点','MAX(business_date)=2025-12-31','#1B1E24']], checksum:null });
+    } else if (/支付|payment/i.test(text)) {
+      done({
+        kind:'agent', status:'REFUSE', pill:'REFUSE', category:'governance_refusal',
+        text:'无法回答支付总额：该指标（M014 支付金额）未通过财务认证 —— raw.payments 存在 1,500 笔多支付订单，payment amount P0 未修。表结构存在不代表指标可信，此为治理拒绝而非数据缺失。'
+      }, { state:'red', title:'治理拒绝', rows:[['指标','M014 / M140 / M141','#C4442A'],['原因','payment amount 未通过财务认证','#C4442A'],['禁用资产','raw.payments · marts.fct_payments','#C4442A']], checksum:null });
+    } else if (/每月|月度/.test(text) && /收入/.test(text)) {
+      done({
+        kind:'agent', status:'ANSWER', pill:'ANSWER', category:'certified_semantic_answer',
+        text:'2024 年确认收入合计 $4,630,000（M001 净收入，USD，按自然月聚合，12 行）。此为认证语义答案，凭证见右侧。',
+        table:{ head:['month','net_revenue_usd'], rows:[['2024-01','342,000'],['2024-02','318,000'],['2024-03','365,000'],['2024-04','351,000'],['2024-05','377,000'],['2024-06','402,000'],['2024-07','396,000'],['2024-08','388,000'],['2024-09','411,000'],['2024-10','405,000'],['2024-11','428,000'],['2024-12','447,000']] },
+        foot:'12 rows · Σ $4,630,000 · semantic.semantic_revenue · marts.dim_date 自然月'
+      }, {
+        state:'green', title:'凭证校验全绿',
+        rows:[['来源资产','semantic.semantic_revenue','#1B1E24'],['指标版本','M001_v2','#1B1E24'],['口径','fx_rate_basis=event_date_ecb','#1B1E24'],['行数','12','#1B1E24'],['认证状态','BU-certified','#20794F']],
+        checksum:'sha256:a9d3f1…04e77c · step18 持续校验'
+      });
+    } else {
+      done({
+        kind:'agent', status:'MISS', pill:'MISS', category:'semantic_capability_miss',
+        text:'该问题未命中已认证能力目录（左侧）。BU 模式不会用未认证路径猜答案；可转交 DA 做诊断性分析。',
+        handoff:true, handoffLabel:'转交 DA 诊断 →'
+      }, { state:'red', title:'未命中认证能力', rows:[['请求','自由问题','#1B1E24'],['绑定结果','no certified capability','#C4442A']], checksum:null });
+    }
+  }
+
+  buClarifyPick(act){
+    if (act === 'clarify_latest') {
+      this.buPush({ kind:'user', text:'最新可用日 2025-12-31' });
+      this.buPush({ kind:'typing' });
+      this.later(800, () => {
+        this.buReplaceTyping({
+          kind:'agent', status:'ANSWER', pill:'ANSWER', category:'certified_semantic_answer · clarified',
+          text:'2025-12-31 当日销售额按币种如下（本币金额不可跨币种相加，排序按折算 USD）。',
+          table:{ head:['currency','本币金额','折算 USD'], rows:this.currencyTable() },
+          foot:'9 rows · 9 币种 · USD 1,142.74 居首'
+        });
+        this.setState({ buCred:{
+          state:'green', title:'凭证校验全绿',
+          rows:[['来源资产','semantic.semantic_revenue','#1B1E24'],['指标版本','M002_v2','#1B1E24'],['口径','fx_rate_basis=event_date_ecb · 按币种','#1B1E24'],['行数','9','#1B1E24'],['时间锚点','2025-12-31（最新可用日）','#1B1E24']],
+          checksum:'sha256:2f80cd…91ab34 · 校验通过'
+        }});
+      });
+    } else {
+      this.buPush({ kind:'user', text:'自然日昨天（2026-07-07）' });
+      this.buPush({ kind:'typing' });
+      this.later(700, () => this.buReplaceTyping({
+        kind:'agent', status:'MISS', pill:'MISS', category:'out_of_data_range',
+        text:'自然日 2026-07-07 超出数据覆盖范围（2022-01-01 至 2025-12-31），无数据可答。建议使用最新可用日锚点。'
+      }));
+    }
+  }
+
+  buHandoff(){
+    if (this.state.ticketCreated) { this.toast('工单 T-0087 已在 DA 队列中'); return; }
+    this.setState({ ticketCreated: true });
+    this.toast('已生成 MISS 工单 T-0087，转入 DA 诊断队列');
+  }
+
+  // ─────── DA 状态机 ───────
+  daPush(msg){ this.setState(s => ({ daMsgs: [...s.daMsgs, msg] })); }
+  daReplaceTyping(msg){ this.setState(s => ({ daMsgs: [...s.daMsgs.filter(m => m.kind!=='typing'), msg] })); }
+
+  daOpenTicket(id){
+    if (id !== 'T-0087') { this.toast('T-0084 已关闭（示例历史工单）'); return; }
+    if (this.state.daActiveTicket === 'T-0087') return;
+    this.setState(s => ({
+      daActiveTicket:'T-0087', daMsgs:[{ kind:'sys', text:'── 工单 T-0087 · 来自 BU MISS · S0101 ──' }, { kind:'typing' }],
+      daTickets: s.daTickets.map(t => t.id==='T-0087' ? {...t, status:'诊断中'} : t)
+    }));
+    this.later(1000, () => this.daReplaceTyping({
+      kind:'agent', pill:'诊断建议', pillKind:'blue', category:'diagnostic',
+      text:'诊断结论：问题数据存在，缺的是认证。',
+      facts:[
+        { sym:'✓', c:'#2AA36B', t:'semantic 层无 tier 收入资产 —— 这是 MISS 的直接原因' },
+        { sym:'✓', c:'#2AA36B', t:'权威等级历史在 staging.stg_customer_scd2（SCD2，1,200 客户多版本）' },
+        { sym:'✕', c:'#C4442A', t:'intermediate.int_customer_tier_at_order 覆盖 41,389/50,000 单，缺口 8,611 单（needs_rebuild）' },
+        { sym:'△', c:'#C9821B', t:'可用非认证路径先出参考数，但覆盖率仅 82.8%，不可作 BU 正式口径' }
+      ],
+      actions:[{ label:'用非认证路径出数（附 caveat）', act:'fallback', kind:'blue' }]
+    }));
+  }
+
+  daFallback(){
+    if (this.state.daSqlOpen) return;
+    this.daPush({ kind:'typing' });
+    this.later(900, () => {
+      this.setState({ daSqlOpen: true });
+      this.daReplaceTyping({
+        kind:'agent', pill:'FALLBACK 答案', pillKind:'amber', category:'fallback_answer',
+        text:'按可覆盖的 41,389 单计算：2024 年 Gold 客户净收入 $282,311.20（10 国，Top1 美国 $103,183.52）。缺口 8,611 单未计入，真实值必然更高。SQL 与完整结果见下方面板。',
+        caveat:'本答案使用 intermediate 层非认证资产，覆盖率 82.8%，不可作为 BU 正式口径。',
+        actions:[{ label:'生成诊断报告 → 提交 DE 补数申请', act:'submit', kind:'amber' }]
+      });
+    });
+  }
+
+  // DA 自主发起查询（不依赖 BU 工单）
+  daAsk(text){
+    this.setState({ daInput:'' });
+    this.daPush({ kind:'user', text });
+    this.daPush({ kind:'typing' });
+    if (/对账|对得上|一致|渠道/.test(text)) {
+      this.later(1000, () => this.daReplaceTyping({
+        kind:'agent', pill:'诊断结论', pillKind:'green', category:'da_initiated · reconciliation',
+        text:'semantic 与 marts 层收入对账完成：逐月对比 semantic.semantic_revenue（M001）与 marts.fct_orders 净收入聚合，2024 年 12 个月差异均为 0 —— 两层口径一致（semantic 由 marts 认证物化而来）。无需上报。',
+        facts:[
+          { sym:'✓', c:'#2AA36B', t:'12/12 月份 checksum 一致 · step18 契约校验绿' },
+          { sym:'△', c:'#C9821B', t:'注意：raw 层聚合与 fct 层存在预期差异（orphan ×114 已剔除），不作对账基准' }
+        ]
+      }));
+    } else if (/cac|广告|获客成本/i.test(text)) {
+      this.later(1000, () => this.daReplaceTyping({
+        kind:'agent', pill:'数据缺口', pillKind:'red', category:'da_initiated · data_gap',
+        text:'无法计算活动 CAC（M150)：仓内无广告投放成本数据源，任何层都不存在该数据 —— 这不是覆盖率问题，是数据源缺失。需要 DE 发起新数据源引入。',
+        facts:[
+          { sym:'✕', c:'#C4442A', t:'M150 在 semantic_capability_list 中标记 excluded：无广告成本数据' },
+          { sym:'△', c:'#C9821B', t:'campaign_roi（M040–M042）只覆盖优惠券核销成本，不含广告投放' }
+        ],
+        actions:[{ label:'提交 DE 数据源引入申请', act:'submitNew', kind:'amber' }]
+      }));
+    } else if (/nps/i.test(text)) {
+      this.later(900, () => this.daReplaceTyping({
+        kind:'agent', pill:'数据缺口', pillKind:'red', category:'da_initiated · data_gap',
+        text:'NPS（M090）无外部调研数据源，仓内不存在可用数据。可提交 DE 数据源引入申请。',
+        actions:[{ label:'提交 DE 数据源引入申请', act:'submitNew', kind:'amber' }]
+      }));
+    } else {
+      this.later(900, () => this.daReplaceTyping({
+        kind:'agent', pill:'诊断建议', pillKind:'blue', category:'da_initiated',
+        text:'已收到自主查询。本原型预置了三类 DA 自发场景：① 层间对账（试试「渠道收入和 marts 对得上吗」）② 数据源缺口（试试「2024 各活动 CAC」）③ BU 转交工单诊断（左侧队列 T-0087）。'
+      }));
+    }
+  }
+
+  daSubmitNew(){
+    if (this.state.daReqSubmitted) { this.toast('数据源引入申请 REQ-0032 已提交'); return; }
+    this.setState(s => ({
+      daReqSubmitted: true,
+      deQueue: [{ id:'REQ-0032', title:'新数据源引入：广告投放成本（DA 自发）', status:'待处理', meta:'DA 自主发起 · 解锁 M150 CAC' }, ...s.deQueue]
+    }));
+    this.daPush({ kind:'sys', text:'数据源引入申请 REQ-0032 已进入 DE 队列（DA 自主发起）' });
+    this.toast('已提交 DE：REQ-0032 新数据源引入申请');
+  }
+
+  daPromote(){
+    if (this.state.promoSubmitted) { this.toast('晋升申请 PRM-0012 已提交，等待 owner 认证'); return; }
+    this.setState(s => ({
+      promoSubmitted: true,
+      deQueue: [{ id:'PRM-0012', title:'能力晋升认证：季度预算 vs 实际差异（DA 发起）', status:'待处理', meta:'查询日志：本月 17 人次 · 目标 M016_v1 · 需 owner 认证 ad_hoc 预算表' }, ...s.deQueue]
+    }));
+    this.daPush({ kind:'sys', text:'晋升申请 PRM-0012 已提交：fallback 查询「季度预算 vs 实际差异」→ 候选认证能力 M016_v1（入 DE/owner 队列）' });
+    this.toast('晋升申请 PRM-0012 已提交 —— 认证飞轮第一步');
+  }
+
+  daSubmit(){
+    if (this.state.daSubmitted) { this.toast('补数申请 REQ-0031 已提交'); return; }
+    this.setState(s => ({
+      daSubmitted: true,
+      daTickets: s.daTickets.map(t => t.id==='T-0087' ? {...t, status:'已提交 DE'} : t)
+    }));
+    this.daPush({ kind:'sys', text:'诊断报告已生成 → 补数申请 REQ-0031 已进入 DE 队列' });
+    this.toast('已提交 DE 补数申请 REQ-0031');
+  }
+
+  // ─────── DE 状态机 ───────
+  deLogAdd(t, c){ this.setState(s => ({ deLog: [...s.deLog, {t, c: c||'dim'}] })); }
+
+  deSelfTask(){
+    const n = this.state.deSelfCount + 1;
+    const id = 'REQ-00' + (32 + n);
+    this.setState(s => ({
+      deSelfCount: n,
+      deQueue: [{ id, title:'fct_orders 分区键优化（DE 自发）', status:'待处理', meta:'DE 自主发起 · ' + id + '-DRD 待起草' }, ...s.deQueue]
+    }));
+    this.deLogAdd('> DE 自发任务 ' + id + ' 已创建：同样走 DRD → DDD → 流水线 → Owner Decision 流程。');
+    this.toast('已创建 DE 自发任务 ' + id + '（流程与补数申请一致）');
+  }
+
+  deOpen(id){
+    if (id === 'REQ-0027') { this.toast('REQ-0027 已完成（示例历史申请）'); return; }
+    if (id !== 'REQ-0031') { this.toast(id + '：示例任务 —— 完整 DRD→DDD→流水线→审批 流程以 REQ-0031 演示'); return; }
+    if (!this.state.deActive) {
+      this.setState({ deActive:true });
+      this.deLogAdd('> 打开 REQ-0031。流程：① 确认数据需求文档（业务口径）→ ② 确认数据设计文档 → ③–⑥ 补丁流水线 → Owner Decision 审批。');
+      this.deLogAdd('> 请先在第 1 步卡片确认 DRD。');
+    }
+  }
+
+  confirmDrd(){
+    if (this.state.drdConfirmed) return;
+    this.setState({ drdConfirmed:true });
+    this.deLogAdd('> DRD 已确认（业务口径无误：tier_at_order · 按国家 · 净收入 USD）。进入第 2 步：确认数据设计文档。', 'ok');
+    this.toast('数据需求文档已确认，请继续确认数据设计文档');
+  }
+  confirmDdd(){
+    if (!this.state.drdConfirmed || this.state.dddConfirmed) return;
+    this.setState({ dddConfirmed:true });
+    this.deLogAdd('> DDD 已确认（SCD2 区间 join · M015_v1 注册 · 事务内变更）。请先运行第 3 步血缘影响分析，再进入补丁流水线。', 'ok');
+    this.toast('数据设计文档已确认 —— 请运行血缘影响分析');
+  }
+  runImpact(){
+    if (!this.state.dddConfirmed) { this.toast('请先确认 DRD 与 DDD 文档'); return; }
+    if (this.state.impactStatus !== 'idle') return;
+    this.setState({ impactStatus:'running' });
+    this.deLogAdd('> 血缘影响分析：扫描 lineage_metadata.csv 中 int_customer_tier_at_order 的下游…');
+    this.later(1000, () => {
+      this.setState({ impactStatus:'done' });
+      this.deLogAdd('> 影响分析完成：需重新认证 semantic_tier_migration（M061–M062），已自动加入 OD006 认证范围。流水线已解锁，请在第 5 步运行 dry-run。', 'ok');
+      this.toast('影响分析完成：1 个下游能力需重新认证');
+    });
+  }
+  runDry(){
+    if (this.state.impactStatus !== 'done') { this.toast('请先完成文档确认与血缘影响分析'); return; }
+    if (this.state.dryStatus !== 'idle') return;
+    this.setState({ dryStatus:'running' });
+    this.deLogAdd('> BEGIN; 事务内预演 patch_candidate.sql …');
+    this.later(1100, () => {
+      this.setState({ dryStatus:'done' });
+      this.deLogAdd('> dry-run 完成：50,000 行，checksum sha256:7c41e0…b28f9d（两次计算一致），ROLLBACK。', 'ok');
+      this.deLogAdd('> 开始 validation 断言 …');
+      const step = (n) => this.later(450 * n, () => {
+        this.setState({ valProgress:n });
+        if (n === 5) { this.deLogAdd('> validation 5/5 通过。等待 Owner Decision OD006。', 'ok'); this.setState({odBlocked:false}); }
+      });
+      [1,2,3,4,5].forEach(step);
+    });
+  }
+
+  odApprove(){
+    if (this.state.valProgress < 5) { this.setState({odBlocked:true}); return; }
+    if (this.state.odStatus !== 'pending') return;
+    this.setState({ odStatus:'approved', odChainStep:0 });
+    this.deLogAdd('> OD006 已批准（owner 决议，关联 OD001）。执行补丁 …', 'ok');
+    this.later(800, () => { this.setState({odChainStep:1}); this.deLogAdd('> 补丁执行完成：int_customer_tier_at_order 50,000/50,000 全覆盖。', 'ok'); });
+    this.later(1700, () => {
+      this.setState(s => ({ odChainStep:2, goldCertified:true,
+        deQueue: s.deQueue.map(r => r.id==='REQ-0031' ? {...r, status:'已完成'} : r) }));
+      this.deLogAdd('> semantic_gold_customer_revenue_2024（M015_v1）已注册进 semantic_capability_list.yaml。', 'ok');
+    });
+    this.later(2600, () => {
+      this.setState({ odChainStep:3 });
+      this.deLogAdd('> 已通知 BU：case S0101 已可回答。', 'ok');
+      this.toast('BU case S0101 已可回答 —— 认证能力目录已更新');
+    });
+  }
+  odReject(){
+    if (this.state.odStatus !== 'pending') return;
+    this.deLogAdd('> OD006 被驳回：补丁保持未执行状态，工单退回 DA。', 'warn');
+    this.toast('OD006 已驳回（原型模拟：状态保持 pending 可重试）');
+  }
+
+  // ─────── 演示模式 ───────
+  playAct(n){
+    if (this.state.playing) return;
+    this.setState({ playing:true });
+    const finish = (ms) => this.later(ms, () => this.setState(s => ({ playing:false, actsDone:{...s.actsDone, [n]:true} })));
+    if (n === 1) {
+      this.setState({ role:'BU' });
+      this.later(400, () => this.buAsk('2024 全年 Gold 客户的净收入是多少？按客户国家分。'));
+      finish(2200);
+    }
+    if (n === 2) {
+      if (!this.state.ticketCreated) this.buHandoff();
+      this.setState({ role:'DA' });
+      this.later(500, () => this.daOpenTicket('T-0087'));
+      this.later(2200, () => this.daFallback());
+      this.later(3800, () => this.daSubmit());
+      finish(4200);
+    }
+    if (n === 3) {
+      if (!this.state.daSubmitted) this.setState({ daSubmitted:true });
+      this.setState({ role:'DE' });
+      this.later(400, () => this.deOpen('REQ-0031'));
+      this.later(1200, () => this.confirmDrd());
+      this.later(2200, () => this.confirmDdd());
+      this.later(3000, () => this.runImpact());
+      this.later(4400, () => this.runDry());
+      this.later(8000, () => this.odApprove());
+      finish(11000);
+    }
+    if (n === 4) {
+      if (!this.state.goldCertified) this.setState({ goldCertified:true });
+      this.setState({ role:'BU' });
+      this.later(500, () => this.buAsk('2024 全年 Gold 客户的净收入是多少？按客户国家分。'));
+      finish(2200);
+    }
+  }
+
+  // ─────── render ───────
+  renderVals() {
+    const s = this.state;
+    const mono = "font-family:'SF Mono',Consolas,monospace;";
+    const C = { green:['#2AA36B','rgba(42,163,107,.13)'], amber:['#C9821B','rgba(201,130,27,.14)'], red:['#C4442A','rgba(196,68,42,.12)'], blue:['#3B6FD4','rgba(59,111,212,.12)'], gray:['#7A8089','rgba(122,128,137,.15)'] };
+    const pill = (k) => `font-size:10.5px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:${C[k][1]};color:${C[k][0]};`;
+    const pillOf = { ANSWER:'green', CLARIFY:'amber', MISS:'red', REFUSE:'red' };
+    const roleBtn = (r) => `font-family:inherit;font-size:12px;font-weight:600;padding:6px 13px;border:none;border-radius:6px;cursor:pointer;background:${s.role===r?'#4A63D8':'transparent'};color:${s.role===r?'#fff':'rgba(232,234,238,.6)'};`;
+
+    // info matrix
+    const matrices = {
+      BU: [['semantic','✓ 认证入口','green','唯一入口'],['marts','✗ 禁止','red',''],['intermediate','✗ 禁止','red',''],['staging','✗ 禁止','red',''],['raw','✗ 禁止','red','含 PII'],['ad_hoc','✗ 禁止','red','sandbox']],
+      DA: [['semantic','✓ 优先','green',''],['marts','△ 可用','amber','强制 caveat'],['intermediate','△ 可用','amber','强制 caveat'],['staging','◇ 只读诊断','amber',''],['raw','◇ 只读诊断','amber','脏数据+陷阱'],['ad_hoc','◇ 特例','gray','仅对账/负例']],
+      DE: [['semantic','✓ 可维护','green',''],['marts','✓ 读写','green','需 PR 四件套'],['intermediate','✓ 读写','green','需 PR 四件套'],['staging','✓ 读写','green',''],['raw','✓ 读写','green',''],['mutation','▣ 需批准','red','owner decision + DBA']]
+    };
+    const infoRows = matrices[s.role].map(([layer,tag,k,note]) => ({ layer, tag, note, c:C[k][0] }));
+
+    // BU catalog
+    const capBase = 'padding:10px 11px;border-radius:9px;background:rgba(255,255,255,.045);';
+    const buCatalog = [
+      ...(s.goldCertified ? [{ name:'semantic_gold_customer_revenue_2024', desc:'Gold 客户收入 · 订单时点等级', metrics:'M015_v1 · OD006', isNew:true, style: capBase + 'background:rgba(42,163,107,.16);outline:1px solid rgba(42,163,107,.5);' }] : []),
+      { name:'semantic_revenue', desc:'收入 · 月/国家/客户/退款调整', metrics:'M001–M004', isNew:false, style:capBase },
+      { name:'semantic_sales', desc:'商品销售 · 品类贡献 · 净销售', metrics:'M070–M071', isNew:false, style:capBase },
+      { name:'semantic_customer_value', desc:'客户 LTV · 首购/最近购买', metrics:'M030–M034', isNew:false, style:capBase },
+      { name:'semantic_campaign_roi', desc:'活动 ROI · 优惠券核销', metrics:'M040–M042', isNew:false, style:capBase },
+      { name:'semantic_tier_migration', desc:'等级升降级 · 迁移矩阵', metrics:'M061–M062', isNew:false, style:capBase }
+    ];
+
+    const cells = (row) => row.map((v,i) => ({ v, style:`padding:7px 12px;${i===0?'':mono+'font-size:11.5px;'}` }));
+    const buMsgs = s.buMsgs.map(m => {
+      if (m.kind==='user') return { isUser:true, text:m.text };
+      if (m.kind==='typing') return { isTyping:true };
+      return {
+        isAgent:true, pill:m.pill, pillStyle:pill(pillOf[m.status]||'blue'), category:m.category, text:m.text,
+        hasTable: !!m.table, tableHead:(m.table?m.table.head:[]).map(t=>({t})), tableRows:(m.table?m.table.rows:[]).map(r=>({cells:cells(r)})),
+        hasFoot: !!m.foot, foot:m.foot||'',
+        hasOptions: !!m.options, options:(m.options||[]).map(o=>({ label:o.label, onPick:()=>this.buClarifyPick(o.act) })),
+        hasHandoff: !!m.handoff, handoffLabel:m.handoffLabel||'', onHandoff:()=>this.buHandoff()
+      };
+    });
+
+    // warn strip
+    const t = s.buInput;
+    const outside = /(gold|支付|payment|nps|cac|预算|budget|库存|员工)/i.test(t) && !(s.goldCertified && /gold/i.test(t));
+    const certified = /(收入|销售|卖|ltv|客户价值|roi|活动|等级迁移|升级|降级|币种|国家|revenue)/i.test(t);
+    const buWarn = t.trim().length >= 4 && (outside || !certified);
+
+    const cred = s.buCred;
+    const credHead = cred ? { green:['rgba(42,163,107,.13)','#20794F','#2AA36B'], amber:['rgba(201,130,27,.14)','#8F5D10','#C9821B'], red:['rgba(196,68,42,.11)','#9A3521','#C4442A'] }[cred.state] : null;
+
+    // DA
+    const tPill = (st) => pill({ '待诊断':'red','诊断中':'blue','已提交 DE':'amber','已关闭':'gray' }[st] || 'gray');
+    const daTickets = s.daTickets.map(tk => ({
+      ...tk, pillStyle:tPill(tk.status), onOpen:()=>this.daOpenTicket(tk.id),
+      style:`padding:11px 12px;border-radius:9px;cursor:pointer;background:${s.daActiveTicket===tk.id?'rgba(74,99,216,.22)':'rgba(255,255,255,.045)'};outline:${s.daActiveTicket===tk.id?'1px solid rgba(74,99,216,.55)':'none'};`
+    }));
+    const actBtn = (k) => `font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 16px;border:none;border-radius:8px;cursor:pointer;background:${k==='amber'?'#C9821B':'#3B6FD4'};color:#fff;`;
+    const daMsgs = s.daMsgs.map(m => {
+      if (m.kind==='sys') return { isSys:true, text:m.text };
+      if (m.kind==='typing') return { isTyping:true };
+      return {
+        isAgent:true, pill:m.pill, pillStyle:pill(m.pillKind||'blue'), category:m.category, text:m.text,
+        hasFacts: !!m.facts, facts:m.facts||[],
+        hasCaveat: !!m.caveat, caveat:m.caveat||'',
+        hasActions: !!m.actions, actions:(m.actions||[]).map(a=>({ label:a.label, style:actBtn(a.kind), onPick:()=>a.act==='fallback'?this.daFallback():(a.act==='submitNew'?this.daSubmitNew():this.daSubmit()) }))
+      };
+    });
+    const lin = (name, tagK, tag, tables, hot, last) => ({ name, tag, tables, hot:!!hot, hasLine:!last, dot:C[tagK][0], tagBg:C[tagK][1], tagFg:C[tagK][0] });
+    const daLineage = [
+      lin('semantic','green','可用','semantic_revenue · semantic_sales'),
+      lin('marts','green','可用+caveat','fct_orders · dim_customers'),
+      lin('intermediate','green','可用+caveat','int_customer_tier_at_order', true),
+      lin('staging','amber','只读诊断','stg_customer_scd2 · stg_payments_normalized'),
+      lin('raw','amber','只读诊断','raw.orders · raw.payments'),
+      lin('ad_hoc','gray','特例对账','quarterly_budget_v2_usd', false, true)
+    ];
+
+    // DE
+    const rPill = (st) => pill({ '待处理':'red','已完成':'green' }[st] || 'gray');
+    const deQueue = s.deQueue.map(r => ({
+      ...r, pillStyle:rPill(r.status), onOpen:()=>this.deOpen(r.id),
+      style:`padding:11px 12px;border-radius:9px;cursor:pointer;background:${s.deActive&&r.id==='REQ-0031'?'rgba(74,99,216,.22)':'rgba(255,255,255,.045)'};outline:${s.deActive&&r.id==='REQ-0031'?'1px solid rgba(74,99,216,.55)':'none'};`
+    }));
+    const stepPill = (st) => ({ idle:pill('gray'), running:pill('blue'), done:pill('green') }[st]);
+    const dry = s.dryStatus;
+    const valDone = s.valProgress >= 5;
+    const asserts = [
+      ['行数覆盖','50,000 / 50,000'],['temporal gap 订单数','= 0'],['checksum 重算两次一致','sha256:7c41e0…b28f9d'],['fct_orders join 完整性','100%'],['SCD2 版本区间无重叠','0 overlap']
+    ].map(([t,v],i) => {
+      const on = i < s.valProgress;
+      return { t, v, sym:on?'✓':'·', c:on?'#2AA36B':'rgba(27,30,36,.25)', bg:on?'rgba(42,163,107,.08)':'transparent' };
+    });
+    const odApproved = s.odStatus==='approved';
+    const chain = ['执行补丁 · 50,000 行写入','注册进 semantic capability list','通知 BU：case S0101 已可回答'].map((t,i) => {
+      const on = s.odChainStep > i;
+      return { t, sym:on?'✓':String(i+1), bg:on?'#2AA36B':'rgba(27,30,36,.08)', fg:on?'#fff':'rgba(27,30,36,.45)', tc:on?'#1B1E24':'rgba(27,30,36,.4)' };
+    });
+    const logC = { dim:'rgba(27,30,36,.5)', ok:'#20794F', warn:'#C9821B' };
+
+    // demo
+    const acts = [
+      [1,'BU 提问 → MISS','第1幕'],[2,'DA 诊断 → caveat 出数 → 提交','第2幕'],[3,'DE 补数 → OD006 批准 → 注册','第3幕'],[4,'BU 重问 → ANSWER 全绿','第4幕']
+    ].map(([n,label]) => ({
+      num:String(n), label, st: s.actsDone[n] ? '✓ 已播放' : (s.playing?'…':'播放'), stC: s.actsDone[n] ? '#3DBC82' : 'rgba(232,234,238,.5)',
+      onPlay:()=>this.playAct(n),
+      style:`display:flex;align-items:center;gap:10px;font-family:inherit;font-size:12px;padding:8px 10px;border:none;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.07);color:#E8EAEE;`,
+      numStyle:`flex:none;width:18px;height:18px;border-radius:50%;background:${s.actsDone[n]?'#2AA36B':'#4A63D8'};color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;`
+    }));
+
+    return {
+      // top bar
+      roleBtnBU:roleBtn('BU'), roleBtnDA:roleBtn('DA'), roleBtnDE:roleBtn('DE'),
+      goBU:()=>this.setState({role:'BU'}), goDA:()=>this.setState({role:'DA'}), goDE:()=>this.setState({role:'DE'}),
+      toggleDemo:()=>this.setState({demoOpen:!s.demoOpen}), demoBtnLabel: s.demoOpen ? '关闭演示' : '▶ 演示模式',
+      infoEnter:()=>this.setState({infoOpen:true}), infoLeave:()=>this.setState({infoOpen:false}),
+      infoOpen:s.infoOpen, infoTitle:`${s.role} 角色约束`, infoRows,
+      hasNotice: !!s.notice, noticeText: s.notice || '',
+      isBU: s.role==='BU', isDA: s.role==='DA', isDE: s.role==='DE',
+      // BU
+      buCatalog, catalogCount: buCatalog.length,
+      buEmpty: s.buMsgs.length===0, buMsgs, buScroll:this.buScroll,
+      buChips: [
+        { label:'2024 全年 Gold 客户净收入，按国家分', onPick:()=>this.buAsk('2024 全年 Gold 客户的净收入是多少？按客户国家分。') },
+        { label:'昨天卖了多少？', onPick:()=>this.buAsk('昨天卖了多少？') },
+        { label:'上季度支付总额多少？', onPick:()=>this.buAsk('上季度支付总额多少？') },
+        { label:'2024 年每月确认收入', onPick:()=>this.buAsk('2024 年每月确认收入是多少？') }
+      ],
+      buWarn, buInput:s.buInput,
+      buOnInput:(e)=>this.setState({buInput:e.target.value}),
+      buOnKey:(e)=>{ if(e.key==='Enter'&&s.buInput.trim()) this.buAsk(s.buInput.trim()); },
+      buSend:()=>{ if(s.buInput.trim()) this.buAsk(s.buInput.trim()); },
+      noCred: !cred, hasCred: !!cred,
+      credTitle: cred?cred.title:'', credHeadBg: credHead?credHead[0]:'', credHeadFg: credHead?credHead[1]:'', credDot: credHead?credHead[2]:'',
+      credRows: cred ? cred.rows.map(([k,v,c])=>({k,v,c})) : [],
+      credChecksum: !!(cred&&cred.checksum), credChecksumVal: cred?(cred.checksum||''):'',
+      // DA
+      daTickets, daEmpty: s.daMsgs.length===0, daMsgs, daScroll:this.daScroll,
+      daSqlOpen:s.daSqlOpen, daCloseSql:()=>this.setState({daSqlOpen:false}),
+      daChips: [
+        { label:'渠道收入和 marts 层对得上吗？', onPick:()=>this.daAsk('渠道收入和 marts 层对得上吗？') },
+        { label:'2024 各活动 CAC 是多少？', onPick:()=>this.daAsk('2024 各活动 CAC 是多少？') }
+      ],
+      daInput:s.daInput,
+      daOnInput:(e)=>this.setState({daInput:e.target.value}),
+      daOnKey:(e)=>{ if(e.key==='Enter'&&s.daInput.trim()) this.daAsk(s.daInput.trim()); },
+      daSend:()=>{ if(s.daInput.trim()) this.daAsk(s.daInput.trim()); },
+      deNewTask:()=>this.deSelfTask(),
+      showPromo: s.role==='DA',
+      promoText: s.promoSubmitted ? '晋升申请 PRM-0012 已提交，等待 owner 认证（目标 M016_v1）' : '口径「季度预算 vs 实际收入差异」本月被 17 人问过（均走 fallback），建议晋升为认证能力',
+      promoBtnLabel: s.promoSubmitted ? '已提交 ✓' : '发起晋升申请',
+      promoBtnStyle: `flex:none;font-family:inherit;font-size:12px;font-weight:700;padding:7px 14px;border:none;border-radius:8px;cursor:pointer;background:${s.promoSubmitted?'#2AA36B':'#4A63D8'};color:#fff;`,
+      onPromote:()=>this.daPromote(),
+      daSql:"-- T-0087 · 非认证路径（intermediate + marts）\nSELECT c.country,\n       SUM(f.net_revenue_usd) AS net_revenue_usd,\n       COUNT(DISTINCT f.customer_id) AS gold_customers\nFROM marts.fct_orders f\nJOIN intermediate.int_customer_tier_at_order t\n  ON t.order_id = f.order_id        -- 覆盖 41,389/50,000\nJOIN marts.dim_customers c\n  ON c.customer_sk = f.customer_sk\nWHERE t.tier_at_order = 'Gold'\n  AND f.business_date >= DATE '2024-01-01'\n  AND f.business_date <  DATE '2025-01-01'\nGROUP BY 1 ORDER BY 2 DESC;",
+      daRows:this.daPrelimRows(), daLineage,
+      // DE
+      deQueue, deEmpty: !s.deActive, deActive: s.deActive,
+      patchSql:"-- REQ-0031 · S0106 patch_candidate.sql\nBEGIN;\nTRUNCATE intermediate.int_customer_tier_at_order;\nINSERT INTO intermediate.int_customer_tier_at_order\nSELECT o.order_id, o.customer_id,\n       scd.tier AS tier_at_order\nFROM marts.fct_orders o\nJOIN staging.stg_customer_scd2 scd\n  ON scd.customer_id = o.customer_id\n AND o.order_date >= scd.valid_from\n AND o.order_date <  scd.valid_to;\n-- expected: 50,000 rows\nROLLBACK; -- dry-run 模式",
+      drdPill: s.drdConfirmed ? pill('green') : pill('amber'),
+      drdTag: s.drdConfirmed ? '已确认' : '待确认',
+      dddPill: s.dddConfirmed ? pill('green') : (s.drdConfirmed ? pill('amber') : pill('gray')),
+      dddTag: s.dddConfirmed ? '已确认' : (s.drdConfirmed ? '待确认' : '等待 DRD'),
+      showDrdBtn: s.deActive && !s.drdConfirmed,
+      showDddBtn: s.drdConfirmed && !s.dddConfirmed,
+      confirmDrd:()=>this.confirmDrd(), confirmDdd:()=>this.confirmDdd(),
+      impactPill: s.impactStatus==='done' ? pill('green') : (s.impactStatus==='running' ? pill('blue') : (s.dddConfirmed ? pill('amber') : pill('gray'))),
+      impactTag: s.impactStatus==='done' ? '完成 · 需重认证 ×1' : (s.impactStatus==='running' ? '分析中' : (s.dddConfirmed ? '待运行' : '等待文档确认')),
+      showImpactBtn: s.dddConfirmed && s.impactStatus==='idle',
+      impactDone: s.impactStatus==='done',
+      runImpact:()=>this.runImpact(),
+      step1Pill: s.impactStatus==='done' ? pill('green') : pill('gray'), step1Tag: s.impactStatus==='done' ? '已加载' : '等待影响分析',
+      step2Pill: s.impactStatus==='done' ? stepPill(dry) : pill('gray'), step2Tag: s.impactStatus!=='done' ? '等待影响分析' : (dry==='idle'?'待执行':(dry==='running'?'预演中':'通过')),
+      step3Pill: valDone?pill('green'):(s.valProgress>0?pill('blue'):pill('gray')), step3Tag: valDone?'5/5 通过':(s.valProgress>0?`${s.valProgress}/5`:'等待 dry-run'),
+      step4Pill: valDone?pill('green'):pill('gray'), step4Tag: valDone?'就绪':'待确认',
+      showDryBtn: dry==='idle' && s.impactStatus==='done',
+      runDry:()=>this.runDry(),
+      dryRows: dry==='done'?'50,000':'—', dryGap: dry==='done'?'0':'—',
+      dryChecksum: dry==='done'?'sha256:7c41e0…b28f9d':'—',
+      dryTwice: dry==='done'?'一致 ✓':'—', dryTwiceC: dry==='done'?'#2AA36B':'rgba(27,30,36,.4)',
+      assertions:asserts, deLog: s.deLog.map(l=>({t:l.t, c:logC[l.c]})),
+      odPending: s.odStatus==='pending', odApproved, odBlocked:s.odBlocked,
+      odHeadBg: odApproved?'rgba(42,163,107,.13)':'rgba(201,130,27,.14)', odHeadFg: odApproved?'#20794F':'#8F5D10',
+      odStatusLabel: odApproved?'已批准':'待审批',
+      odApprove:()=>this.odApprove(), odReject:()=>this.odReject(),
+      odApproveStyle:`flex:1;font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 0;border:none;border-radius:8px;cursor:pointer;background:${valDone?'#2AA36B':'#9AA0AA'};color:#fff;`,
+      odChain:chain,
+      // demo
+      demoOpen:s.demoOpen, demoActs:acts
+    };
+  }
+}
+</script>
+</body>
+</html>

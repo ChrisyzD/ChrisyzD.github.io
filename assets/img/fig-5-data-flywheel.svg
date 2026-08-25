@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="776" viewBox="0 0 800 776" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-5-data-flywheel-title fig-5-data-flywheel-desc">
+  <title id="fig-5-data-flywheel-title">The data flywheel</title>
+  <desc id="fig-5-data-flywheel-desc">A six-step training-data cycle — simulate, roll out, judge, locate, regenerate, re-evaluate — turning clockwise around a growing set of verified dialogues. The judge's error breakdown localises the eleven highest-error functions, and regeneration is aimed only at those.</desc>
+  <defs>
+    <style>
+      .s  { font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; }
+      .m  { font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .ttl{ font-size:26px; font-weight:600; fill:#16181d; letter-spacing:-0.01em; }
+      .sub{ font-size:14px; font-weight:400; fill:#5b6068; }
+      .eyb{ font-size:9px;  font-weight:500; fill:#5b6068; letter-spacing:0.18em; }
+      .nam{ font-size:16px; font-weight:600; fill:#16181d; }
+      .slb{ font-size:10px; font-weight:400; fill:#5b6068; }
+      .lgd{ font-size:10px; fill:#5b6068; }
+    </style>
+    <marker id="f5-arw" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5b6068"/></marker>
+    <marker id="f5-arw-soft" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8b9198"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <!-- header -->
+  <text class="m eyb" x="40" y="48">FIG. 5 · CAPSTONE · TRAINING-DATA FLYWHEEL</text>
+  <text class="s ttl" x="40" y="84">The data flywheel</text>
+  <text class="s sub" x="40" y="112">More data everywhere is easier to write and worse. Measuring first makes the failures visible.</text>
+
+  <!-- ring flow (clockwise) -->
+  <path d="M 488.000 201.337 A 232 232 0 0 1 577.894 267.078" fill="none" stroke="#5b6068" stroke-width="1.2" marker-end="url(#f5-arw)"/>
+  <path d="M 616.259 332.000 A 232 232 0 0 1 616.691 498.880" fill="none" stroke="#5b6068" stroke-width="1.2" marker-end="url(#f5-arw)"/>
+  <path d="M 578.662 564.000 A 232 232 0 0 1 489.109 630.204" fill="none" stroke="#5b6068" stroke-width="1.2" marker-end="url(#f5-arw)"/>
+  <path d="M 312.000 630.663 A 232 232 0 0 1 222.106 564.922" fill="none" stroke="#5b6068" stroke-width="1.2" marker-end="url(#f5-arw)"/>
+  <path d="M 183.741 500.000 A 232 232 0 0 1 183.309 333.120" fill="none" stroke="#5b6068" stroke-width="1.2" marker-end="url(#f5-arw)"/>
+  <path d="M 221.338 268.000 A 232 232 0 0 1 310.891 201.796" fill="none" stroke="#5b6068" stroke-width="1.2" marker-end="url(#f5-arw)"/>
+
+  <!-- write-back spokes into the growing set -->
+  <path d="M 544.828 332.000 L 487.949 364.990" fill="none" stroke="#8b9198" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#f5-arw-soft)"/>
+  <path d="M 544.828 500.000 L 487.949 467.010" fill="none" stroke="#8b9198" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#f5-arw-soft)"/>
+  <path d="M 255.172 500.000 L 312.051 467.010" fill="none" stroke="#8b9198" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#f5-arw-soft)"/>
+
+  <!-- stations -->
+  <rect x="312" y="152" width="176" height="64" rx="6" fill="#ffffff"/>
+  <rect x="312" y="152" width="176" height="64" rx="6" fill="#ffffff" stroke="#16181d" stroke-width="1"/>
+  <text class="s nam" x="400" y="184" text-anchor="middle">Simulate</text>
+  <text class="m slb" x="400" y="202" text-anchor="middle">persona-driven users</text>
+
+  <rect x="512" y="268" width="176" height="64" rx="6" fill="#ffffff"/>
+  <rect x="512" y="268" width="176" height="64" rx="6" fill="#ffffff" stroke="#16181d" stroke-width="1"/>
+  <text class="s nam" x="600" y="300" text-anchor="middle">Roll out</text>
+  <text class="m slb" x="600" y="318" text-anchor="middle">grounded conversations</text>
+
+  <rect x="512" y="500" width="176" height="64" rx="6" fill="#ffffff"/>
+  <rect x="512" y="500" width="176" height="64" rx="6" fill="#ffffff" stroke="#16181d" stroke-width="1"/>
+  <text class="s nam" x="600" y="532" text-anchor="middle">Judge</text>
+  <text class="m slb" x="600" y="550" text-anchor="middle">LLM scores every turn</text>
+
+  <!-- focal : where measurement pays off -->
+  <rect x="312" y="616" width="176" height="64" rx="6" fill="#ffffff"/>
+  <rect x="312" y="616" width="176" height="64" rx="6" fill="rgba(11,92,173,0.07)" stroke="#0b5cad" stroke-width="1.4"/>
+  <text class="s nam" x="400" y="648" text-anchor="middle" fill="#0b5cad">Locate</text>
+  <text class="m slb" x="400" y="666" text-anchor="middle" fill="#0b5cad">11 highest-error functions</text>
+
+  <rect x="112" y="500" width="176" height="64" rx="6" fill="#ffffff"/>
+  <rect x="112" y="500" width="176" height="64" rx="6" fill="#ffffff" stroke="#16181d" stroke-width="1"/>
+  <text class="s nam" x="200" y="532" text-anchor="middle">Regenerate</text>
+  <text class="m slb" x="200" y="550" text-anchor="middle">targeted, not everywhere</text>
+
+  <rect x="112" y="268" width="176" height="64" rx="6" fill="#ffffff"/>
+  <rect x="112" y="268" width="176" height="64" rx="6" fill="#ffffff" stroke="#16181d" stroke-width="1"/>
+  <text class="s nam" x="200" y="300" text-anchor="middle">Re-evaluate</text>
+  <text class="m slb" x="200" y="318" text-anchor="middle">72.8% &#8594; 82.7% accepted</text>
+
+  <!-- hub : accumulated state -->
+  <rect x="304" y="368" width="192" height="96" rx="8" fill="#16181d"/>
+  <text class="s nam" x="400" y="408" text-anchor="middle" fill="#ffffff">Verified dialogues</text>
+  <text class="m slb" x="400" y="428" text-anchor="middle" fill="rgba(255,255,255,0.75)">the training set grows</text>
+
+  <!-- legend -->
+  <line x1="40" y1="720" x2="760" y2="720" stroke="#e3e5e8" stroke-width="0.8"/>
+  <text class="m eyb" x="40" y="744" letter-spacing="0.14em">LEGEND</text>
+  <line x1="128" y1="740" x2="156" y2="740" stroke="#5b6068" stroke-width="1.2"/>
+  <text class="s lgd" x="164" y="744">flywheel step</text>
+  <line x1="288" y1="740" x2="316" y2="740" stroke="#8b9198" stroke-width="1" stroke-dasharray="5,4"/>
+  <text class="s lgd" x="324" y="744">writes into the training set</text>
+  <rect x="544" y="733" width="14" height="12" rx="2" fill="rgba(11,92,173,0.07)" stroke="#0b5cad" stroke-width="1.2"/>
+  <text class="s lgd" x="566" y="744">where measuring pays off</text>
+</svg>
