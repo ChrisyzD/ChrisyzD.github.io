@@ -2458,9 +2458,9 @@ class Component extends DCLogic {
       if (this.state.goldCertified) {
         done({
           kind:'agent', status:'ANSWER', pill:'ANSWER', category:'certified_semantic_answer',
-          text:'2024 全年 Gold 客户净收入合计 $340,955.56，覆盖 10 个国家、1,546 名 Gold 客户 / 4,057 单。Top1 美国 $124,617.70。口径：订单时点等级（tier_at_order，SCD2 temporal join），净收入 USD。',
+          text:'2024 全年 Gold 客户净收入合计 $340,955.56，覆盖 10 个国家、1,486 名 Gold 客户 / 4,057 单。Top1 美国 $124,617.70。口径：订单时点等级（tier_at_order，SCD2 temporal join），净收入 USD。',
           table:{ head:['country','net_revenue_usd','gold_customers'], rows:this.goldTable() },
-          foot:'10 rows · Σ $340,955.56 · Gold 1,546 人 / 4,057 单 · 覆盖 50,000/50,000'
+          foot:'10 rows · Σ $340,955.56 · Gold 1,486 人 / 4,057 单 · 覆盖 50,000/50,000'
         }, {
           state:'green', title:'凭证校验全绿',
           rows:[
