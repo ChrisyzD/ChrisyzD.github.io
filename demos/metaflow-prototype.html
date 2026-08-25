@@ -1729,15 +1729,21 @@
     text-align: center;
   }
   #mf-proto-notice a { color: #9cc2ff; text-decoration: underline; text-underline-offset: 2px; }
-  #dc-root > .sc-host { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* Scroll at the document level, not on an inner wrapper: an overflow-x:auto on
+     #dc-root > .sc-host traps the overflow inside that div, so the page itself
+     never becomes scrollable (document.scrollWidth stays at the viewport width)
+     even though the content inside is 1400px wide. Leaving .sc-host's overflow
+     at its default (visible) lets the 1400px content spill out to the right and
+     the browser grows the document's own scrollable area instead. */
+  body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   #dc-root > .sc-host > div { min-width: 1400px; }
 }
 </style>
 </head>
 <body>
-<div id="mf-proto-notice">This prototype is a fixed-width desktop artifact — best viewed
-  on a larger screen. Click ▶ Demo mode (top right) for a guided walkthrough. Annotated
-  screenshots are on the <a href="/work/metaflow/">MetaFlow page</a>.</div>
+<div id="mf-proto-notice">This prototype is a fixed-width desktop artifact. A guided demo
+  starts automatically — best viewed on a larger screen. Annotated screenshots are on the
+  <a href="/work/metaflow/">MetaFlow page</a>.</div>
 <x-dc>
 <helmet>
 <style>
