@@ -363,7 +363,7 @@ figcaption .src { display: block; margin-top: 4px; }
 
 .fig-diagram { max-width: 900px; }    /* drawn at 800 */
 .fig-plate   { max-width: 1200px; }   /* the poster exports are 1200 wide */
-.fig-clip    { max-width: 1280px; }   /* both recordings are 1280 wide */
+.fig-clip    { max-width: 1280px; }   /* desktop track is 1280; EMG recording is native 1280, MetaFlow is native 1440 (0.889 on this track) */
 
 /* Images are shown at the size that makes them readable and that is the end of
    it. There is no click-to-open-the-original anywhere on this site: sending a
