@@ -72,8 +72,10 @@ a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; 
 a:hover { text-decoration-thickness: 2px; }
 a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 2px; }
 
-ul { margin: 0 0 16px; padding-left: 20px; }
+ul, ol { margin: 0 0 16px; padding-left: 20px; }
 li { margin-bottom: 4px; }
+
+.de-console-notes { font-size: 15px; }
 
 hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; }
 

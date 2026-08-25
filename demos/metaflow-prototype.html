@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
@@ -1736,8 +1736,8 @@
 </head>
 <body>
 <div id="mf-proto-notice">This prototype is a fixed-width desktop artifact — best viewed
-  on a larger screen. Annotated screenshots are on the
-  <a href="/work/metaflow/">MetaFlow page</a>.</div>
+  on a larger screen. Click ▶ Demo mode (top right) for a guided walkthrough. Annotated
+  screenshots are on the <a href="/work/metaflow/">MetaFlow page</a>.</div>
 <x-dc>
 <helmet>
 <style>
@@ -2414,6 +2414,12 @@ class Component extends DCLogic {
     this.buScroll = React.createRef();
     this.daScroll = React.createRef();
     this.timers = [];
+  }
+  componentDidMount(){
+    // Land on a populated first screen instead of the empty BU placeholder —
+    // this plays the same "BU asks, hits a MISS" sequence as clicking act 1
+    // in the demo-mode panel manually would.
+    this.playAct(1);
   }
   componentWillUnmount(){ this.timers.forEach(clearTimeout); }
   componentDidUpdate(){

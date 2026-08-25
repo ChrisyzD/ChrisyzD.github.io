@@ -72,11 +72,12 @@ attached.</p>
 
 <section>
   <h2>Prototype</h2>
-  <p>These are screens from the design prototype for the studio, annotated in English. They
-  show the ideas the system is built around: answers are bounded by a certified
-  capability list, every answer carries provenance, anything out of scope is refused
-  explicitly rather than guessed, and the fix behind a refusal goes through lineage
-  analysis, a dry-run and an explicit owner approval before it ships.</p>
+  <p>These are screens from the design prototype for the studio, annotated in English.
+  <strong>Design prototype — not the running system.</strong> They show the ideas the system is
+  built around: answers are bounded by a certified capability list, every answer carries
+  provenance, anything out of scope is refused explicitly rather than guessed, and the fix
+  behind a refusal goes through lineage analysis, a dry-run and an explicit owner approval
+  before it ships.</p>
 
   <figure>
     <a href="/assets/img/metaflow-provenance.png" target="_blank" rel="noopener">
@@ -86,7 +87,6 @@ attached.</p>
     <figcaption>What to look at: this card is attached to every answer. It names the certified
       table the number came from, the metric version, and the definition the answer was bound to
       — so “where did this number come from” has an answer that is not a conversation.
-      <strong>Design prototype — not the running system.</strong>
       <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
       testkit.</span></figcaption>
   </figure>
@@ -99,7 +99,6 @@ attached.</p>
     <figcaption>What to look at: the refusal. A question outside the certified surface returns
       an explicit MISS that names the blocker — 8,611 orders with no historical tier coverage —
       and turns into a ticket in the analyst queue instead of a plausible-looking guess.
-      <strong>Design prototype — not the running system.</strong>
       <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
       testkit.</span></figcaption>
   </figure>
@@ -111,32 +110,63 @@ attached.</p>
     </a>
     <figcaption>What to look at: the catalog on the left is the whole answerable surface, and
       the metrics that failed certification are listed too — visible, and still unanswerable.
-      <strong>Design prototype — not the running system.</strong>
       <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
       testkit.</span></figcaption>
   </figure>
 
   <figure>
     <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
-    <img src="/assets/img/metaflow-de-console.png" width="1440" height="1686" loading="lazy"
-         alt="The DE engineering console for REQ-0031: DRD and DDD confirmed, a lineage impact
-         analysis flagging one downstream capability for recertification, a transactional
-         dry-run and five passing validation checks, and an approved Owner Decision with its
-         post-approval action chain — annotated in English.">
+    <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-workflow-mobile.png">
+      <img src="/assets/img/metaflow-de-console-workflow.png" width="1142" height="1519"
+           alt="The DE engineering console for REQ-0031: DRD and DDD confirmed, a lineage
+           impact analysis marked 1 flagging one downstream capability for recertification, a
+           patch, a transactional dry-run marked 2, five passing validation checks, and a
+           rollback plan.">
+    </picture>
     </a>
-    <figcaption>What to look at: the step that turns a diagnosis into a shipped fix. Four
-      things happen before a byte is written for real — lineage impact analysis, a
-      transaction-scoped dry-run, a checksum recomputed twice, and an explicit owner
-      approval — and the approval itself triggers the write, the registration and the
-      notification back to the business user, all logged. <strong>Design prototype — not the
-      running system.</strong>
+    <figcaption><span class="only-mobile">What to look at: the impact analysis (marked 1) and
+      the dry-run (marked 2) — the two checks that run before a byte is written. Tap the image
+      above to open the full console at full size.</span>
+      <span class="only-desktop">What to look at: the impact analysis (marked 1) automatically
+      flags one downstream capability for recertification before the patch can ship; the
+      dry-run (marked 2) proves the row count and a checksum that still matches before anything
+      real is written. Tap the image above to open the full console at full size.</span>
       <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
       testkit.</span></figcaption>
   </figure>
 
+  <figure>
+    <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
+    <img src="/assets/img/metaflow-de-console-approval.png" width="310" height="526" loading="lazy"
+         alt="The Owner Decision approval card for OD006: an explicit owner approval marked 3,
+         and the post-approval action chain — execute the patch, register the capability,
+         notify the business user — marked 4.">
+    </a>
+    <figcaption>What to look at: the approval. Any write to a certified layer needs an explicit
+      owner sign-off (marked 3), and approval is not the end of the flow — it triggers the
+      write, the registration and the notification back to the business user, all logged
+      (marked 4). Tap the image above to open the full console at full size.
+      <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
+      testkit.</span></figcaption>
+  </figure>
+
+  <ol class="de-console-notes">
+    <li>Impact analysis automatically flags one downstream capability
+      (<code>semantic_tier_migration</code>) that needs recertification before the patch can
+      ship.</li>
+    <li>A transactional dry-run (<code>BEGIN … ROLLBACK</code>) proves the exact row count and a
+      checksum that still matches on a second, independent recomputation — before anything real
+      is written.</li>
+    <li>Any write to a certified layer needs an explicit owner sign-off, and the approval card
+      carries the dry-run and validation evidence that justified it.</li>
+    <li>Approval is not the end of the flow: it triggers the write, registers the new
+      capability, and notifies the business user whose question started the ticket.</li>
+  </ol>
+
   <p><a href="/demos/metaflow-prototype.html">Open the interactive prototype ↗</a><br>
-    <span class="note">UI is in Chinese; data is the public <code>jaffle_shop</code> testkit.
-    It is a design prototype, not the running system.</span></p>
+    <span class="note">UI is in Chinese; data is the public <code>jaffle_shop</code>
+    testkit.</span></p>
 </section>
 
 <section>
