@@ -72,12 +72,11 @@ are a design prototype rather than the running system. There is also the
       case, not just that something is red.</figcaption>
   </figure>
 
-  <p><strong>The studio.</strong> The five screens below come from the design prototype for the
-  front end — a mock, not the running system. Interface, annotations and data are all English.
+  <p><strong>The studio.</strong> Interface, annotations and data are all English.
   The data is the <strong><code>jaffle_shop</code> demo dataset</strong>: synthetic rows
   generated against dbt's public <code>jaffle_shop</code> schema — 50,000 orders spanning 2022
   to 2025 — not the toy seed data that ships with dbt. The screens show the four ideas the
-  system is organised around: answers are bounded by a certified capability list, every answer
+  system is organized around: answers are bounded by a certified capability list, every answer
   carries provenance, anything out of scope is refused explicitly rather than guessed, and the
   fix behind a refusal goes through lineage analysis, a dry run and an explicit owner approval
   before it ships.</p>
@@ -116,27 +115,6 @@ are a design prototype rather than the running system. There is also the
   </figure>
 
   <figure class="wide">
-    <a href="/assets/img/metaflow-capabilities.png" target="_blank" rel="noopener">
-    <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-capabilities-mobile.png"
-              width="1048" height="2392">
-      <img src="/assets/img/metaflow-capabilities.png" width="1920" height="2102" loading="lazy"
-           alt="The prototype's certified capability catalog, marked 1; a box of metrics that
-           failed certification and stay unanswerable, marked 2; and a certified answer naming
-           its metric, currency and grain, marked 3.">
-    </picture>
-    </a>
-    <figcaption><span class="only-mobile">What to look at: this crop is the certified capability
-      catalog — five semantic assets, which are the whole answerable surface — with the metrics
-      that failed certification pinned underneath it. Tap the image to open the full screen,
-      which also shows what a certified answer looks like.</span>
-      <span class="only-desktop">What to look at: the catalog on the left, marked 1, is the whole
-      answerable surface. A question that lands inside it comes back naming its metric, currency
-      and grain, marked 3; the metrics that failed certification sit in the box at the bottom
-      left and stay unanswerable, marked 2.</span></figcaption>
-  </figure>
-
-  <figure class="wide">
     <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
     <picture>
       <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-workflow-mobile.png"
@@ -156,22 +134,6 @@ are a design prototype rather than the running system. There is also the
       included, at full size.</span></figcaption>
   </figure>
 
-  <figure class="wide">
-    <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
-    <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-approval-mobile.png"
-              width="720" height="1618">
-      <img src="/assets/img/metaflow-de-console-approval.png" width="1920" height="1068" loading="lazy"
-         alt="The Owner Decision approval card for OD006, marked 3, and the post-approval action
-         chain — execute the patch, register the capability, notify the business user — marked 4.">
-    </picture>
-    </a>
-    <figcaption>What to look at: approval is a gate and a trigger. Nothing is written to a
-      certified layer without an owner signing the card, and signing it starts the write, the
-      registration and the notification back to the person who asked the original
-      question.</figcaption>
-  </figure>
-
   <p><a href="/demos/metaflow-prototype-en.html">Open the interactive prototype →</a>
     <span class="note">English · desktop width · <a href="/demos/metaflow-prototype.html">original
     Chinese version</a></span></p>
@@ -186,10 +148,9 @@ are a design prototype rather than the running system. There is also the
       enforces data-quality rules as executable tests.</li>
     <li>In development since <strong>March 2026</strong>.</li>
     <li><strong>What this page cannot prove.</strong> Two people built it, and the NL→IR→SQL
-      engine core is my collaborator's work, not mine. The repository is private, the screens
-      above are a design prototype rather than the running system, and every figure here is a
-      count of artefacts rather than a benchmark result — so nothing on this page is
-      independently verifiable from a link. That is the whole caveat, stated once.</li>
+      engine core is my collaborator's work, not mine. The repository is private, and every
+      figure here is a count of artifacts rather than a benchmark result — so nothing on this
+      page is independently verifiable from a link.</li>
   </ul>
 </section>
 
@@ -211,9 +172,8 @@ are a design prototype rather than the running system. There is also the
 
     <p>The prototype is probably more convincing than the system behind it, and that is the
     trap. A good mock is always more complete than the thing it stands in for, it costs a
-    fraction as much, and on a personal site nobody is checking which one they are looking at.
-    The word <em>prototype</em> stays on those screens because it is the only thing stopping
-    this page from making a claim the repository could not back.</p>
+    fraction as much, and on a personal site nobody is checking which one they are looking
+    at.</p>
   </div>
 </section>
 

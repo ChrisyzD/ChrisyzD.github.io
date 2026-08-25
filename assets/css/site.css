@@ -122,7 +122,7 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 /* The home page is an index, not the work itself. Each card carries one
    sentence and that project's key figure, and links to its own page.
    No shadow, no gradient, no hover lift: the only state change is the border
-   and the title colour. */
+   and the title color. */
 
 .cards { display: grid; gap: 24px; margin: 0; padding: 0; list-style: none; }
 
@@ -137,37 +137,6 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 }
 .card:hover { border-color: var(--link); }
 .card:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
-
-/* contain, not cover: these are charts and schematics, and cropping a box plot
-   to fill a box turns evidence into decoration. 4/3 rather than 16/10 because
-   three of the four figures are close to square and a wide box letterboxed them
-   down to half the card width. */
-.card .thumb {
-  display: block;
-  width: 100%;
-  height: auto;                 /* let aspect-ratio win over the intrinsic height attr */
-  aspect-ratio: 4 / 3;
-  object-fit: contain;
-  background: var(--bg);
-  border: 1px solid var(--rule);
-  border-radius: 2px;
-  padding: 8px;
-  margin: 16px 0 0;
-}
-
-/* The card is read top to bottom on every width: the title leads, the figure
-   follows the sentence it illustrates, and the exits sit with the text rather
-   than under 330px of chart. A figure-first desktop card pushed all four project
-   names 340px below a 900px fold, which is the one thing this index cannot do. */
-.card .go    { order: 1; }
-.card .thumb { order: 2; }
-
-/* Below 899px a 4/3 thumbnail renders too small to read (chart labels, panel
-   detail) and just adds scroll to an index that is supposed to be scannable
-   in two screens. Desktop keeps the figure; the phone gets the index. */
-@media (max-width: 899px) {
-  .card .thumb { display: none; }
-}
 
 .card h3 { margin-bottom: 4px; }
 .card h3 a { color: var(--text); text-decoration: none; }
