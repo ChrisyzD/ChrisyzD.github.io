@@ -1746,14 +1746,18 @@
      already centres its children, so giving the link the site's 44px touch height
      changes nothing visible — on a phone it just becomes hittable. */
   #mf-back { display: inline-flex; align-items: center; min-height: 44px; }
+  /* The walkthrough scrim starts below the 50px top bar so the role switcher and the
+     way out stay live behind it. On a phone the notice above pushes that bar down by
+     an amount that depends on how the text wraps, so 50px lands mid-header and the
+     scrim edge reads as a rendering seam. Here it just covers everything. */
+  #mf-guide-scrim { top: 0 !important; }
 }
 </style>
 </head>
 <body>
-<div id="mf-proto-notice">This prototype is a fixed-width desktop artifact, so on a narrow
-  screen it scrolls sideways. It still runs — a guided demo starts automatically — but the
-  readable version of these same screens is the annotated set on the
-  <a href="/work/metaflow/">MetaFlow page</a>. Come back on a laptop to operate it.</div>
+<div id="mf-proto-notice">这个原型是固定宽度的桌面产物，所以在窄屏上会横向滚动。它照样能跑——
+  四步引导演示由你逐步点击推进，节奏你自己掌握——但同样这几屏更好读的版本，是
+  <a href="/work/metaflow/">MetaFlow 案例页</a>上那组带批注的截图。用笔记本再来操作它。</div>
 <x-dc>
 <helmet>
 <style>
@@ -1794,7 +1798,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       <button onClick="{{ goDE }}" style="{{ roleBtnDE }}">DE 数据工程师</button>
     </div>
     <div style="flex:1;"></div>
-    <button onClick="{{ toggleDemo }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border:none;border-radius:7px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ demoBtnLabel }}</button>
+    <button onClick="{{ guideToggle }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border:none;border-radius:7px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideBtnLabel }}</button>
     <div style="position:relative;" onMouseEnter="{{ infoEnter }}" onMouseLeave="{{ infoLeave }}">
       <div style="width:26px;height:26px;border-radius:50%;border:1px solid rgba(232,234,238,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-style:italic;font-family:Georgia,serif;cursor:default;color:rgba(232,234,238,.7);">i</div>
       <sc-if value="{{ infoOpen }}" hint-placeholder-val="{{ false }}">
@@ -2390,22 +2394,42 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   </sc-if>
   </div>
 
-  <!-- ═══════ 演示模式导航 ═══════ -->
-  <sc-if value="{{ demoOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;right:18px;bottom:18px;z-index:70;width:280px;background:#191C22;color:#E8EAEE;border-radius:13px;box-shadow:0 14px 40px rgba(15,17,22,.45);padding:14px 15px;animation:mfIn .25s ease both;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-        <span style="font-size:12.5px;font-weight:700;">反馈闭环演示</span>
-        <span style="font-family:'SF Mono',Consolas,monospace;font-size:9.5px;color:rgba(232,234,238,.4);">MISS → DA → DE → ANSWER</span>
-      </div>
-      <div style="font-size:11px;color:rgba(232,234,238,.5);line-height:1.6;margin-bottom:10px;">S0101 · Gold 客户 2024 净收入按国家</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <sc-for list="{{ demoActs }}" as="a" hint-placeholder-count="4">
-          <button onClick="{{ a.onPlay }}" style="{{ a.style }}">
-            <span style="{{ a.numStyle }}">{{ a.num }}</span>
-            <span style="flex:1;text-align:left;">{{ a.label }}</span>
-            <span style="flex:none;width:52px;text-align:right;font-size:10px;color:{{ a.stC }};">{{ a.st }}</span>
+  <!-- ═══════ 引导条 · 每一步由访客自己点着走 ═══════ -->
+  <sc-if value="{{ guideBar }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:none;display:flex;align-items:center;gap:16px;padding:10px 16px;background:#191C22;color:#E8EAEE;border-top:1px solid rgba(255,255,255,.09);animation:mfIn .2s ease both;">
+      <div style="flex:none;display:flex;align-items:center;gap:5px;">
+        <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="4">
+          <button onClick="{{ g.onGo }}" title="{{ g.full }}" style="{{ g.chipStyle }}">
+            <span style="{{ g.numStyle }}">{{ g.num }}</span>
+            <span>{{ g.label }}</span>
           </button>
         </sc-for>
+      </div>
+      <div style="flex:1;min-width:120px;font-size:12.5px;line-height:1.6;color:rgba(232,234,238,.82);">{{ guideSay }}</div>
+      <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">退出引导，自由探索</button>
+      <button onClick="{{ guideNext }}" disabled="{{ guideBusy }}" style="{{ guideNextStyle }}">{{ guideNextLabel }}</button>
+    </div>
+  </sc-if>
+
+  <!-- ═══════ 落地面板 · 不点它就什么都不播 ═══════ -->
+  <sc-if value="{{ guideLanding }}" hint-placeholder-val="{{ true }}">
+    <div id="mf-guide-scrim" style="position:fixed;top:50px;left:0;right:0;bottom:0;z-index:90;background:rgba(15,17,22,.6);display:flex;align-items:center;justify-content:center;padding:24px;animation:mfIn .2s ease both;">
+      <div style="width:660px;max-width:100%;background:#fff;border-radius:16px;box-shadow:0 24px 70px rgba(15,17,22,.45);padding:26px 30px 24px;">
+        <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;color:#4A63D8;">引导演示 · 四步 · 每一步由你点</div>
+        <div style="font-size:20px;font-weight:700;line-height:1.5;margin-top:10px;">这段演示讲的是：一个一开始答不了的问题——以及要做到哪些事，它才答得了。</div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-top:18px;">
+          <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:11px;">
+              <span style="flex:none;width:21px;height:21px;border-radius:50%;background:#EDEFF6;color:#4A63D8;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">{{ g.landNum }}</span>
+              <span style="font-size:13.5px;line-height:1.7;">{{ g.full }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:22px;">
+          <button onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
+          <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">跳过，我自己点</button>
+        </div>
+        <div style="font-size:11.5px;line-height:1.8;color:rgba(27,30,36,.5);margin-top:14px;">没有任何东西会自动播。每一步都等你点，也可以随时退出引导——三个角色和自由提问一直都在。</div>
       </div>
     </div>
   </sc-if>
@@ -2414,8 +2438,13 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 <script type="text/x-dc" data-dc-script data-props="{&quot;demoSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.3,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;unit&quot;:&quot;×&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;演示&quot;}}">
 class Component extends DCLogic {
   state = {
-    role: 'BU', infoOpen: false, demoOpen: false, notice: null,
+    role: 'BU', infoOpen: false, notice: null,
     playing: false, playingAct: null, actsDone: {},
+    // 引导态。'landing' = 落地面板，什么都还没跑；'running' = 访客正在逐步推进；
+    // 'off' = 自由探索。?autorun=1 直接进 'off' 并放老的连播 —— 那个 URL 只为录屏
+    // 存在，不是访客落地会看到的东西。
+    guideMode: (/[?&]autorun=1(?:&|$)/.test(location.search) ? 'off' : 'landing'),
+    guideStep: 0,
     // BU
     buMsgs: [], buInput: '', buCred: null, goldCertified: false, ticketCreated: false,
     // DA
@@ -2441,17 +2470,19 @@ class Component extends DCLogic {
     this.timers = [];
   }
   componentDidMount(){
-    // The point of this prototype is the loop, not the refusal. Playing only act 1
-    // left every visitor staring at "cannot be answered" as the final frame, while
-    // the page that links here promises a guided demo. All four acts now run end to
-    // end on their own — MISS -> DA -> DE -> ANSWER — and the first press on any
-    // control hands the demo over to whoever is sitting there.
-    this.autoRun = true;
+    // 这里原来是一载入就把四幕连着播完。可这个原型唯一值得看的东西 —— 一个问题先失败、
+    // 然后同一个问题成功 —— 播得比任何人读得完还快；中途进来的人根本不知道自己撞见了什么。
+    // 所以演示不再自己播：落地是一块说清叙事弧和四步结构的面板，之后每一步由访客自己点。
+    // 老的连播逻辑原样留在下面，只在 ?autorun=1 下跑，供录屏用。
+    this.autoRun = false;
     this.stopAuto = (e) => {
       if (e.target instanceof Element && e.target.closest('button, input, textarea, a')) this.autoRun = false;
     };
-    document.addEventListener('pointerdown', this.stopAuto, true);
-    this.playAct(1, true);
+    if (this.state.guideMode === 'off') {   // ?autorun=1
+      this.autoRun = true;
+      document.addEventListener('pointerdown', this.stopAuto, true);
+      this.playAct(1, true);
+    }
   }
   componentWillUnmount(){
     this.timers.forEach(clearTimeout);
@@ -2782,6 +2813,21 @@ class Component extends DCLogic {
     this.toast('OD006 已驳回（原型模拟：状态保持 pending 可重试）');
   }
 
+  // ─────── 引导演示（访客自己掌节奏）───────
+  // 每一步仍然对应老的一幕，所以下面那套机制原封不动 —— 变的只是「谁来决定下一步什么时候开始」。
+  guideStart(){ this.setState({ guideMode:'running' }); this.guideGo(1); }
+  guideGo(n){
+    if (this.state.playing || n < 1 || n > 4) return;
+    this.setState({ guideMode:'running', guideStep:n });
+    this.playAct(n);
+  }
+  guideNext(){
+    if (this.state.guideStep >= 4 && this.state.actsDone[4]) { this.guideExit(); return; }
+    this.guideGo(this.state.guideStep + 1);
+  }
+  guideExit(){ this.setState({ guideMode:'off' }); }
+  guideToggle(){ this.setState(s => ({ guideMode: s.guideMode === 'off' ? (s.guideStep === 0 ? 'landing' : 'running') : 'off' })); }
+
   // ─────── 演示模式 ───────
   playAct(n, auto){
     if (this.state.playing) return;
@@ -2922,21 +2968,36 @@ class Component extends DCLogic {
     });
     const logC = { dim:'rgba(27,30,36,.5)', ok:'#20794F', warn:'#C9821B' };
 
-    // demo
-    const acts = [
-      [1,'BU 提问 → MISS','第1幕'],[2,'DA 诊断 → caveat 出数 → 提交','第2幕'],[3,'DE 补数 → OD006 批准 → 注册','第3幕'],[4,'BU 重问 → ANSWER 全绿','第4幕']
-    ].map(([n,label]) => ({
-      num:String(n), label, st: s.actsDone[n] ? '✓ 已播放' : (s.playingAct===n?'…':'播放'), stC: s.actsDone[n] ? '#3DBC82' : 'rgba(232,234,238,.5)',
-      onPlay:()=>this.playAct(n),
-      style:`display:flex;align-items:center;gap:10px;font-family:inherit;font-size:12px;padding:8px 10px;border:none;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.07);color:#E8EAEE;`,
-      numStyle:`flex:none;width:18px;height:18px;border-radius:50%;background:${s.actsDone[n]?'#2AA36B':'#4A63D8'};color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;`
-    }));
+    // 引导演示
+    const GSTEPS = [
+      { label:'提问 → MISS', full:'提问，拿到一个明确的 MISS。',
+        say:'第 1 步 · 问题按业务用户会问的方式提进去 —— 然后被拒绝了。没有任何认证能力覆盖「客户下单当时的等级」，所以 MetaFlow 把原因原原本本说出来，而不是给一个看起来像那么回事的数。' },
+      { label:'转工单交接', full:'把这个 MISS 转成工单，交接给分析师。',
+        say:'第 2 步 · 拒绝变成了工作。工单 T-0087 落进 DA 的队列；诊断发现数据是有的，只是覆盖率 82.8%，于是先给一个带 caveat 的兜底数，同时向 DE 提补数请求。' },
+      { label:'工程 → 批准', full:'工程侧：血缘影响分析 → dry run → owner 批准。',
+        say:'第 3 步 · DE 打开请求：确认定义、跑血缘影响分析、在一个会回滚的事务里预演补丁、5/5 断言全过 —— 到这一步 owner 才批 OD006，能力才被注册进目录。' },
+      { label:'重问 → 认证答案', full:'把同一个问题再问一遍 —— 这次它是认证的。',
+        say:'第 4 步 · 同一个问题，同样的问法。这次返回的是认证答案，凭证全绿：来源资产、指标版本、口径定义、checksum。' }
+    ];
+    const gClosing = '走完了。刚才答不了的那个问题，现在返回的是认证答案 —— 第 1 步那次拒绝，正是拿到它的第一步。从这里开始自己探索：切角色，或者在输入框里随便问。';
+    const gStep = s.guideStep, gBusy = s.playing, gFinished = gStep >= 4 && !!s.actsDone[4];
+    const guideSteps = GSTEPS.map((g, i) => {
+      const n = i + 1, cur = gStep === n, done = !!s.actsDone[n];
+      return {
+        num: (done && !cur) ? '✓' : String(n), landNum: String(n), label: g.label, full: g.full,
+        onGo: () => this.guideGo(n),
+        chipStyle:`display:flex;align-items:center;gap:6px;font-family:inherit;font-size:11.5px;font-weight:600;white-space:nowrap;padding:6px 11px;border:none;border-radius:99px;cursor:pointer;background:${cur?'#4A63D8':(done?'rgba(42,163,107,.16)':'rgba(255,255,255,.07)')};color:${cur?'#fff':(done?'#7BD3A8':'rgba(232,234,238,.55)')};`,
+        numStyle:`flex:none;width:16px;height:16px;border-radius:50%;font-size:9.5px;font-weight:800;display:flex;align-items:center;justify-content:center;background:${cur?'rgba(255,255,255,.26)':(done?'rgba(42,163,107,.45)':'rgba(255,255,255,.12)')};color:#fff;`
+      };
+    });
+    const guideSay = gFinished ? gClosing : GSTEPS[Math.max(0, gStep - 1)].say;
+    const guideNextLabel = gBusy ? '第 ' + gStep + ' 步演示中…' : (gFinished ? '结束 · 自己探索 →' : '下一步 · 第 ' + (gStep + 1) + ' 步 →');
 
     return {
       // top bar
       roleBtnBU:roleBtn('BU'), roleBtnDA:roleBtn('DA'), roleBtnDE:roleBtn('DE'),
       goBU:()=>this.setState({role:'BU'}), goDA:()=>this.setState({role:'DA'}), goDE:()=>this.setState({role:'DE'}),
-      toggleDemo:()=>this.setState({demoOpen:!s.demoOpen}), demoBtnLabel: s.demoOpen ? '关闭演示' : '▶ 演示模式',
+      guideToggle:()=>this.guideToggle(), guideBtnLabel: s.guideMode==='off' ? '▶ 引导演示' : '收起引导',
       infoEnter:()=>this.setState({infoOpen:true}), infoLeave:()=>this.setState({infoOpen:false}),
       infoOpen:s.infoOpen, infoTitle:`${s.role} 角色约束`, infoRows,
       hasNotice: !!s.notice, noticeText: s.notice || '',
@@ -3008,8 +3069,12 @@ class Component extends DCLogic {
       odApprove:()=>this.odApprove(), odReject:()=>this.odReject(),
       odApproveStyle:`flex:1;font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 0;border:none;border-radius:8px;cursor:pointer;background:${valDone?'#2AA36B':'#9AA0AA'};color:#fff;`,
       odChain:chain,
-      // demo
-      demoOpen:s.demoOpen, demoActs:acts
+      // 引导演示
+      guideLanding: s.guideMode==='landing', guideBar: s.guideMode==='running',
+      guideSteps, guideSay, guideBusy: gBusy, guideNextLabel,
+      guideStartLabel: gStep===0 ? '开始 · 第 1 步 →' : '继续 · 第 ' + Math.max(1, gStep) + ' 步 →',
+      guideStart:()=>this.guideStart(), guideNext:()=>this.guideNext(), guideExit:()=>this.guideExit(),
+      guideNextStyle:`flex:none;font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 17px;border:none;border-radius:9px;white-space:nowrap;cursor:${gBusy?'default':'pointer'};background:${gBusy?'#3A3F4C':(gFinished?'#2AA36B':'#4A63D8')};color:${gBusy?'rgba(232,234,238,.5)':'#fff'};`
     };
   }
 }

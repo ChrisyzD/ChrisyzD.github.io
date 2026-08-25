@@ -1746,13 +1746,18 @@
      already centres its children, so giving the link the site's 44px touch height
      changes nothing visible — on a phone it just becomes hittable. */
   #mf-back { display: inline-flex; align-items: center; min-height: 44px; }
+  /* The walkthrough scrim starts below the 50px top bar so the role switcher and the
+     way out stay live behind it. On a phone the notice above pushes that bar down by
+     an amount that depends on how the text wraps, so 50px lands mid-header and the
+     scrim edge reads as a rendering seam. Here it just covers everything. */
+  #mf-guide-scrim { top: 0 !important; }
 }
 </style>
 </head>
 <body>
 <div id="mf-proto-notice">This prototype is a fixed-width desktop artifact, so on a narrow
-  screen it scrolls sideways. It still runs — a guided demo starts automatically — but the
-  readable version of these same screens is the annotated set on the
+  screen it scrolls sideways. It still runs — click through a four-step walkthrough, at your
+  own pace — but the readable version of these same screens is the annotated set on the
   <a href="/work/metaflow/">MetaFlow page</a>. Come back on a laptop to operate it.</div>
 <x-dc>
 <helmet>
@@ -1794,7 +1799,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       <button onClick="{{ goDE }}" style="{{ roleBtnDE }}">DE · Data Engineer</button>
     </div>
     <div style="flex:1;"></div>
-    <button onClick="{{ toggleDemo }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border:none;border-radius:7px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ demoBtnLabel }}</button>
+    <button onClick="{{ guideToggle }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border:none;border-radius:7px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideBtnLabel }}</button>
     <div style="position:relative;" onMouseEnter="{{ infoEnter }}" onMouseLeave="{{ infoLeave }}">
       <div style="width:26px;height:26px;border-radius:50%;border:1px solid rgba(232,234,238,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-style:italic;font-family:Georgia,serif;cursor:default;color:rgba(232,234,238,.7);">i</div>
       <sc-if value="{{ infoOpen }}" hint-placeholder-val="{{ false }}">
@@ -2390,22 +2395,42 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   </sc-if>
   </div>
 
-  <!-- ═══════ Demo-mode navigator ═══════ -->
-  <sc-if value="{{ demoOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;right:18px;bottom:18px;z-index:70;width:300px;background:#191C22;color:#E8EAEE;border-radius:13px;box-shadow:0 14px 40px rgba(15,17,22,.45);padding:14px 15px;animation:mfIn .25s ease both;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-        <span style="font-size:12.5px;font-weight:700;">Feedback loop demo</span>
-        <span style="font-family:'SF Mono',Consolas,monospace;font-size:9.5px;color:rgba(232,234,238,.4);">MISS → DA → DE → ANSWER</span>
-      </div>
-      <div style="font-size:11px;color:rgba(232,234,238,.5);line-height:1.6;margin-bottom:10px;">S0101 · Gold customer net revenue 2024, by country</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <sc-for list="{{ demoActs }}" as="a" hint-placeholder-count="4">
-          <button onClick="{{ a.onPlay }}" style="{{ a.style }}">
-            <span style="{{ a.numStyle }}">{{ a.num }}</span>
-            <span style="flex:1;text-align:left;">{{ a.label }}</span>
-            <span style="flex:none;width:52px;text-align:right;font-size:10px;color:{{ a.stC }};">{{ a.st }}</span>
+  <!-- ═══════ Walkthrough bar · the visitor advances it, one press per step ═══════ -->
+  <sc-if value="{{ guideBar }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:none;display:flex;align-items:center;gap:16px;padding:10px 16px;background:#191C22;color:#E8EAEE;border-top:1px solid rgba(255,255,255,.09);animation:mfIn .2s ease both;">
+      <div style="flex:none;display:flex;align-items:center;gap:5px;">
+        <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="4">
+          <button onClick="{{ g.onGo }}" title="{{ g.full }}" style="{{ g.chipStyle }}">
+            <span style="{{ g.numStyle }}">{{ g.num }}</span>
+            <span>{{ g.label }}</span>
           </button>
         </sc-for>
+      </div>
+      <div style="flex:1;min-width:120px;font-size:12.5px;line-height:1.55;color:rgba(232,234,238,.82);">{{ guideSay }}</div>
+      <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">Exit and explore freely</button>
+      <button onClick="{{ guideNext }}" disabled="{{ guideBusy }}" style="{{ guideNextStyle }}">{{ guideNextLabel }}</button>
+    </div>
+  </sc-if>
+
+  <!-- ═══════ Landing panel · nothing plays until this is dismissed ═══════ -->
+  <sc-if value="{{ guideLanding }}" hint-placeholder-val="{{ true }}">
+    <div id="mf-guide-scrim" style="position:fixed;top:50px;left:0;right:0;bottom:0;z-index:90;background:rgba(15,17,22,.6);display:flex;align-items:center;justify-content:center;padding:24px;animation:mfIn .2s ease both;">
+      <div style="width:660px;max-width:100%;background:#fff;border-radius:16px;box-shadow:0 24px 70px rgba(15,17,22,.45);padding:26px 30px 24px;">
+        <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;color:#4A63D8;">GUIDED WALKTHROUGH · FOUR STEPS · YOU CLICK EACH ONE</div>
+        <div style="font-size:20px;font-weight:700;line-height:1.45;margin-top:10px;">This walkthrough shows a question that cannot be answered at first — and what it takes until it can.</div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-top:18px;">
+          <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:11px;">
+              <span style="flex:none;width:21px;height:21px;border-radius:50%;background:#EDEFF6;color:#4A63D8;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">{{ g.landNum }}</span>
+              <span style="font-size:13.5px;line-height:1.65;">{{ g.full }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:22px;">
+          <button onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
+          <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">Skip — I will explore it myself</button>
+        </div>
+        <div style="font-size:11.5px;line-height:1.7;color:rgba(27,30,36,.5);margin-top:14px;">Nothing plays on its own. Every step waits for you, and you can leave the walkthrough at any point — all three roles and free-form questions stay available.</div>
       </div>
     </div>
   </sc-if>
@@ -2414,8 +2439,14 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 <script type="text/x-dc" data-dc-script data-props="{&quot;demoSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.3,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;unit&quot;:&quot;×&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Demo&quot;}}">
 class Component extends DCLogic {
   state = {
-    role: 'BU', infoOpen: false, demoOpen: false, notice: null,
+    role: 'BU', infoOpen: false, notice: null,
     playing: false, playingAct: null, actsDone: {},
+    // Walkthrough. 'landing' = the intro panel, nothing has run yet; 'running' = the
+    // visitor is stepping through it; 'off' = free exploration. ?autorun=1 skips
+    // straight to 'off' and lets the old continuous reel play — that URL exists so
+    // the screen recording can be made, and is not what a visitor lands on.
+    guideMode: (/[?&]autorun=1(?:&|$)/.test(location.search) ? 'off' : 'landing'),
+    guideStep: 0,
     // BU
     buMsgs: [], buInput: '', buCred: null, goldCertified: false, ticketCreated: false,
     // DA
@@ -2441,17 +2472,22 @@ class Component extends DCLogic {
     this.timers = [];
   }
   componentDidMount(){
-    // The point of this prototype is the loop, not the refusal. Playing only act 1
-    // left every visitor staring at "cannot be answered" as the final frame, while
-    // the page that links here promises a guided demo. All four acts now run end to
-    // end on their own — MISS -> DA -> DE -> ANSWER — and the first press on any
-    // control hands the demo over to whoever is sitting there.
-    this.autoRun = true;
+    // This used to start playing all four acts the moment the page loaded. The one
+    // thing worth seeing here — a question that fails, and then the same question
+    // succeeding — went past faster than anyone could read it, and a visitor who
+    // arrived mid-reel had no idea what they had walked into. So the demo no longer
+    // plays itself: it opens on a panel that states the arc and the four steps, and
+    // the visitor presses through it one step at a time. The continuous reel is kept
+    // verbatim below and now only runs under ?autorun=1, for screen recording.
+    this.autoRun = false;
     this.stopAuto = (e) => {
       if (e.target instanceof Element && e.target.closest('button, input, textarea, a')) this.autoRun = false;
     };
-    document.addEventListener('pointerdown', this.stopAuto, true);
-    this.playAct(1, true);
+    if (this.state.guideMode === 'off') {   // ?autorun=1
+      this.autoRun = true;
+      document.addEventListener('pointerdown', this.stopAuto, true);
+      this.playAct(1, true);
+    }
   }
   componentWillUnmount(){
     this.timers.forEach(clearTimeout);
@@ -2782,6 +2818,22 @@ class Component extends DCLogic {
     this.toast('OD006 rejected (prototype simulation: status stays pending so you can retry)');
   }
 
+  // ─────── walkthrough (visitor-paced) ───────
+  // Each step is still one act of the reel, so the machinery below is untouched —
+  // what changed is who decides when the next one starts.
+  guideStart(){ this.setState({ guideMode:'running' }); this.guideGo(1); }
+  guideGo(n){
+    if (this.state.playing || n < 1 || n > 4) return;
+    this.setState({ guideMode:'running', guideStep:n });
+    this.playAct(n);
+  }
+  guideNext(){
+    if (this.state.guideStep >= 4 && this.state.actsDone[4]) { this.guideExit(); return; }
+    this.guideGo(this.state.guideStep + 1);
+  }
+  guideExit(){ this.setState({ guideMode:'off' }); }
+  guideToggle(){ this.setState(s => ({ guideMode: s.guideMode === 'off' ? (s.guideStep === 0 ? 'landing' : 'running') : 'off' })); }
+
   // ─────── demo mode ───────
   playAct(n, auto){
     if (this.state.playing) return;
@@ -2922,21 +2974,36 @@ class Component extends DCLogic {
     });
     const logC = { dim:'rgba(27,30,36,.5)', ok:'#20794F', warn:'#C9821B' };
 
-    // demo
-    const acts = [
-      [1,'BU asks → MISS','Act 1'],[2,'DA triages → caveat answer → submit','Act 2'],[3,'DE backfills → OD006 approved → registered','Act 3'],[4,'BU re-asks → ANSWER, all green','Act 4']
-    ].map(([n,label]) => ({
-      num:String(n), label, st: s.actsDone[n] ? '✓ played' : (s.playingAct===n?'…':'Play'), stC: s.actsDone[n] ? '#3DBC82' : 'rgba(232,234,238,.5)',
-      onPlay:()=>this.playAct(n),
-      style:`display:flex;align-items:center;gap:10px;font-family:inherit;font-size:12px;padding:8px 10px;border:none;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.07);color:#E8EAEE;text-align:left;`,
-      numStyle:`flex:none;width:18px;height:18px;border-radius:50%;background:${s.actsDone[n]?'#2AA36B':'#4A63D8'};color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;`
-    }));
+    // walkthrough
+    const GSTEPS = [
+      { label:'Ask → MISS', full:'Ask the question, and get an explicit MISS.',
+        say:'Step 1 · The question goes in as a business user would ask it — and it comes back refused. No certified capability covers a customer’s tier at the time of the order, so MetaFlow says so, in full, instead of producing a plausible number.' },
+      { label:'Hand off', full:'Hand the MISS off as a ticket to the analyst.',
+        say:'Step 2 · The refusal becomes work. Ticket T-0087 lands in the analyst’s queue; triage finds the data exists but is only 82.8% covered, produces a caveated fallback number, and files a backfill request to engineering.' },
+      { label:'Engineer → approve', full:'Engineer: lineage impact → dry run → owner approval.',
+        say:'Step 3 · Engineering opens the request: confirm the definition, run the lineage impact analysis, rehearse the patch in a transaction that rolls back, pass 5/5 assertions — and only then does the owner approve OD006 and the capability get registered.' },
+      { label:'Ask again → answer', full:'Ask the same question again — this time it is certified.',
+        say:'Step 4 · The same question, worded the same way. This time it returns a certified answer with green provenance: source asset, metric version, definition, checksum.' }
+    ];
+    const gClosing = 'Done. The same question that could not be answered now returns a certified answer — the refusal in step 1 was the first step of getting it. Explore on your own from here: switch roles, or ask anything in the input box.';
+    const gStep = s.guideStep, gBusy = s.playing, gFinished = gStep >= 4 && !!s.actsDone[4];
+    const guideSteps = GSTEPS.map((g, i) => {
+      const n = i + 1, cur = gStep === n, done = !!s.actsDone[n];
+      return {
+        num: (done && !cur) ? '✓' : String(n), landNum: String(n), label: g.label, full: g.full,
+        onGo: () => this.guideGo(n),
+        chipStyle:`display:flex;align-items:center;gap:6px;font-family:inherit;font-size:11.5px;font-weight:600;white-space:nowrap;padding:6px 11px;border:none;border-radius:99px;cursor:pointer;background:${cur?'#4A63D8':(done?'rgba(42,163,107,.16)':'rgba(255,255,255,.07)')};color:${cur?'#fff':(done?'#7BD3A8':'rgba(232,234,238,.55)')};`,
+        numStyle:`flex:none;width:16px;height:16px;border-radius:50%;font-size:9.5px;font-weight:800;display:flex;align-items:center;justify-content:center;background:${cur?'rgba(255,255,255,.26)':(done?'rgba(42,163,107,.45)':'rgba(255,255,255,.12)')};color:#fff;`
+      };
+    });
+    const guideSay = gFinished ? gClosing : GSTEPS[Math.max(0, gStep - 1)].say;
+    const guideNextLabel = gBusy ? 'Step ' + gStep + ' is playing…' : (gFinished ? 'Finish · explore on your own →' : 'Next · step ' + (gStep + 1) + ' →');
 
     return {
       // top bar
       roleBtnBU:roleBtn('BU'), roleBtnDA:roleBtn('DA'), roleBtnDE:roleBtn('DE'),
       goBU:()=>this.setState({role:'BU'}), goDA:()=>this.setState({role:'DA'}), goDE:()=>this.setState({role:'DE'}),
-      toggleDemo:()=>this.setState({demoOpen:!s.demoOpen}), demoBtnLabel: s.demoOpen ? 'Close demo' : '▶ Demo mode',
+      guideToggle:()=>this.guideToggle(), guideBtnLabel: s.guideMode==='off' ? '▶ Walkthrough' : 'Hide walkthrough',
       infoEnter:()=>this.setState({infoOpen:true}), infoLeave:()=>this.setState({infoOpen:false}),
       infoOpen:s.infoOpen, infoTitle:`${s.role} role constraints`, infoRows,
       hasNotice: !!s.notice, noticeText: s.notice || '',
@@ -3008,8 +3075,12 @@ class Component extends DCLogic {
       odApprove:()=>this.odApprove(), odReject:()=>this.odReject(),
       odApproveStyle:`flex:1;font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 0;border:none;border-radius:8px;cursor:pointer;background:${valDone?'#2AA36B':'#9AA0AA'};color:#fff;`,
       odChain:chain,
-      // demo
-      demoOpen:s.demoOpen, demoActs:acts
+      // walkthrough
+      guideLanding: s.guideMode==='landing', guideBar: s.guideMode==='running',
+      guideSteps, guideSay, guideBusy: gBusy, guideNextLabel,
+      guideStartLabel: gStep===0 ? 'Start · step 1 →' : 'Resume · step ' + Math.max(1, gStep) + ' →',
+      guideStart:()=>this.guideStart(), guideNext:()=>this.guideNext(), guideExit:()=>this.guideExit(),
+      guideNextStyle:`flex:none;font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 17px;border:none;border-radius:9px;white-space:nowrap;cursor:${gBusy?'default':'pointer'};background:${gBusy?'#3A3F4C':(gFinished?'#2AA36B':'#4A63D8')};color:${gBusy?'rgba(232,234,238,.5)':'#fff'};`
     };
   }
 }
