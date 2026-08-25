@@ -1751,6 +1751,11 @@
 html,body{margin:0;padding:0;height:100%;background:#F5F6F8;font-family:-apple-system,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Segoe UI',sans-serif;color:#1B1E24;font-size:13px;}
 a{color:#4A63D8;text-decoration:none;}
 a:hover{color:#1B1E24;text-decoration:underline;}
+/* The only way back to the site from this full-screen prototype. It used to exist
+   only inside the (max-width:899px) mobile banner, so on a laptop — where the demo
+   link is actually meant to be opened — there was no exit but the back button. */
+#mf-back{color:rgba(232,234,238,.62);text-decoration:none;white-space:nowrap;}
+#mf-back:hover{color:#fff;text-decoration:underline;text-underline-offset:2px;}
 *{box-sizing:border-box;}
 ::-webkit-scrollbar{width:9px;height:9px;}
 ::-webkit-scrollbar-thumb{background:rgba(27,30,36,.2);border-radius:5px;}
@@ -1764,6 +1769,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 
   <!-- ═══════ 全局顶栏 · v1.0.1 ═══════ -->
   <header style="flex:none;height:50px;display:flex;align-items:center;gap:18px;padding:0 16px;background:#191C22;color:#E8EAEE;">
+    <a id="mf-back" href="/work/metaflow/" style="flex:none;font-size:12px;font-weight:600;padding-right:18px;border-right:1px solid rgba(232,234,238,.15);">← Yizhe Dai · 返回 MetaFlow 项目页</a>
     <div style="display:flex;align-items:center;gap:9px;">
       <div style="width:22px;height:22px;border-radius:6px;background:#4A63D8;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;">M</div>
       <span style="font-weight:700;font-size:14.5px;letter-spacing:.3px;">MetaFlow</span>
@@ -2423,12 +2429,22 @@ class Component extends DCLogic {
     this.timers = [];
   }
   componentDidMount(){
-    // Land on a populated first screen instead of the empty BU placeholder —
-    // this plays the same "BU asks, hits a MISS" sequence as clicking act 1
-    // in the demo-mode panel manually would.
-    this.playAct(1);
+    // The point of this prototype is the loop, not the refusal. Playing only act 1
+    // left every visitor staring at "cannot be answered" as the final frame, while
+    // the page that links here promises a guided demo. All four acts now run end to
+    // end on their own — MISS -> DA -> DE -> ANSWER — and the first press on any
+    // control hands the demo over to whoever is sitting there.
+    this.autoRun = true;
+    this.stopAuto = (e) => {
+      if (e.target instanceof Element && e.target.closest('button, input, textarea, a')) this.autoRun = false;
+    };
+    document.addEventListener('pointerdown', this.stopAuto, true);
+    this.playAct(1, true);
   }
-  componentWillUnmount(){ this.timers.forEach(clearTimeout); }
+  componentWillUnmount(){
+    this.timers.forEach(clearTimeout);
+    document.removeEventListener('pointerdown', this.stopAuto, true);
+  }
   componentDidUpdate(){
     [this.buScroll, this.daScroll].forEach(r => { if (r.current) r.current.scrollTop = r.current.scrollHeight; });
   }
@@ -2755,10 +2771,14 @@ class Component extends DCLogic {
   }
 
   // ─────── 演示模式 ───────
-  playAct(n){
+  playAct(n, auto){
     if (this.state.playing) return;
+    if (!auto) this.autoRun = false;          // a manual Play means the visitor is driving
     this.setState({ playing:true, playingAct:n });
-    const finish = (ms) => this.later(ms, () => this.setState(s => ({ playing:false, playingAct:null, actsDone:{...s.actsDone, [n]:true} })));
+    const finish = (ms) => this.later(ms, () => {
+      this.setState(s => ({ playing:false, playingAct:null, actsDone:{...s.actsDone, [n]:true} }));
+      if (auto && this.autoRun && n < 4) this.later(1200, () => this.playAct(n + 1, true));
+    });
     if (n === 1) {
       this.setState({ role:'BU' });
       this.later(400, () => this.buAsk('2024 全年 Gold 客户的净收入是多少？按客户国家分。'));

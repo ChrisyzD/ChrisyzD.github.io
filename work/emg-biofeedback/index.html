@@ -94,8 +94,6 @@ clinical questions are the lab's; nothing participant-level appears on this page
 
 <section class="thoughts">
   <h2>Further thoughts</h2>
-  <p class="kicker">Build notes from the longest project here: one decision I would defend, one
-    instrument I never built, and one step in the analysis that deserved more scrutiny.</p>
   <div class="thoughts-body">
     <p>The decision I am proudest of sounds like the least impressive one: I hand-wrote the
     optimizer in C# instead of calling it from Python. Not for speed as an end in itself. A
@@ -109,18 +107,14 @@ clinical questions are the lab's; nothing participant-level appears on this page
     <p>What I cannot give you is the number that would prove any of it. I do not have latency or
     frame-rate figures for the ported decoder, before or after. It held up in sessions, and “it
     held up” is not a measurement. For a real-time system that is exactly the wrong way round:
-    the timing harness should have been the first commit. It is the clearest example I have of
-    building the ruler for other people's work and forgetting to build one for my own.</p>
+    the timing harness should have been the first commit.</p>
 
-    <p>The harder problem was in the analysis, not the game. Pulling synergies out of one
-    participant is a factorization; making them comparable across eighteen is the actual work,
-    because the factorization returns its components in no fixed order or orientation. I used
+    <p>The harder problem was in the analysis. Pulling synergies out of one participant is a
+    factorization; making them comparable across eighteen is the actual work, because the
+    factorization returns its components in no fixed order or orientation. I used
     correlation-based alignment to hold them in correspondence, and I still think that step
     deserves more scrutiny than it got — it quietly decides what “the same synergy” means before
     any statistics are run on top of it.</p>
-
-    <p>And the honest end of a year and a half is that I shipped instrumentation. I built the
-    measure; I do not know whether the measure ever changed anyone's care.</p>
   </div>
 </section>
 
@@ -136,6 +130,7 @@ clinical questions are the lab's; nothing participant-level appears on this page
   <p>Yizhe Dai · Boston, MA ·
     <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
     <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·
     <a href="/">Home</a></p>
   <p>Last updated 25 August 2026.</p>
 </footer>

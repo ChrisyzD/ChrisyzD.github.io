@@ -52,7 +52,7 @@ owner approval. Built for a desktop window — on a phone it scrolls sideways. T
 <section>
   <h2>What I built</h2>
 
-  <p><strong>The ruler, before the features.</strong> We pinned <strong>20 gold-case
+  <p><strong>The suite, before the features.</strong> We pinned <strong>20 gold-case
   scenarios</strong> before building. Each is pinned across all <strong>five pipeline
   stages</strong>, with the expected output at every stage, kept in version control. When a
   schema moves or a definition changes, I do not have to ask whether something broke — I re-run
@@ -84,7 +84,8 @@ owner approval. Built for a desktop window — on a phone it scrolls sideways. T
   <figure class="wide">
     <a href="/assets/img/metaflow-provenance.png" target="_blank" rel="noopener">
     <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-provenance-mobile.png">
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-provenance-mobile.png"
+              width="720" height="1710">
       <img src="/assets/img/metaflow-provenance.png" width="1920" height="832" loading="lazy"
          alt="The provenance card the prototype attaches to every answer, with its five fields
          numbered and glossed: source asset, metric version, definition binding, certification
@@ -98,10 +99,14 @@ owner approval. Built for a desktop window — on a phone it scrolls sideways. T
 
   <figure class="wide">
     <a href="/assets/img/metaflow-miss-ticket.png" target="_blank" rel="noopener">
-    <img src="/assets/img/metaflow-miss-ticket.png" width="1920" height="1416" loading="lazy"
+    <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-miss-ticket-mobile.png"
+              width="720" height="2272">
+      <img src="/assets/img/metaflow-miss-ticket.png" width="1920" height="1416" loading="lazy"
          alt="The prototype returning a MISS for an out-of-scope question, naming the blocker,
          and handing off to the analyst triage queue as ticket T-0087. Four numbered annotations
          mark the refusal, the handoff button, the ticket toast and the blocked-by field.">
+    </picture>
     </a>
     <figcaption>What to look at: the refusal. A question outside the certified surface returns an
       explicit MISS that names the blocker — 8,611 orders with no historical tier coverage — and
@@ -112,7 +117,8 @@ owner approval. Built for a desktop window — on a phone it scrolls sideways. T
   <figure class="wide">
     <a href="/assets/img/metaflow-capabilities.png" target="_blank" rel="noopener">
     <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-capabilities-mobile.png">
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-capabilities-mobile.png"
+              width="1048" height="2392">
       <img src="/assets/img/metaflow-capabilities.png" width="1920" height="2102" loading="lazy"
            alt="The prototype's certified capability catalog, marked 1; a box of metrics that
            failed certification and stay unanswerable, marked 2; and a certified answer naming
@@ -132,7 +138,8 @@ owner approval. Built for a desktop window — on a phone it scrolls sideways. T
   <figure class="wide">
     <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
     <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-workflow-mobile.png">
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-workflow-mobile.png"
+              width="1740" height="678">
       <img src="/assets/img/metaflow-de-console-workflow.png" width="1728" height="2572" loading="lazy"
            alt="The engineering console for REQ-0031: requirements and design docs confirmed, a
            lineage impact analysis marked 1 flagging one downstream capability for
@@ -151,7 +158,8 @@ owner approval. Built for a desktop window — on a phone it scrolls sideways. T
   <figure class="wide">
     <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
     <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-approval-mobile.png">
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-approval-mobile.png"
+              width="720" height="1618">
       <img src="/assets/img/metaflow-de-console-approval.png" width="1920" height="1068" loading="lazy"
          alt="The Owner Decision approval card for OD006, marked 3, and the post-approval action
          chain — execute the patch, register the capability, notify the business user — marked 4.">
@@ -186,28 +194,25 @@ owner approval. Built for a desktop window — on a phone it scrolls sideways. T
 
 <section class="thoughts">
   <h2>Further thoughts</h2>
-  <p class="kicker">Working notes — first person, unfinished, and mine to revise. Three questions
-    I expect about this page, answered before anyone has to ask them.</p>
   <div class="thoughts-body">
-    <p><strong>Who wrote the ruler?</strong> I did — the same person who built the metadata layer
-    the suite is meant to police. That is convenient, and it means the twenty scenarios encode my
-    blind spots along with my intent. They catch regressions against what I already thought to
-    check; they say nothing about the case I never imagined. So the honest description of the
-    ruler is that it grows only when something fails in a way somebody noticed — which is an
-    argument for putting it in front of people who did not build it, not an argument for pinning
-    more cases myself.</p>
+    <p>The gold-case suite was written by the same person who built the metadata layer it is
+    meant to police — me. That is convenient, and it means the twenty scenarios encode my blind
+    spots along with my intent. They catch regressions against what I already thought to check;
+    they say nothing about the case I never imagined. So the suite grows only when something
+    fails in a way somebody noticed, which is an argument for putting it in front of people who
+    did not build it.</p>
 
-    <p><strong>How deep does the lineage actually go?</strong> To the table, not the column. What
-    the impact analysis flags is a whole downstream capability, which is the coarse version of
-    lineage and the version that is tractable in a two-person project. Lineage that tells you
-    <em>which column</em> is affected is a much harder thing to build than the diagram admits. I
-    would rather write that down here than be asked it in a room.</p>
+    <p>The lineage goes to the table, not the column. What the impact analysis flags is a whole
+    downstream capability, which is the coarse version of lineage and the version that is
+    tractable in a two-person project. Lineage that tells you <em>which column</em> is affected
+    is a much harder thing to build than the diagram admits. I would rather write that down here
+    than be asked it in a room.</p>
 
-    <p><strong>Isn't the prototype more convincing than the system behind it?</strong> Probably,
-    and that is the trap. A good mock is always more complete than the thing it stands in for,
-    it costs a fraction as much, and on a personal site nobody is checking which one they are
-    looking at. Keeping the word <em>prototype</em> on those screens is not modesty; it is the
-    only thing stopping this page from making a claim the repository could not back.</p>
+    <p>The prototype is probably more convincing than the system behind it, and that is the
+    trap. A good mock is always more complete than the thing it stands in for, it costs a
+    fraction as much, and on a personal site nobody is checking which one they are looking at.
+    The word <em>prototype</em> stays on those screens because it is the only thing stopping
+    this page from making a claim the repository could not back.</p>
   </div>
 </section>
 
@@ -223,6 +228,7 @@ owner approval. Built for a desktop window — on a phone it scrolls sideways. T
   <p>Yizhe Dai · Boston, MA ·
     <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
     <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·
     <a href="/">Home</a></p>
   <p>Last updated 25 August 2026.</p>
 </footer>

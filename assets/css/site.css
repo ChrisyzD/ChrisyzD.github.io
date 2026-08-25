@@ -155,11 +155,12 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
   margin: 16px 0 0;
 }
 
-/* On a phone the card is read top to bottom, so the title leads and the figure
-   follows the sentence it illustrates. On desktop the grid is scanned, so the
-   figure leads — see the media query below. */
-.card .thumb { order: 1; }
-.card .go    { order: 2; }
+/* The card is read top to bottom on every width: the title leads, the figure
+   follows the sentence it illustrates, and the exits sit with the text rather
+   than under 330px of chart. A figure-first desktop card pushed all four project
+   names 340px below a 900px fold, which is the one thing this index cannot do. */
+.card .go    { order: 1; }
+.card .thumb { order: 2; }
 
 .card h3 { margin-bottom: 4px; }
 .card h3 a { color: var(--text); text-decoration: none; }
@@ -169,11 +170,17 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 .card:hover h3 a { color: var(--link); text-decoration: underline; }
 .card p { font-size: 16px; margin-bottom: 0; }
 .card .role { margin-bottom: 8px; }
-.card .go { margin-top: auto; padding-top: 12px; font-size: 15px; }
+.card .go { padding-top: 12px; font-size: 15px; }
 /* Real links, above the title's full-card overlay — so a card can offer a second
    exit (the demo) without the overlay swallowing it. */
 .card .go a { position: relative; z-index: 1; }
 .card .go .sep { color: var(--meta); margin: 0 4px; }
+
+/* Every "→" exit on the home page is a 44px row on a phone, not an 18px line of
+   text. iOS asks for 44; these were 18–21. The visual size of the type does not
+   change — only the box around it. On desktop they go back to being inline. */
+.card .go a, .golink a { display: inline-flex; align-items: center; min-height: 44px; }
+.golink { margin: 8px 0 0; font-size: 15px; }
 
 /* ---------- deep pages ---------- */
 
@@ -193,10 +200,11 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 }
 .tryit .note { display: block; margin-top: 4px; }
 
-/* Further thoughts: marginalia, marked as such. */
+/* Further thoughts: marginalia, marked as such. No standing header above it —
+   these sections used to open with a line announcing how many points were coming,
+   which turned a working note into a prepared answer. */
 .thoughts-body { border-left: 2px solid var(--rule); padding-left: 16px; }
 .thoughts-body p:last-child { margin-bottom: 0; }
-.kicker { font-size: 14px; color: var(--meta); margin: 0 0 16px; }
 
 .pager { list-style: none; padding: 0; margin: 0 0 24px; font-size: 15px; }
 .pager li { margin-bottom: 4px; }
@@ -252,9 +260,12 @@ footer.site a { color: var(--link); }
   .row { flex-direction: row; justify-content: space-between; align-items: baseline; gap: 16px; }
   .contact a { min-height: 0; }
   nav.top a, .pager a, footer.site a { display: inline; min-height: 0; }
+  .card .go a, .golink a { display: inline; min-height: 0; }
   .cards { grid-template-columns: 1fr 1fr; }
-  .card .thumb { order: 0; margin: 0 0 16px; }
-  .card .go { order: 0; }
+  /* The figure trails the sentence it illustrates and bottom-aligns across the
+     row, so the four titles and their exits all sit above the fold. */
+  .card .go { margin-bottom: 16px; }
+  .card .thumb { margin-top: auto; }
   .pager { display: flex; flex-wrap: wrap; gap: 8px 24px; }
   .pager li { margin-bottom: 0; }
 }

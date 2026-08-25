@@ -28,10 +28,10 @@ into them. Done part-time, alongside the Lark internship over the same summer.</
   <p>When an assistant is weak, the reflex is to generate more training data. That scales cost
   linearly and quality barely at all, because most of the new data lands where the model was
   already fine.</p>
-  <p>The alternative is to build the ruler first and let it aim the spending. Simulate users,
-  roll the assistant out against them, score the rollouts, and then read the error breakdown
-  rather than the score — because the breakdown is what tells you which functions to regenerate
-  against. The score is a summary; the breakdown is a work order.</p>
+  <p>The alternative is to measure first and let the measurement aim the spending. Simulate
+  users, roll the assistant out against them, score the rollouts, and then read the error
+  breakdown rather than the score — because the breakdown is what tells you which functions to
+  regenerate against.</p>
 </section>
 
 <section>
@@ -81,26 +81,23 @@ into them. Done part-time, alongside the Lark internship over the same summer.</
 
 <section class="thoughts">
   <h2>Further thoughts</h2>
-  <p class="kicker">Where the system's numbers stop and my part of them starts — and the two
-    checks I would run first if I picked this up again.</p>
   <div class="thoughts-body">
-    <p>Start with the boundary, because it is the thing I get wrong most easily when I talk about
-    this project. “I owned the data pillar” is a convenient phrase and it hides a seam. The four
-    numbers above belong to the whole system; the pillar is one input into them. When I describe
-    this work I try to keep that order — here is what the system did, here is the part of it that
-    was mine — rather than letting the two blur together, because the blurring is effortless and
+    <p>“I owned the data pillar” is a convenient phrase and it hides a seam. The four numbers
+    above belong to the whole system; the pillar is one input into them. When I describe this
+    work I try to keep that order — here is what the system did, here is the part of it that was
+    mine — rather than letting the two blur together, because the blurring is effortless and
     one-directional and always flatters me.</p>
 
-    <p>The first check I owe it is about the judge. <code>reward = 1</code> is the judge's
+    <p>The first check I would run is about the judge. <code>reward = 1</code> is the judge's
     verdict, the corpus was filtered on that verdict, and the improvement afterwards was scored
     by a judge rather than by a person — so the judge is grading work the judge helped produce.
     Some fraction of 72.8 → 82.7 is the assistant getting better; some fraction may be the
     assistant learning what a judge likes; I cannot give you the split.</p>
 
     <p>What would settle it is a held-out slice scored by hand, or scored by a judge from a
-    different model family. I cannot point you at one, and a check I cannot point at is not a
-    check I should lean on. Until it exists the number is a strong internal signal and a weak
-    external claim, and I would rather say that than let it be read as the second thing.</p>
+    different model family. I cannot point you at one. Until it exists the number is a strong
+    internal signal and a weak external claim, and I would rather say that than let it be read as
+    the second thing.</p>
 
     <p>The second check is a denominator. 17,200 is a numerator I can quote; the
     generated-and-discarded count that belongs beside it is not something I can put on this page.
@@ -123,6 +120,7 @@ into them. Done part-time, alongside the Lark internship over the same summer.</
   <p>Yizhe Dai · Boston, MA ·
     <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
     <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·
     <a href="/">Home</a></p>
   <p>Last updated 25 August 2026.</p>
 </footer>

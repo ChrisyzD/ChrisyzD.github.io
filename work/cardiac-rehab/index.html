@@ -26,9 +26,9 @@ owner.</p>
 
 <section>
   <h2>What &amp; why</h2>
-  <p>Thirty-six sessions is a protocol, not a measurement. Some patients plateau well before it
-  ends and are occupying a slot they no longer benefit from; others are still improving when
-  they are discharged. Wearables record what actually happened between sessions, every day, for
+  <p>Thirty-six sessions is a protocol. Some patients plateau well before it ends and are
+  occupying a slot they no longer benefit from; others are still improving when they are
+  discharged. Wearables record what actually happened between sessions, every day, for
   months — which makes “has this person stopped improving?” an empirical question for the first
   time.</p>
   <p>Most of the work was not modelling. It was getting from raw device exports to a per-patient
@@ -60,8 +60,7 @@ owner.</p>
   <p>The jump from v1 to v2 is the part I would point at, because you can read the diff. v1 was
   willing to call a plateau after three weeks of low change and low variability; adding a
   minimum wait of eight weeks and a slope condition is, structurally, an admission that v1 could
-  call one too early. Measure, find the ruler wrong, fix the ruler — then keep both versions
-  visible so the change is auditable.</p>
+  call one too early. Both versions stay visible so the change is auditable.</p>
 
   <figure>
     <a href="/assets/img/sure-plateau-definitions.png" target="_blank" rel="noopener">
@@ -94,8 +93,8 @@ owner.</p>
     <li><strong>400K+</strong> raw step records reconciled onto one per-patient daily
       timeline.</li>
     <li>Cleaning and missing-value rules cut <strong>247 enrolled patients</strong> to a
-      <strong>191-patient analysis cohort</strong> — the exclusion rules are part of the result,
-      not a footnote to it.</li>
+      <strong>191-patient analysis cohort</strong> — the exclusion rules are part of the
+      result.</li>
     <li><strong>~68%</strong> of that cohort had suboptimal discharge timing against the standard
       36-session model.</li>
     <li><strong>Boundary:</strong> a supervised research project, presented as a co-authored
@@ -106,15 +105,13 @@ owner.</p>
 
 <section class="thoughts">
   <h2>Further thoughts</h2>
-  <p class="kicker">Everything on this page rests on one definitional choice. These notes are
-    about that choice and what it costs.</p>
   <div class="thoughts-body">
     <p>Three defensible definitions of “stable recovery” move the median plateau day by roughly a
     factor of two. That box plot is the most useful thing here and it is also the thing that
     undercuts the headline, because any single number I report inherits whichever definition I
     picked. The correct response is a sensitivity analysis — sweep the thresholds, report a range
     instead of a point — and I have not run one. So “~68% had suboptimal discharge timing” is one
-    defensible reading of the data, not a measurement of the world.</p>
+    defensible reading of the data.</p>
 
     <p>There is a second circularity underneath the cleaning, and it took me a while to see it.
     Wearable step series are full of gaps, and the standard repairs — forward fill, moving
@@ -130,9 +127,9 @@ owner.</p>
     <p>One smaller thing, about the word rather than the method. “Suboptimal” is doing too much
     work: it merges patients discharged too early with patients discharged too late. Those are
     two different clinical problems with two different fixes, and reporting them as one
-    percentage is a convenience of mine, not a property of the data. I write “~68%” rather than a
-    precise figure for a related reason — the defensible numerators round to either side of 68,
-    and a number I cannot reconstruct is a number I should round.</p>
+    percentage is a convenience of mine. I write “~68%” rather than a precise figure for a
+    related reason — the defensible numerators round to either side of 68, and a number I cannot
+    reconstruct is a number I should round.</p>
   </div>
 </section>
 
@@ -148,6 +145,7 @@ owner.</p>
   <p>Yizhe Dai · Boston, MA ·
     <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
     <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·
     <a href="/">Home</a></p>
   <p>Last updated 25 August 2026.</p>
 </footer>
