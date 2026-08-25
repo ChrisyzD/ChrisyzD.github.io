@@ -12,48 +12,63 @@
 
 <nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
 
+<!-- The page head is a spread: who/what/when on the spine, and the boundary of my
+     own work in the margin beside it. "My scope" was already a margin note by every
+     rule this site has — a rule down the left, grey, set apart from the argument —
+     it just had nowhere to hang except back over the spine. Now it has a column. -->
+<div class="spread">
+  <div>
 <h1>EMG biofeedback training system</h1>
 <p class="lead">A real-time system that turns a patient's own muscle activity into a cursor in a
 reaching game, plus the muscle-synergy analysis pipeline behind it. Both are used in the lab's
 clinical experiments.</p>
 <p class="meta">October 2024 – April 2026 · Research assistant (part-time), NeuRRo Lab,
 University of Michigan · MATLAB, Python/PyTorch, Unity, C#</p>
-<p class="meta scope"><strong>My scope.</strong> I built the real-time acquisition and control
-loop, the on-device optimizer port, and the MATLAB synergy pipeline. The experiments and the
-clinical questions are the lab's; nothing participant-level appears on this page.</p>
+  </div>
+
+  <aside class="side">
+    <span class="lbl">My scope</span>
+    <p>I built the real-time acquisition and control
+    loop, the on-device optimizer port, and the MATLAB synergy pipeline. The experiments and the
+    clinical questions are the lab's; nothing participant-level appears on this page.</p>
+  </aside>
+</div>
 
 <figure class="clip fig-clip">
   <video src="/assets/video/emg-task-loop.mp4"
          poster="/assets/img/emg-task-poster.png"
-         width="1280" height="686"
+         width="1280" height="460"
          autoplay muted loop playsinline controls preload="metadata" data-clip data-tap
-         aria-label="Eight seconds of the biofeedback system running, cut to the three regions of
+         aria-label="Six seconds of the biofeedback system running, cut to the three regions of
          the screen that carry it: the software's reach counter at the top left, the Delsys EMG
          panel beside it zoomed to the bottom of its nought-to-one axis, and the reaching canvas
-         across the bottom. A yellow cursor driven by muscle activity leaves the centre target
-         and travels left; the left target turns green as the cursor lands on it; the counter
-         goes from 0 to 1; and the red EMG trace rises off its baseline through the reach and
-         falls flat again afterwards."></video>
+         across the bottom. A yellow cursor driven by muscle activity travels left toward the
+         target; the target turns green as the cursor lands on it; the counter goes from 0 to 1
+         about two seconds in; and the red EMG trace rises off its baseline through the reach,
+         peaks near 0.07, and falls flat again afterwards."></video>
   <figcaption>
-    <p class="spec">8 s · silent · loops<span class="only-mobile"> · a still on a phone; tap to
-      play</span></p>
-    <p>Eight seconds of the loop actually running: the yellow dot is a cursor driven by muscle
+    <p class="spec">6 s · silent · loops · re-cut to 1280 wide, which is 1:1 from 1360px of
+      window<span class="only-mobile"> · a still on a phone; tap to play</span></p>
+    <p>Six seconds of the loop actually running: the yellow dot is a cursor driven by muscle
       activity and nothing else — no mouse, no keyboard — and the reach counter at the top left
       is the entire score.</p>
-    <p><span class="look">Watch two places at once:</span> the target on the left turns green the
-      moment the cursor lands on it and the counter ticks <strong>0 → 1</strong>, while beside
-      the counter the red trace in the Delsys panel rises off its baseline through the reach and
-      goes flat again once the target is hit.</p>
+    <p><span class="look">Watch two places at once:</span> about a second in the target turns
+      green under the cursor and the counter ticks <strong>0 → 1</strong>, while beside the
+      counter the red trace in the Delsys panel rises off its baseline through the reach, peaks,
+      and goes flat again once the target is hit. The rest of the clip is the signal at rest,
+      which is the half of the argument that is easy to forget: a decoder that cannot sit still
+      is not a decoder.</p>
     <p>What is plotted there is the smoothed envelope the controller actually reads rather than
       raw EMG, and it peaks at roughly <strong>0.07</strong> of the panel's 0–1 axis — so the
       panel is shown zoomed to the bottom of that axis, with its own 0.1 and 0.2 gridlines left
       in to say by how much. The distance between that envelope and the raw signal is the
       band-pass filtering, envelope extraction, EMA smoothing and MVC calibration described
       below, which is what makes the cursor move like a limb instead of twitching at noise.</p>
-    <p class="bound">Three regions of one unbroken eight-second stretch of the recording, re-cut
-      so each is legible at this size — same frames, same clock, nothing retouched and nothing
-      assembled across time. The rest of that screen was a Windows desktop, six operator buttons
-      and a stray close box, and none of it was evidence. The session ran a two-channel
+    <p class="bound">Three regions of one unbroken six-second stretch of the recording, re-cut so
+      each is legible at this size and set apart by a white gutter rather than butted edge to
+      edge — same frames, same clock, nothing retouched and nothing assembled across time. The
+      rest of that screen was a Windows desktop, six operator buttons and a stray close box, and
+      none of it was evidence. The session ran a two-channel
       differential configuration rather than the sixteen channels the system supports, which is
       why the panel plots two traces. No participant is visible and no participant identifiers
       appear in any frame.</p>
@@ -101,18 +116,26 @@ clinical questions are the lab's; nothing participant-level appears on this page
 
 <section>
   <h2>Results &amp; boundary</h2>
-  <ul>
-    <li>Both the biofeedback system and the synergy pipeline are <strong>used in the lab's
-      clinical experiments</strong> — not demos.</li>
-    <li>The synergy pipeline produced between-group statistics and visualizations across
-      <strong>18 participants</strong>, as objective measures for evaluating treatment
-      effect.</li>
-    <li><strong>18 months</strong> of continuous work on one system, October 2024 to April
-      2026, across both the real-time loop and the offline pipeline.</li>
-    <li><strong>Boundary:</strong> the software is mine; the study design, the participants and
-      the clinical interpretation are the lab's. I am not reporting findings here, only what I
-      built.</li>
-  </ul>
+  <div class="spread">
+    <div>
+      <ul>
+        <li>Both the biofeedback system and the synergy pipeline are <strong>used in the lab's
+          clinical experiments</strong> — not demos.</li>
+        <li>The synergy pipeline produced between-group statistics and visualizations across
+          <strong>18 participants</strong>, as objective measures for evaluating treatment
+          effect.</li>
+        <li><strong>18 months</strong> of continuous work on one system, October 2024 to April
+          2026, across both the real-time loop and the offline pipeline.</li>
+      </ul>
+    </div>
+    <aside class="side">
+      <span class="lbl">Boundary</span>
+      <p>The software is mine; the study design, the participants and the clinical
+      interpretation are the lab's. I am not reporting findings here, only what I built.</p>
+      <p>No participant is visible and no participant identifiers appear in any frame of the
+      clip above, which is why the recording starts where it does.</p>
+    </aside>
+  </div>
 </section>
 
 <section class="thoughts">

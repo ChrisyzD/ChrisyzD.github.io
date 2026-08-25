@@ -12,17 +12,29 @@
 
 <nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
 
+<!-- The page head is a spread: who/what/when on the spine, and the boundary of my
+     own work in the margin beside it. "My scope" was already a margin note by every
+     rule this site has — a rule down the left, grey, set apart from the argument —
+     it just had nowhere to hang except back over the spine. Now it has a column. -->
+<div class="spread">
+  <div>
 <h1>Cardiac rehabilitation wearable study</h1>
 <p class="lead">Cardiac rehab is prescribed as a fixed 36-session protocol, the same length for
 everyone. The question was whether wearable step data can say when a given patient has actually
 stopped improving.</p>
 <p class="meta">April 2025 – January 2026 · Research assistant (SURE summer program, then
 continued on the study), University of Michigan · Python</p>
-<p class="meta scope"><strong>My scope.</strong> The data and feature side: assembling the
-analysis dataset, setting the cleaning rules, engineering the temporal features, and the
-phenotyping and plateau detection built on them. This is supervised research with named
-co-authors — the poster below is the group's work and I am one author on it, not its
-owner.</p>
+  </div>
+
+  <aside class="side">
+    <span class="lbl">My scope</span>
+    <p>The data and feature side: assembling the
+    analysis dataset, setting the cleaning rules, engineering the temporal features, and the
+    phenotyping and plateau detection built on them. This is supervised research with named
+    co-authors — the poster below is the group's work and I am one author on it, not its
+    owner.</p>
+  </aside>
+</div>
 
 <dl class="stack deltas band">
   <div>
@@ -59,27 +71,39 @@ bottom of this page is why I write it with a tilde.</p>
   <h2>What I built</h2>
   <p>Four stages, each one a set of decisions rather than a library call:</p>
 
-  <dl class="stack">
-    <div><dt>Cleaning</dt><dd>DateTime standardization · type unification · missing-value
-      marking · exercise-time capping (&gt; 300 min) · step-count anomaly detection. Reconciled
-      <strong>400K+</strong> raw step records from multiple sources onto one per-patient daily
-      timeline.</dd></div>
-    <div><dt>Features</dt><dd>2-week / 4-week moving averages · week-over-week change rate ·
-      trend slope · coefficient of variation · stable-week count</dd></div>
-    <div><dt>Plateau detection</dt><dd>v1: change rate &lt; 20%, CV &lt; 0.30, duration
-      ≥ 3 weeks → v2: minimum wait 8 weeks, moving-average slope &lt; 200, change rate
-      &lt; 25%, multi-metric → v3: a Kalman filter over the same signal, so the plateau call
-      comes from an estimated trend rather than from thresholds I chose. The thresholds are
-      what produced the numbers on this page; the filter is where the method went next.</dd></div>
-    <div><dt>Phenotyping</dt><dd>PCA to compress the correlated temporal features, then K-means
-      (k = 2) over the reduced space: higher-baseline / stable-progression / later-plateau
-      <strong>vs</strong> lower-baseline / slower-progress / earlier-plateau</dd></div>
-  </dl>
+  <div class="spread">
+    <div>
+      <dl class="stack">
+        <div><dt>Cleaning</dt><dd>DateTime standardization · type unification · missing-value
+          marking · exercise-time capping (&gt; 300 min) · step-count anomaly detection.
+          Reconciled <strong>400K+</strong> raw step records from multiple sources onto one
+          per-patient daily timeline.</dd></div>
+        <div><dt>Features</dt><dd>2-week / 4-week moving averages · week-over-week change rate ·
+          trend slope · coefficient of variation · stable-week count</dd></div>
+        <div><dt>Plateau detection</dt><dd>v1: change rate &lt; 20%, CV &lt; 0.30, duration
+          ≥ 3 weeks → v2: minimum wait 8 weeks, moving-average slope &lt; 200, change rate
+          &lt; 25%, multi-metric → v3: a Kalman filter over the same signal, so the plateau call
+          comes from an estimated trend rather than from thresholds I chose. The thresholds are
+          what produced the numbers on this page; the filter is where the method went
+          next.</dd></div>
+        <div><dt>Phenotyping</dt><dd>PCA to compress the correlated temporal features, then
+          K-means (k = 2) over the reduced space: higher-baseline / stable-progression /
+          later-plateau <strong>vs</strong> lower-baseline / slower-progress /
+          earlier-plateau</dd></div>
+      </dl>
+    </div>
 
-  <p>The jump from v1 to v2 is the part I would point at, because you can read the diff. v1 was
-  willing to call a plateau after three weeks of low change and low variability; adding a
-  minimum wait of eight weeks and a slope condition is, structurally, an admission that v1 could
-  call one too early. Both versions stay visible so the change is auditable.</p>
+    <aside class="side">
+      <span class="lbl">Reading the version numbers</span>
+      <p>The jump from <strong>v1 to v2</strong> is the row to read, because you can read the
+      diff. v1 was willing to call a plateau after three weeks of low change and low
+      variability; adding a minimum wait of eight weeks and a slope condition is, structurally,
+      an admission that v1 could call one too early.</p>
+      <p>Both versions stay in the table rather than being replaced, so the change is
+      auditable — and both are on the poster figure below, where you can see what the
+      admission cost.</p>
+    </aside>
+  </div>
 
   <div class="plate">
     <figure class="fig-plate">
@@ -111,19 +135,32 @@ bottom of this page is why I write it with a tilde.</p>
 
 <section>
   <h2>Results &amp; boundary</h2>
-  <ul>
-    <li>The three numbers at the top of this page are the result: <strong>400K+</strong> raw step
-      records reconciled onto one per-patient daily timeline, <strong>247 → 191</strong> patients
-      once the cleaning and missing-value rules are applied, and <strong>~68%</strong> of that
-      cohort with suboptimal discharge timing against the standard 36-session model.</li>
-    <li><strong>Boundary:</strong> a supervised research project, presented as a co-authored
-      poster. No patient-level data appears on this page; both figures are cohort-level charts
-      from the published poster.</li>
-  </ul>
+  <div class="spread">
+    <div>
+      <ul>
+        <li>The three numbers at the top of this page are the result: <strong>400K+</strong> raw
+          step records reconciled onto one per-patient daily timeline, <strong>247 → 191</strong>
+          patients once the cleaning and missing-value rules are applied, and
+          <strong>~68%</strong> of that cohort with suboptimal discharge timing against the
+          standard 36-session model.</li>
+        <li>The cleaning rules and the plateau definition are both mine, and both are stated on
+          this page rather than left to a methods section nobody opens — because either one of
+          them, changed, changes that third number.</li>
+      </ul>
+    </div>
+    <aside class="side">
+      <span class="lbl">Boundary</span>
+      <p>A supervised research project with named co-authors, presented as a poster. The poster
+      is the group's work and I am one author on it, not its owner.</p>
+      <p>No patient-level data appears on this page; both figures are cohort-level charts from
+      the published poster, reproduced at the size they were exported at.</p>
+    </aside>
+  </div>
 </section>
 
 <section class="thoughts">
   <h2>Further thoughts</h2>
+  <div class="spread">
   <div class="thoughts-body">
     <p>Three defensible definitions of “stable recovery” move the median plateau day by roughly a
     factor of two. That box plot is the most useful thing here and it is also the thing that
@@ -142,13 +179,17 @@ bottom of this page is why I write it with a tilde.</p>
     most exposed to it. The minimum wait and the slope condition in v2 are a partial answer at
     best. The real answer is to re-run the detector on complete-case patients only and see
     whether the number survives; that is the experiment I owe this project.</p>
+  </div>
 
-    <p>One smaller thing, about the word rather than the method. “Suboptimal” is doing too much
-    work: it merges patients discharged too early with patients discharged too late. Those are
-    two different clinical problems with two different fixes, and reporting them as one
-    percentage is a convenience of mine. I write “~68%” rather than a precise figure for a
-    related reason — the defensible numerators round to either side of 68, and a number I cannot
-    reconstruct is a number I should round.</p>
+  <aside class="side">
+    <span class="lbl">On the word “suboptimal”</span>
+    <p>It is doing too much work: it merges patients discharged too early with patients
+    discharged too late. Those are two different clinical problems with two different fixes,
+    and reporting them as one percentage is a convenience of mine.</p>
+    <p>I write <strong>“~68%”</strong> rather than a precise figure for a related reason — the
+    defensible numerators round to either side of 68, and a number I cannot reconstruct is a
+    number I should round.</p>
+  </aside>
   </div>
 </section>
 

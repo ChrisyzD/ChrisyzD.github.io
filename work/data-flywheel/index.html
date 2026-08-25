@@ -12,16 +12,28 @@
 
 <nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
 
+<!-- The page head is a spread: who/what/when on the spine, and the boundary of my
+     own work in the margin beside it. "My scope" was already a margin note by every
+     rule this site has — a rule down the left, grey, set apart from the argument —
+     it just had nowhere to hang except back over the spine. Now it has a column. -->
+<div class="spread">
+  <div>
 <h1>LLM data flywheel</h1>
 <p class="lead">Training data for a multi-model in-vehicle voice assistant. Instead of
 generating more data everywhere, measure first — then regenerate only where the failures
 are.</p>
 <p class="meta">June – August 2026 · Undergraduate thesis, UM–SJTU Joint Institute · Python,
 LLM agents, retrieval</p>
-<p class="meta scope"><strong>My scope.</strong> I owned the data pillar: the user simulator,
-the rollout and judging harness, the deterministic governance layer, and the targeted
-regeneration. The figures below are end-to-end system numbers; the pillar I owned is one input
-into them. Done part-time, alongside the Lark internship over the same summer.</p>
+  </div>
+
+  <aside class="side">
+    <span class="lbl">My scope</span>
+    <p>I owned the data pillar: the user simulator,
+    the rollout and judging harness, the deterministic governance layer, and the targeted
+    regeneration. The figures below are end-to-end system numbers; the pillar I owned is one input
+    into them. Done part-time, alongside the Lark internship over the same summer.</p>
+  </aside>
+</div>
 
 <p><strong>17,200</strong> verified (reward = 1) dialogues came out of the pipeline. Fine-tuning
 the assistant on that corpus moved three end-to-end numbers:</p>
@@ -86,10 +98,22 @@ I am least comfortable with.</p>
 
 <section>
   <h2>Boundary</h2>
-  <p>This is an undergraduate thesis, not production. The three numbers at the top of this page
-  are end-to-end system numbers and the data pillar I owned is one input into them — and every
-  one of them is scored by an LLM judge, which is exactly the thing I am least comfortable with.
-  Both of those are picked apart below.</p>
+  <div class="spread">
+    <div>
+      <p>This is an undergraduate thesis, not production. The three numbers at the top of this
+      page are end-to-end system numbers and the data pillar I owned is one input into them —
+      and every one of them is scored by an LLM judge, which is exactly the thing I am least
+      comfortable with. Both of those are picked apart below.</p>
+    </div>
+    <aside class="side">
+      <span class="lbl">Where the numbers come from</span>
+      <p><strong>72.8 → 82.7%</strong> and <strong>39.9 → 60.0%</strong> are the system's
+      before/after on the same evaluation set, scored by the LLM judge described above.</p>
+      <p><strong>17,200</strong> is a count of dialogues that scored <code>reward = 1</code>.
+      The denominator it belongs to — how many were generated to get there — is the number I
+      cannot put on this page, and the one I would put on the wall next time.</p>
+    </aside>
+  </div>
 </section>
 
 <section class="thoughts">

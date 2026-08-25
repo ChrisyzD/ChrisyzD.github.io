@@ -30,6 +30,8 @@ SQL.</p>
 
 <h2>1. It starts with not trusting the answer</h2>
 
+<div class="spread">
+<div>
 <p>A question first lands in a relational intermediate representation. The IR spells out what
 the system intends to compute, as a structured object rather than prose or SQL. You can read
 it before anything executes, and so can a machine.</p>
@@ -41,6 +43,23 @@ It bound <em>revenue</em> to the wrong measure. It dropped the time filter. It r
 
 <p>Trust does not come from a model sounding confident. It comes from there being somewhere
 to look before you commit.</p>
+</div>
+
+<aside class="side">
+  <span class="lbl">What “has an address” means</span>
+  <p>The IR is a small set of named slots, and each one is a place a mistake can live:</p>
+  <ul>
+    <li><strong>measure</strong> — which number is being summed</li>
+    <li><strong>grain</strong> — what one row of the result is</li>
+    <li><strong>filters</strong> — including the time window, the one most often silently
+      dropped</li>
+    <li><strong>entity binding</strong> — which table <em>gold customer</em> resolved against</li>
+    <li><strong>decisions</strong> — the definition records this answer inherits</li>
+  </ul>
+  <p>“The answer is wrong” becomes “the entity binding is wrong”, which is a sentence somebody
+  can act on.</p>
+</aside>
+</div>
 
 <figure class="fig-diagram">
   <img src="/assets/img/fig-1-ir-path.svg" width="800" height="540"
@@ -51,6 +70,8 @@ to look before you commit.</p>
 
 <h2>2. Build the ruler before the feature</h2>
 
+<div class="spread">
+<div>
 <p>Before we built features, we pinned twenty gold-case scenarios. Each one is pinned across
 all five pipeline stages, from the natural-language input through to the final design, with
 the expected output at every stage, in version control.</p>
@@ -65,6 +86,23 @@ Contract as test.</p>
 
 <p>An untested change to metadata is not a small change. It is a silent change to every answer
 downstream of it.</p>
+</div>
+
+<aside class="side">
+  <span class="lbl">What a gold case is</span>
+  <p>Not an assertion on the final number. One row per scenario, with the expected artifact at
+  every stage of the pipeline:</p>
+  <ul>
+    <li>the natural-language question, as a user would type it</li>
+    <li>the entities and metrics it should resolve to</li>
+    <li>the intermediate representation it should compile to</li>
+    <li>the SQL that IR should produce</li>
+    <li>the shape and value of the result</li>
+  </ul>
+  <p>A failure names a cell, not a suite. That is the whole reason it is a grid rather than a
+  list of assertions.</p>
+</aside>
+</div>
 
 <figure class="fig-diagram">
   <img src="/assets/img/fig-2-goldcase-grid.svg" width="800" height="420" loading="lazy"
@@ -75,6 +113,8 @@ downstream of it.</p>
 
 <h2>3. The one thing you cannot automate</h2>
 
+<div class="spread">
+<div>
 <p>Here is a real question from the demo dataset: what was net revenue from gold-tier customers
 in 2024?</p>
 
@@ -90,6 +130,23 @@ memory.</p>
 <p>This is the only step in the chain that cannot be automated, and it is why I say metadata is
 the source of truth rather than the database. The ceiling on answer quality is not the model. It
 is whether anyone wrote down what the words mean.</p>
+</div>
+
+<aside class="side">
+  <span class="lbl">The decision, as a record</span>
+  <p>What “treated as an asset” means in practice — the fields the studio in
+  <a href="/work/metaflow/">the MetaFlow prototype</a> actually stores:</p>
+  <ul>
+    <li><strong>id</strong> — <code>OD001</code>, so an answer can cite it</li>
+    <li><strong>rule</strong> — tier as of the order date, not as of today</li>
+    <li><strong>reason</strong> — the question is about 2024 behaviour, so the 2024 tier is the
+      one that was in force</li>
+    <li><strong>owner</strong> — a person, not a team</li>
+    <li><strong>bound to</strong> — every metric version that inherits it</li>
+  </ul>
+  <p>The point of the id is that the disagreement six months later has an address.</p>
+</aside>
+</div>
 
 <h2>4. The loop</h2>
 
@@ -99,6 +156,8 @@ is whether anyone wrote down what the words mean.</p>
 day. A fix that also becomes a new gold case buys you every day after that. The ruler grows with
 the failures, and the same mistake does not get to happen twice.</p>
 
+<div class="spread">
+<div>
 <p>I ran the same loop in a different domain for my undergraduate thesis, on training data for an
 in-vehicle voice assistant. That was a team system and I owned the data pillar: I built the user
 simulator with 41 persona archetypes and explicit state control, produced retrieval-grounded
@@ -113,6 +172,19 @@ all-correct rate from 39.9% to 60.0%.</p>
 
 <p>Generating more data everywhere would have been easier to write and worse. Measuring first is
 what made the eleven functions visible at all.</p>
+</div>
+
+<aside class="side">
+  <span class="lbl">The check I owe this number</span>
+  <p><code>reward = 1</code> is the judge's verdict, the corpus was filtered on that verdict, and
+  the improvement afterwards was scored by a judge too — so the judge is grading work the judge
+  helped produce.</p>
+  <p>Some fraction of <strong>72.8 → 82.7</strong> is the assistant getting better; some fraction
+  may be the assistant learning what a judge likes. I cannot give you the split, and until a
+  held-out slice is scored by hand or by a different model family, it is a strong internal signal
+  and a weak external claim. <a href="/work/data-flywheel/">The full case →</a></p>
+</aside>
+</div>
 
 <figure class="fig-diagram">
   <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
@@ -129,6 +201,8 @@ second: certified net revenue from gold-tier customers in 2024.</p>
 
 <p>Not long before, that question had no answer. Six stations stand behind the one second:</p>
 
+<div class="spread">
+<div>
 <ul>
   <li><strong>Audit.</strong> 8,611 of 50,000 orders had no resolvable customer tier.</li>
   <li><strong>The definition decision.</strong> Tier at order time, recorded with an owner and a
@@ -145,6 +219,20 @@ second: certified net revenue from gold-tier customers in 2024.</p>
 </ul>
 
 <p>Together that is roughly a thousand lines of code and rules, and about five person-days.</p>
+</div>
+
+<aside class="side">
+  <span class="lbl">Where these numbers come from</span>
+  <p><strong>$340,955.56</strong>, <strong>8,611</strong> and <strong>50,000</strong> are all
+  from the <code>jaffle_shop</code> demo dataset — synthetic rows generated against dbt's public
+  <code>jaffle_shop</code> schema, spanning 2022 to 2025. The schema is public; the rows are
+  not real, and the figure is not a claim about anybody's revenue.</p>
+  <p><strong>Roughly a thousand lines</strong> and <strong>about five person-days</strong> are my
+  own estimates for one metric on a two-person project, not a benchmark. I quote them because
+  the shape of the ratio is the argument — the foundation is a one-time cost — and not because
+  either number would survive being audited.</p>
+</aside>
+</div>
 
 <p>Two things follow. The foundation is a one-time cost and metrics are marginal after it — the
 second certified metric on the same base costs a fraction of the first. And every light moment on
@@ -162,6 +250,8 @@ day.</p>
 
 <h2>What I take from this</h2>
 
+<div class="spread">
+<div>
 <p>Both of these systems are small. A two-person project and a thesis are not production
 infrastructure, and I am not going to pretend otherwise. What transfers is the habit: build the
 ruler before the feature, write down what the words mean, and make every fix into a guardrail so
@@ -169,21 +259,21 @@ the ruler grows on its own.</p>
 
 <p class="pull">If an answer cannot be checked, it is not an answer. It is a guess with
 formatting.</p>
+</div>
 
-<hr>
-
-<div class="note">
+<aside class="side">
+  <span class="lbl">Boundaries of this piece</span>
   <p>MetaFlow is a two-person project; my collaborator owns the NL→IR→SQL engine. The thesis
     flywheel in §4 is a team system: I owned the data pillar, and the figures quoted there are
     end-to-end system numbers, with that pillar as one input into them.</p>
-  <p>The <code>jaffle_shop</code> demo dataset is synthetic: 50,000 orders spanning 2022 to
-    2025, generated against dbt's public <code>jaffle_shop</code> schema rather than taken from
-    the toy seed data that ships with dbt. The schema is public; the rows are not real. The
-    repository that generates it is called <code>metaflow_jaffle_testkit</code> — that is a repo
-    name, not a second dataset.</p>
+  <p>The repository that generates the demo dataset is called
+    <code>metaflow_jaffle_testkit</code> — that is a repo name, not a second dataset.</p>
   <p>This piece is about my own projects and how I work — nothing here describes any employer's
     internal plans, products or data.</p>
+</aside>
 </div>
+
+<hr>
 
 <ul class="pager" style="margin-top:24px">
   <li><a href="/work/metaflow/">MetaFlow, in full →</a></li>

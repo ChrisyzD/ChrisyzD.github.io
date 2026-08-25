@@ -10,22 +10,33 @@
 </head>
 <body>
 
-<header class="site">
-  <h1>Yizhe Dai</h1>
+<!-- The opening block used to be four stacked lines that all stopped at the measure,
+     with the track's own rule starting 24px underneath them — so the first thing a
+     visitor saw on a wide screen was a 1280px line with a 767px block above it. The
+     three contact links are the one part of this block that is not a sentence, so
+     they are what moves into the margin column: who I am on the spine, how to reach
+     me beside it. On a phone this is the same four lines in the same order. -->
+<header class="site spread">
+  <div>
+    <h1>Yizhe Dai</h1>
 
-  <p class="lead">I build the measurement layer for data and AI systems — evaluation
-  harnesses, metadata contracts, and the pipelines that make an answer checkable before
-  anyone trusts it.</p>
+    <p class="lead">I build the measurement layer for data and AI systems — evaluation
+    harnesses, metadata contracts, and the pipelines that make an answer checkable before
+    anyone trusts it.</p>
 
-  <p class="meta">M.S. Health Data Science, Harvard (2026–2028) · previously AI Solutions
-  @ Lark, ByteDance · data engineering and AI research at Michigan · <strong>seeking a Summer
-  2027 data engineering internship</strong></p>
+    <p class="meta">M.S. Health Data Science, Harvard (2026–2028) · previously AI Solutions
+    @ Lark, ByteDance · data engineering and AI research at Michigan · <strong>seeking a Summer
+    2027 data engineering internship</strong></p>
+  </div>
 
-  <ul class="contact">
-    <li><a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a></li>
-    <li><a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a></li>
-    <li><a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a></li>
-  </ul>
+  <div class="side bare">
+    <span class="lbl">Contact</span>
+    <ul class="contact">
+      <li><a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a></li>
+      <li><a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a></li>
+      <li><a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a></li>
+    </ul>
+  </div>
 </header>
 
 <!-- Six anchors do not fit one row on a phone, and a wrapped nav costs 44px of a
@@ -43,8 +54,9 @@
   <h2>Selected work</h2>
   <p class="meta">Four projects, one page each: what it is, what I built, what the numbers are
     — and, at the end of every page, what I still think is unresolved about it. Every card
-    carries one frame of that project's own material; two of them open with a clip of the
-    thing actually running.</p>
+    carries one frame of that project's own material, re-cropped where a laptop-width frame
+    is unreadable at phone width; two of them open with a clip of the thing actually
+    running.</p>
 
   <ul class="cards">
 
@@ -56,15 +68,24 @@
         <p>A question resolves through an inspectable relational intermediate representation
           instead of generated SQL, so a wrong answer has an address you can point at.</p>
         <p class="go"><a class="wide" href="/demos/metaflow-prototype-en.html">Try the live
-          demo →</a><a class="narrow" href="/work/metaflow/#annotated">See the four acts,
-          annotated →</a></p>
+          demo →</a><a class="narrow" href="/work/metaflow/#annotated">See the annotated
+          frames →</a></p>
       </div>
+      <!-- A 1200px console screenshot shown at 350px is 0.29 of its own scale and
+           its type is three pixels tall — a grey rectangle where the card promised a
+           frame of the project's own material. The narrow source is the same material
+           re-cropped to one readable block, the method already used for the two
+           annotated frames on the MetaFlow page. -->
+      <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-card-mobile.png"
+              width="720" height="440">
       <img class="shot" src="/assets/img/metaflow-card.png" width="1200" height="600"
            alt="The prototype answering and refusing on the same screen: a governance refusal
            explaining that the payment-amount metric is not finance-certified, a certified
            answer with its monthly table below it, and on the right the provenance card —
            source asset, metric version, definition, row count, certification and a verified
            checksum.">
+      </picture>
     </li>
 
     <li class="card">
@@ -90,11 +111,16 @@
         <p>Whether wearable step data can say when a patient has actually stopped improving — and
           how much that answer depends on what you decide “recovered” means.</p>
       </div>
-      <img class="shot" src="/assets/img/cardiac-card.png" width="1200" height="1038"
+      <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/cardiac-card-mobile.png"
+              width="780" height="580">
+      <img class="shot" src="/assets/img/cardiac-card.png" width="1200" height="748"
            loading="lazy"
-           alt="The plateau box plots from the co-authored poster: three definitions of stable
-           recovery on the same cohort, with three visibly different medians and spreads on a
-           day-since-enrollment axis.">
+           alt="The plateau box plots from the co-authored poster, cropped to two of the three
+           definitions of stable recovery on the same cohort: two visibly different medians and
+           spreads on the same day-since-enrollment axis, with the third definition's box just
+           visible at the top edge.">
+      </picture>
     </li>
 
     <li class="card">
@@ -105,11 +131,15 @@
         <p>Muscle activity to cursor in real time, with the optimizer hand-ported out of Python so
           the decoder adapts on-device inside the game loop.</p>
       </div>
+      <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/emg-card-mobile.png"
+              width="700" height="525">
       <img class="shot" src="/assets/img/emg-card.png" width="1200" height="525" loading="lazy"
            alt="One frame of the EMG clip at the instant of a reach: the reach counter at the
            top left, the Delsys panel with the smoothed envelope of that reach peaking near
            0.07 of its nought-to-one axis, and the yellow muscle-driven cursor resting against
            the lit target below.">
+      </picture>
     </li>
 
   </ul>

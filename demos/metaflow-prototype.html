@@ -1778,7 +1778,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 ::-webkit-scrollbar-track{background:transparent;}
 @keyframes mfIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 @keyframes mfPulse{0%,100%{opacity:.3;}50%{opacity:1;}}
-@keyframes mfToast{from{opacity:0;transform:translate(-50%,-8px);}to{opacity:1;transform:translate(-50%,0);}}
+@keyframes mfToast{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}
 </style>
 </helmet>
 <div style="display:flex;flex-direction:column;height:100vh;overflow:hidden;">
@@ -1821,13 +1821,13 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 
   <!-- ═══════ Toast ═══════ -->
   <sc-if value="{{ hasNotice }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;top:62px;left:50%;transform:translateX(-50%);z-index:80;background:#191C22;color:#E8EAEE;padding:10px 18px;border-radius:9px;font-size:12.5px;box-shadow:0 8px 24px rgba(20,22,28,.3);animation:mfToast .25s ease both;display:flex;align-items:center;gap:9px;">
+    <div style="position:fixed;top:62px;right:24px;z-index:80;max-width:420px;background:#191C22;color:#E8EAEE;padding:10px 18px;border-radius:9px;font-size:12.5px;box-shadow:0 8px 24px rgba(20,22,28,.3);animation:mfToast .25s ease both;display:flex;align-items:center;gap:9px;">
       <span style="width:7px;height:7px;border-radius:50%;background:#3DBC82;flex:none;"></span>
       <span>{{ noticeText }}</span>
     </div>
   </sc-if>
 
-  <div style="flex:1;display:flex;min-height:0;">
+  <div id="mf-app-body" style="flex:1;display:flex;min-height:0;">
 
   <!-- ════════════════════ BU 界面 ════════════════════ -->
   <sc-if value="{{ isBU }}" hint-placeholder-val="{{ true }}">
@@ -1917,8 +1917,8 @@ a:hover{color:#1B1E24;text-decoration:underline;}
                   </sc-if>
                   <sc-if value="{{ m.hasHandoff }}" hint-placeholder-val="{{ false }}">
                     <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(27,30,36,.07);display:flex;align-items:center;gap:12px;">
-                      <button onClick="{{ m.onHandoff }}" style="font-family:inherit;font-size:13px;font-weight:700;padding:10px 20px;border:none;border-radius:9px;background:#C9821B;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(201,130,27,.35);" style-hover="background:#B37317;">{{ m.handoffLabel }}</button>
-                      <span style="font-size:11.5px;color:rgba(27,30,36,.5);">生成 MISS 工单，进入 DA 诊断队列（反馈闭环第 1 步）</span>
+                      <button onClick="{{ m.onHandoff }}" disabled="{{ m.handoffDone }}" style="{{ m.handoffStyle }}">{{ m.handoffLabel }}</button>
+                      <span style="font-size:11.5px;color:rgba(27,30,36,.5);">{{ m.handoffNote }}</span>
                     </div>
                   </sc-if>
                 </div>
@@ -2177,7 +2177,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       </div>
     </aside>
 
-    <main style="flex:1;display:flex;flex-direction:column;min-width:0;background:#F5F6F8;overflow-y:auto;">
+    <main id="mf-de-main" style="flex:1;display:flex;flex-direction:column;min-width:0;background:#F5F6F8;overflow-y:auto;">
       <sc-if value="{{ deEmpty }}" hint-placeholder-val="{{ true }}">
         <div style="padding:52px 34px;">
           <div style="font-size:20px;font-weight:700;">工程控制台</div>
@@ -2194,7 +2194,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
 
             <!-- step 1 · 数据需求文档 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p1" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">1</span>
                 <span style="font-size:12.5px;font-weight:700;">数据需求文档 DRD</span>
@@ -2213,7 +2213,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 2 · 数据设计文档 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p2" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">2</span>
                 <span style="font-size:12.5px;font-weight:700;">数据设计文档 DDD</span>
@@ -2232,7 +2232,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 3 · 血缘影响分析 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;grid-column:1 / -1;">
+            <div id="de-p3" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;grid-column:1 / -1;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">3</span>
                 <span style="font-size:12.5px;font-weight:700;">血缘影响分析</span>
@@ -2267,7 +2267,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 3 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p4" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">4</span>
                 <span style="font-size:12.5px;font-weight:700;">patch_candidate.sql</span>
@@ -2277,7 +2277,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 2 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p5" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">5</span>
                 <span style="font-size:12.5px;font-weight:700;">dry-run 预演</span>
@@ -2296,7 +2296,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 3 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p6" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">6</span>
                 <span style="font-size:12.5px;font-weight:700;">validation 逐项断言</span>
@@ -2314,7 +2314,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 4 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p7" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">7</span>
                 <span style="font-size:12.5px;font-weight:700;">rollback 预案</span>
@@ -2330,7 +2330,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           </div>
 
           <!-- 辅助 chat / 执行日志 -->
-          <div style="margin-top:14px;background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:12px 15px;">
+          <div id="de-log" style="margin-top:14px;background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:12px 15px;">
             <div style="font-size:11px;font-weight:700;color:rgba(27,30,36,.55);margin-bottom:8px;">执行日志 · agent 辅助</div>
             <div style="display:flex;flex-direction:column;gap:4px;">
               <sc-for list="{{ deLog }}" as="l" hint-placeholder-count="1">
@@ -2398,7 +2398,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   <sc-if value="{{ guideBar }}" hint-placeholder-val="{{ false }}">
     <div style="flex:none;display:flex;align-items:center;gap:16px;padding:10px 16px;background:#191C22;color:#E8EAEE;border-top:1px solid rgba(255,255,255,.09);animation:mfIn .2s ease both;">
       <div style="flex:none;display:flex;align-items:center;gap:5px;">
-        <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="4">
+        <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="6">
           <button onClick="{{ g.onGo }}" title="{{ g.full }}" style="{{ g.chipStyle }}">
             <span style="{{ g.numStyle }}">{{ g.num }}</span>
             <span>{{ g.label }}</span>
@@ -2415,10 +2415,10 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   <sc-if value="{{ guideLanding }}" hint-placeholder-val="{{ true }}">
     <div id="mf-guide-scrim" style="position:fixed;top:50px;left:0;right:0;bottom:0;z-index:90;background:rgba(15,17,22,.6);display:flex;align-items:center;justify-content:center;padding:24px;animation:mfIn .2s ease both;">
       <div style="width:660px;max-width:100%;background:#fff;border-radius:16px;box-shadow:0 24px 70px rgba(15,17,22,.45);padding:26px 30px 24px;">
-        <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;color:#4A63D8;">引导演示 · 四步 · 每一步由你点</div>
+        <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;color:#4A63D8;">引导演示 · 六步 · 每一步由你点</div>
         <div style="font-size:20px;font-weight:700;line-height:1.5;margin-top:10px;">这段演示讲的是：一个一开始答不了的问题——以及要做到哪些事，它才答得了。</div>
         <div style="display:flex;flex-direction:column;gap:9px;margin-top:18px;">
-          <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="4">
+          <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="6">
             <div style="display:flex;align-items:flex-start;gap:11px;">
               <span style="flex:none;width:21px;height:21px;border-radius:50%;background:#EDEFF6;color:#4A63D8;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">{{ g.landNum }}</span>
               <span style="font-size:13.5px;line-height:1.7;">{{ g.full }}</span>
@@ -2426,10 +2426,10 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           </sc-for>
         </div>
         <div style="display:flex;align-items:center;gap:16px;margin-top:22px;">
-          <button onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
+          <button id="mf-guide-start" onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
           <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">跳过，我自己点</button>
         </div>
-        <div style="font-size:11.5px;line-height:1.8;color:rgba(27,30,36,.5);margin-top:14px;">没有任何东西会自动播。每一步都等你点，也可以随时退出引导——三个角色和自由提问一直都在。</div>
+        <div style="font-size:13.5px;line-height:1.75;color:#1B1E24;margin-top:16px;">没有任何东西会自动播。每一步都等你点，也可以随时退出引导（或按 Esc）——三个角色和自由提问一直都在。</div>
       </div>
     </div>
   </sc-if>
@@ -2443,7 +2443,12 @@ class Component extends DCLogic {
     // 引导态。'landing' = 落地面板，什么都还没跑；'running' = 访客正在逐步推进；
     // 'off' = 自由探索。?autorun=1 直接进 'off' 并放老的连播 —— 那个 URL 只为录屏
     // 存在，不是访客落地会看到的东西。
-    guideMode: (/[?&]autorun=1(?:&|$)/.test(location.search) ? 'off' : 'landing'),
+    // On a phone the scrim dimmed the whole prototype and then centred its card at
+    // x=370–1030 of a 1400px document — outside a 390px window. The visitor got a
+    // greyed-out page with nothing lit on it. The banner above already says to come
+    // back on a laptop, so below 900px the walkthrough simply does not start.
+    guideMode: (/[?&]autorun=1(?:&|$)/.test(location.search) ? 'off'
+                : (window.matchMedia('(max-width: 899px)').matches ? 'off' : 'landing')),
     guideStep: 0,
     // BU
     buMsgs: [], buInput: '', buCred: null, goldCertified: false, ticketCreated: false,
@@ -2468,6 +2473,7 @@ class Component extends DCLogic {
     this.buScroll = React.createRef();
     this.daScroll = React.createRef();
     this.timers = [];
+    this.landingFocused = false;
   }
   componentDidMount(){
     // 这里原来是一载入就把四幕连着播完。可这个原型唯一值得看的东西 —— 一个问题先失败、
@@ -2478,18 +2484,54 @@ class Component extends DCLogic {
     this.stopAuto = (e) => {
       if (e.target instanceof Element && e.target.closest('button, input, textarea, a')) this.autoRun = false;
     };
-    if (this.state.guideMode === 'off') {   // ?autorun=1
-      this.autoRun = true;
-      document.addEventListener('pointerdown', this.stopAuto, true);
-      this.playAct(1, true);
+    // Esc leaves the walkthrough. Without it the only way past the landing card for
+    // someone not using a mouse was six Tab stops through controls the scrim covered.
+    this.onKey = (e) => {
+      if (e.key === 'Escape' && this.state.guideMode !== 'off') { e.preventDefault(); this.guideExit(); }
+    };
+    document.addEventListener('keydown', this.onKey);
+    if (this.state.guideMode === 'off') {   // ?autorun=1, or a phone
+      this.autoRun = /[?&]autorun=1(?:&|$)/.test(location.search);
+      if (this.autoRun) {
+        document.addEventListener('pointerdown', this.stopAuto, true);
+        this.playAct(1, true);
+      }
     }
+    this.syncGuideFocus();
   }
   componentWillUnmount(){
     this.timers.forEach(clearTimeout);
     document.removeEventListener('pointerdown', this.stopAuto, true);
+    document.removeEventListener('keydown', this.onKey);
   }
   componentDidUpdate(){
     [this.buScroll, this.daScroll].forEach(r => { if (r.current) r.current.scrollTop = r.current.scrollHeight; });
+    this.syncGuideFocus();
+  }
+  // While the landing card is up, everything behind it is inert and the one button
+  // that matters holds focus. `inert` is a native attribute; no framework, no trap
+  // to maintain, and screen readers stop announcing what the scrim is covering.
+  syncGuideFocus(){
+    const landing = this.state.guideMode === 'landing';
+    const app = document.getElementById('mf-app-body');
+    if (app) { if (landing) app.setAttribute('inert', ''); else app.removeAttribute('inert'); }
+    if (landing && !this.landingFocused) {
+      const btn = document.getElementById('mf-guide-start');
+      if (btn) { btn.focus(); this.landingFocused = true; }
+    }
+    if (!landing) this.landingFocused = false;
+  }
+  // The walkthrough narrates panels; this is what makes it point at them. <main> is
+  // its own scroll container here, and at 1440x900 47% of the engineering console is
+  // below its fold — including the two panels the narration names by title.
+  deScrollTo(id){
+    const el = document.getElementById(id);
+    if (!el) return;
+    const host = document.getElementById('mf-de-main') || el.closest('main');
+    if (!host) return;
+    const top = host.scrollTop + el.getBoundingClientRect().top - host.getBoundingClientRect().top - 14;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    host.scrollTo({ top: Math.max(0, top), behavior: reduce ? 'auto' : 'smooth' });
   }
   later(ms, fn){ const t = setTimeout(fn, ms * (this.props.demoSpeed ?? 1)); this.timers.push(t); return t; }
   toast(text){ this.setState({notice:text}); this.later(3200, () => this.setState(s => s.notice===text ? {notice:null} : null)); }
@@ -2817,12 +2859,12 @@ class Component extends DCLogic {
   // 每一步仍然对应老的一幕，所以下面那套机制原封不动 —— 变的只是「谁来决定下一步什么时候开始」。
   guideStart(){ this.setState({ guideMode:'running' }); this.guideGo(1); }
   guideGo(n){
-    if (this.state.playing || n < 1 || n > 4) return;
+    if (this.state.playing || n < 1 || n > 6) return;
     this.setState({ guideMode:'running', guideStep:n });
     this.playAct(n);
   }
   guideNext(){
-    if (this.state.guideStep >= 4 && this.state.actsDone[4]) { this.guideExit(); return; }
+    if (this.state.guideStep >= 6 && this.state.actsDone[6]) { this.guideExit(); return; }
     this.guideGo(this.state.guideStep + 1);
   }
   guideExit(){ this.setState({ guideMode:'off' }); }
@@ -2835,7 +2877,7 @@ class Component extends DCLogic {
     this.setState({ playing:true, playingAct:n });
     const finish = (ms) => this.later(ms, () => {
       this.setState(s => ({ playing:false, playingAct:null, actsDone:{...s.actsDone, [n]:true} }));
-      if (auto && this.autoRun && n < 4) this.later(1200, () => this.playAct(n + 1, true));
+      if (auto && this.autoRun && n < 6) this.later(900, () => this.playAct(n + 1, true));
     });
     if (n === 1) {
       this.setState({ role:'BU' });
@@ -2850,18 +2892,36 @@ class Component extends DCLogic {
       this.later(3800, () => this.daSubmit());
       finish(4200);
     }
+    // Step 3 used to be all of engineering in one 11-second block: you clicked once
+    // and were then held for eleven seconds while five panels filled in, 47% of them
+    // below the fold. Three clicks, three panels, nothing over four seconds.
     if (n === 3) {
       if (!this.state.daSubmitted) this.setState({ daSubmitted:true });
       this.setState({ role:'DE' });
-      this.later(400, () => this.deOpen('REQ-0031'));
-      this.later(1200, () => this.confirmDrd());
-      this.later(2200, () => this.confirmDdd());
-      this.later(3000, () => this.runImpact());
-      this.later(4400, () => this.runDry());
-      this.later(8000, () => this.odApprove());
-      finish(11000);
+      this.later(300, () => this.deOpen('REQ-0031'));
+      this.later(350, () => this.deScrollTo('de-p1'));
+      this.later(900, () => this.confirmDrd());
+      this.later(1700, () => this.confirmDdd());
+      this.later(1750, () => this.deScrollTo('de-p3'));
+      this.later(2400, () => this.runImpact());
+      finish(3800);
     }
     if (n === 4) {
+      if (this.state.impactStatus !== 'done') { this.setState({ impactStatus:'done' }); }
+      this.setState({ role:'DE' });
+      this.later(300, () => this.runDry());
+      this.later(320, () => this.deScrollTo('de-p5'));
+      this.later(1500, () => this.deScrollTo('de-p6'));
+      this.later(3700, () => this.deScrollTo('de-p7'));
+      finish(4200);
+    }
+    if (n === 5) {
+      this.setState({ role:'DE' });
+      this.later(300, () => this.odApprove());
+      this.later(1100, () => this.deScrollTo('de-log'));
+      finish(3400);
+    }
+    if (n === 6) {
       if (!this.state.goldCertified) this.setState({ goldCertified:true });
       this.setState({ role:'BU' });
       this.later(500, () => this.buAsk('2024 全年 Gold 客户的净收入是多少？按客户国家分。'));
@@ -2906,7 +2966,16 @@ class Component extends DCLogic {
         hasTable: !!m.table, tableHead:(m.table?m.table.head:[]).map(t=>({t})), tableRows:(m.table?m.table.rows:[]).map(r=>({cells:cells(r)})),
         hasFoot: !!m.foot, foot:m.foot||'',
         hasOptions: !!m.options, options:(m.options||[]).map(o=>({ label:o.label, onPick:()=>this.buClarifyPick(o.act) })),
-        hasHandoff: !!m.handoff, handoffLabel:m.handoffLabel||'', onHandoff:()=>this.buHandoff()
+        // R4-17: the final frame used to carry an unresolved orange call to action
+        // ("hand off to DA") directly above the certified answer that call to action
+        // had already produced. Once the ticket exists the button is spent, and says so.
+        hasHandoff: !!m.handoff, handoffDone: s.ticketCreated,
+        handoffLabel: s.ticketCreated ? '已转交 DA · 工单 T-0087 ✓' : (m.handoffLabel||''),
+        handoffNote: s.ticketCreated ? '这一步已经完成 —— 工单 T-0087 在 DA 队列里' : '生成 MISS 工单，进入 DA 诊断队列（反馈闭环第 1 步）',
+        handoffStyle: s.ticketCreated
+          ? "font-family:inherit;font-size:13px;font-weight:700;padding:10px 20px;border:1px solid rgba(27,30,36,.14);border-radius:9px;background:rgba(27,30,36,.045);color:rgba(27,30,36,.42);cursor:default;"
+          : "font-family:inherit;font-size:13px;font-weight:700;padding:10px 20px;border:none;border-radius:9px;background:#C9821B;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(201,130,27,.35);",
+        onHandoff:()=>this.buHandoff()
       };
     });
 
@@ -2972,15 +3041,19 @@ class Component extends DCLogic {
     const GSTEPS = [
       { label:'提问 → MISS', full:'提问，拿到一个明确的 MISS。',
         say:'第 1 步 · 问题按业务用户会问的方式提进去 —— 然后被拒绝了。没有任何认证能力覆盖「客户下单当时的等级」，所以 MetaFlow 把原因原原本本说出来，而不是给一个看起来像那么回事的数。' },
-      { label:'转工单交接', full:'把这个 MISS 转成工单，交接给分析师。',
+      { label:'转工单', full:'把这个 MISS 转成工单，交接给分析师。',
         say:'第 2 步 · 拒绝变成了工作。工单 T-0087 落进 DA 的队列；诊断发现数据是有的，只是覆盖率 82.8%，于是先给一个带 caveat 的兜底数，同时向 DE 提补数请求。' },
-      { label:'工程 → 批准', full:'工程侧：血缘影响分析 → dry run → owner 批准。',
-        say:'第 3 步 · DE 打开请求：确认定义、跑血缘影响分析、在一个会回滚的事务里预演补丁、5/5 断言全过 —— 到这一步 owner 才批 OD006，能力才被注册进目录。' },
-      { label:'重问 → 认证答案', full:'把同一个问题再问一遍 —— 这次它是认证的。',
-        say:'第 4 步 · 同一个问题，同样的问法。这次返回的是认证答案，凭证全绿：来源资产、指标版本、口径定义、checksum。' }
+      { label:'影响分析', full:'工程侧第一步：确认口径，跑血缘影响分析。',
+        say:'第 3 步 · DE 打开请求，先确认两份文档（业务口径 DRD、技术方案 DDD），再跑血缘影响分析 —— 改这张表会波及哪些已认证能力，必须在动手之前查清楚。结果就在下面第 3 号面板里。' },
+      { label:'dry-run', full:'在一个会回滚的事务里预演补丁，逐项断言。',
+        say:'第 4 步 · 补丁先在一个 BEGIN…ROLLBACK 的事务里跑一遍：行数、temporal gap、checksum 两次重算。然后 5 条断言逐条亮绿 —— 面板 6 就是那 5/5，面板 7 是万一失败时的 rollback 预案。' },
+      { label:'Owner 批准', full:'owner 批准 OD006，能力注册进目录。',
+        say:'第 5 步 · 到这一步 owner 才批。批准之后补丁才真的执行，新能力才被写进 semantic_capability_list，BU 那边才收到「可以回答了」的通知 —— 三件事按顺序发生，都在下面的执行日志里。' },
+      { label:'重问 → 认证', full:'把同一个问题再问一遍 —— 这次它是认证的。',
+        say:'第 6 步 · 同一个问题，同样的问法。这次返回的是认证答案，凭证全绿：来源资产、指标版本、口径定义、checksum。' }
     ];
     const gClosing = '走完了。刚才答不了的那个问题，现在返回的是认证答案 —— 第 1 步那次拒绝，正是拿到它的第一步。从这里开始自己探索：切角色，或者在输入框里随便问。';
-    const gStep = s.guideStep, gBusy = s.playing, gFinished = gStep >= 4 && !!s.actsDone[4];
+    const gStep = s.guideStep, gBusy = s.playing, gFinished = gStep >= 6 && !!s.actsDone[6];
     const guideSteps = GSTEPS.map((g, i) => {
       const n = i + 1, cur = gStep === n, done = !!s.actsDone[n];
       return {

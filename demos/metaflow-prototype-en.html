@@ -1779,7 +1779,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 ::-webkit-scrollbar-track{background:transparent;}
 @keyframes mfIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 @keyframes mfPulse{0%,100%{opacity:.3;}50%{opacity:1;}}
-@keyframes mfToast{from{opacity:0;transform:translate(-50%,-8px);}to{opacity:1;transform:translate(-50%,0);}}
+@keyframes mfToast{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}
 </style>
 </helmet>
 <div style="display:flex;flex-direction:column;height:100vh;overflow:hidden;">
@@ -1822,13 +1822,13 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 
   <!-- ═══════ Toast ═══════ -->
   <sc-if value="{{ hasNotice }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;top:62px;left:50%;transform:translateX(-50%);z-index:80;background:#191C22;color:#E8EAEE;padding:10px 18px;border-radius:9px;font-size:12.5px;box-shadow:0 8px 24px rgba(20,22,28,.3);animation:mfToast .25s ease both;display:flex;align-items:center;gap:9px;">
+    <div style="position:fixed;top:62px;right:24px;z-index:80;max-width:420px;background:#191C22;color:#E8EAEE;padding:10px 18px;border-radius:9px;font-size:12.5px;box-shadow:0 8px 24px rgba(20,22,28,.3);animation:mfToast .25s ease both;display:flex;align-items:center;gap:9px;">
       <span style="width:7px;height:7px;border-radius:50%;background:#3DBC82;flex:none;"></span>
       <span>{{ noticeText }}</span>
     </div>
   </sc-if>
 
-  <div style="flex:1;display:flex;min-height:0;">
+  <div id="mf-app-body" style="flex:1;display:flex;min-height:0;">
 
   <!-- ════════════════════ BU view ════════════════════ -->
   <sc-if value="{{ isBU }}" hint-placeholder-val="{{ true }}">
@@ -1918,8 +1918,8 @@ a:hover{color:#1B1E24;text-decoration:underline;}
                   </sc-if>
                   <sc-if value="{{ m.hasHandoff }}" hint-placeholder-val="{{ false }}">
                     <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(27,30,36,.07);display:flex;align-items:center;gap:12px;">
-                      <button onClick="{{ m.onHandoff }}" style="font-family:inherit;font-size:13px;font-weight:700;padding:10px 20px;border:none;border-radius:9px;background:#C9821B;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(201,130,27,.35);" style-hover="background:#B37317;">{{ m.handoffLabel }}</button>
-                      <span style="font-size:11.5px;color:rgba(27,30,36,.5);">Creates a MISS ticket in the DA triage queue (step 1 of the feedback loop)</span>
+                      <button onClick="{{ m.onHandoff }}" disabled="{{ m.handoffDone }}" style="{{ m.handoffStyle }}">{{ m.handoffLabel }}</button>
+                      <span style="font-size:11.5px;color:rgba(27,30,36,.5);">{{ m.handoffNote }}</span>
                     </div>
                   </sc-if>
                 </div>
@@ -2178,7 +2178,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       </div>
     </aside>
 
-    <main style="flex:1;display:flex;flex-direction:column;min-width:0;background:#F5F6F8;overflow-y:auto;">
+    <main id="mf-de-main" style="flex:1;display:flex;flex-direction:column;min-width:0;background:#F5F6F8;overflow-y:auto;">
       <sc-if value="{{ deEmpty }}" hint-placeholder-val="{{ true }}">
         <div style="padding:52px 34px;">
           <div style="font-size:20px;font-weight:700;">Engineering console</div>
@@ -2195,7 +2195,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
 
             <!-- step 1 · data requirements doc -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p1" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">1</span>
                 <span style="font-size:12.5px;font-weight:700;">Data Requirements Doc</span>
@@ -2214,7 +2214,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 2 · data design doc -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p2" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">2</span>
                 <span style="font-size:12.5px;font-weight:700;">Data Design Doc</span>
@@ -2233,7 +2233,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 3 · lineage impact analysis -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;grid-column:1 / -1;">
+            <div id="de-p3" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;grid-column:1 / -1;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">3</span>
                 <span style="font-size:12.5px;font-weight:700;">Lineage impact analysis</span>
@@ -2268,7 +2268,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 4 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p4" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">4</span>
                 <span style="font-size:12.5px;font-weight:700;">patch_candidate.sql</span>
@@ -2278,7 +2278,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 5 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p5" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">5</span>
                 <span style="font-size:12.5px;font-weight:700;">dry-run rehearsal</span>
@@ -2297,7 +2297,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 6 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p6" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">6</span>
                 <span style="font-size:12.5px;font-weight:700;">validation · assertion by assertion</span>
@@ -2315,7 +2315,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
             </div>
 
             <!-- step 7 -->
-            <div style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
+            <div id="de-p7" style="background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:13px 15px;">
               <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
                 <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:6px;background:#191C22;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;">7</span>
                 <span style="font-size:12.5px;font-weight:700;">rollback plan</span>
@@ -2331,7 +2331,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           </div>
 
           <!-- assist chat / execution log -->
-          <div style="margin-top:14px;background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:12px 15px;">
+          <div id="de-log" style="margin-top:14px;background:#fff;border:1px solid rgba(27,30,36,.1);border-radius:11px;padding:12px 15px;">
             <div style="font-size:11px;font-weight:700;color:rgba(27,30,36,.55);margin-bottom:8px;">Execution log · agent assist</div>
             <div style="display:flex;flex-direction:column;gap:4px;">
               <sc-for list="{{ deLog }}" as="l" hint-placeholder-count="1">
@@ -2399,7 +2399,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   <sc-if value="{{ guideBar }}" hint-placeholder-val="{{ false }}">
     <div style="flex:none;display:flex;align-items:center;gap:16px;padding:10px 16px;background:#191C22;color:#E8EAEE;border-top:1px solid rgba(255,255,255,.09);animation:mfIn .2s ease both;">
       <div style="flex:none;display:flex;align-items:center;gap:5px;">
-        <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="4">
+        <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="6">
           <button onClick="{{ g.onGo }}" title="{{ g.full }}" style="{{ g.chipStyle }}">
             <span style="{{ g.numStyle }}">{{ g.num }}</span>
             <span>{{ g.label }}</span>
@@ -2416,10 +2416,10 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   <sc-if value="{{ guideLanding }}" hint-placeholder-val="{{ true }}">
     <div id="mf-guide-scrim" style="position:fixed;top:50px;left:0;right:0;bottom:0;z-index:90;background:rgba(15,17,22,.6);display:flex;align-items:center;justify-content:center;padding:24px;animation:mfIn .2s ease both;">
       <div style="width:660px;max-width:100%;background:#fff;border-radius:16px;box-shadow:0 24px 70px rgba(15,17,22,.45);padding:26px 30px 24px;">
-        <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;color:#4A63D8;">GUIDED WALKTHROUGH · FOUR STEPS · YOU CLICK EACH ONE</div>
+        <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;color:#4A63D8;">GUIDED WALKTHROUGH · SIX STEPS · YOU CLICK EACH ONE</div>
         <div style="font-size:20px;font-weight:700;line-height:1.45;margin-top:10px;">This walkthrough shows a question that cannot be answered at first — and what it takes until it can.</div>
         <div style="display:flex;flex-direction:column;gap:9px;margin-top:18px;">
-          <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="4">
+          <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="6">
             <div style="display:flex;align-items:flex-start;gap:11px;">
               <span style="flex:none;width:21px;height:21px;border-radius:50%;background:#EDEFF6;color:#4A63D8;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">{{ g.landNum }}</span>
               <span style="font-size:13.5px;line-height:1.65;">{{ g.full }}</span>
@@ -2427,10 +2427,10 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           </sc-for>
         </div>
         <div style="display:flex;align-items:center;gap:16px;margin-top:22px;">
-          <button onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
+          <button id="mf-guide-start" onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
           <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">Skip — I will explore it myself</button>
         </div>
-        <div style="font-size:11.5px;line-height:1.7;color:rgba(27,30,36,.5);margin-top:14px;">Nothing plays on its own. Every step waits for you, and you can leave the walkthrough at any point — all three roles and free-form questions stay available.</div>
+        <div style="font-size:13.5px;line-height:1.7;color:#1B1E24;margin-top:16px;">Nothing plays on its own. Every step waits for you, and you can leave the walkthrough at any point (or press Esc) — all three roles and free-form questions stay available.</div>
       </div>
     </div>
   </sc-if>
@@ -2445,7 +2445,12 @@ class Component extends DCLogic {
     // visitor is stepping through it; 'off' = free exploration. ?autorun=1 skips
     // straight to 'off' and lets the old continuous reel play — that URL exists so
     // the screen recording can be made, and is not what a visitor lands on.
-    guideMode: (/[?&]autorun=1(?:&|$)/.test(location.search) ? 'off' : 'landing'),
+    // On a phone the scrim dimmed the whole prototype and then centred its card at
+    // x=370–1030 of a 1400px document — outside a 390px window. The visitor got a
+    // greyed-out page with nothing lit on it. The banner above already says to come
+    // back on a laptop, so below 900px the walkthrough simply does not start.
+    guideMode: (/[?&]autorun=1(?:&|$)/.test(location.search) ? 'off'
+                : (window.matchMedia('(max-width: 899px)').matches ? 'off' : 'landing')),
     guideStep: 0,
     // BU
     buMsgs: [], buInput: '', buCred: null, goldCertified: false, ticketCreated: false,
@@ -2470,6 +2475,7 @@ class Component extends DCLogic {
     this.buScroll = React.createRef();
     this.daScroll = React.createRef();
     this.timers = [];
+    this.landingFocused = false;
   }
   componentDidMount(){
     // This used to start playing all four acts the moment the page loaded. The one
@@ -2483,18 +2489,54 @@ class Component extends DCLogic {
     this.stopAuto = (e) => {
       if (e.target instanceof Element && e.target.closest('button, input, textarea, a')) this.autoRun = false;
     };
-    if (this.state.guideMode === 'off') {   // ?autorun=1
-      this.autoRun = true;
-      document.addEventListener('pointerdown', this.stopAuto, true);
-      this.playAct(1, true);
+    // Esc leaves the walkthrough. Without it the only way past the landing card for
+    // someone not using a mouse was six Tab stops through controls the scrim covered.
+    this.onKey = (e) => {
+      if (e.key === 'Escape' && this.state.guideMode !== 'off') { e.preventDefault(); this.guideExit(); }
+    };
+    document.addEventListener('keydown', this.onKey);
+    if (this.state.guideMode === 'off') {   // ?autorun=1, or a phone
+      this.autoRun = /[?&]autorun=1(?:&|$)/.test(location.search);
+      if (this.autoRun) {
+        document.addEventListener('pointerdown', this.stopAuto, true);
+        this.playAct(1, true);
+      }
     }
+    this.syncGuideFocus();
   }
   componentWillUnmount(){
     this.timers.forEach(clearTimeout);
     document.removeEventListener('pointerdown', this.stopAuto, true);
+    document.removeEventListener('keydown', this.onKey);
   }
   componentDidUpdate(){
     [this.buScroll, this.daScroll].forEach(r => { if (r.current) r.current.scrollTop = r.current.scrollHeight; });
+    this.syncGuideFocus();
+  }
+  // While the landing card is up, everything behind it is inert and the one button
+  // that matters holds focus. `inert` is a native attribute; no framework, no trap
+  // to maintain, and screen readers stop announcing what the scrim is covering.
+  syncGuideFocus(){
+    const landing = this.state.guideMode === 'landing';
+    const app = document.getElementById('mf-app-body');
+    if (app) { if (landing) app.setAttribute('inert', ''); else app.removeAttribute('inert'); }
+    if (landing && !this.landingFocused) {
+      const btn = document.getElementById('mf-guide-start');
+      if (btn) { btn.focus(); this.landingFocused = true; }
+    }
+    if (!landing) this.landingFocused = false;
+  }
+  // The walkthrough narrates panels; this is what makes it point at them. <main> is
+  // its own scroll container here, and at 1440x900 47% of the engineering console is
+  // below its fold — including the two panels the narration names by title.
+  deScrollTo(id){
+    const el = document.getElementById(id);
+    if (!el) return;
+    const host = document.getElementById('mf-de-main') || el.closest('main');
+    if (!host) return;
+    const top = host.scrollTop + el.getBoundingClientRect().top - host.getBoundingClientRect().top - 14;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    host.scrollTo({ top: Math.max(0, top), behavior: reduce ? 'auto' : 'smooth' });
   }
   later(ms, fn){ const t = setTimeout(fn, ms * (this.props.demoSpeed ?? 1)); this.timers.push(t); return t; }
   toast(text){ this.setState({notice:text}); this.later(3200, () => this.setState(s => s.notice===text ? {notice:null} : null)); }
@@ -2823,12 +2865,12 @@ class Component extends DCLogic {
   // what changed is who decides when the next one starts.
   guideStart(){ this.setState({ guideMode:'running' }); this.guideGo(1); }
   guideGo(n){
-    if (this.state.playing || n < 1 || n > 4) return;
+    if (this.state.playing || n < 1 || n > 6) return;
     this.setState({ guideMode:'running', guideStep:n });
     this.playAct(n);
   }
   guideNext(){
-    if (this.state.guideStep >= 4 && this.state.actsDone[4]) { this.guideExit(); return; }
+    if (this.state.guideStep >= 6 && this.state.actsDone[6]) { this.guideExit(); return; }
     this.guideGo(this.state.guideStep + 1);
   }
   guideExit(){ this.setState({ guideMode:'off' }); }
@@ -2841,7 +2883,7 @@ class Component extends DCLogic {
     this.setState({ playing:true, playingAct:n });
     const finish = (ms) => this.later(ms, () => {
       this.setState(s => ({ playing:false, playingAct:null, actsDone:{...s.actsDone, [n]:true} }));
-      if (auto && this.autoRun && n < 4) this.later(1200, () => this.playAct(n + 1, true));
+      if (auto && this.autoRun && n < 6) this.later(900, () => this.playAct(n + 1, true));
     });
     if (n === 1) {
       this.setState({ role:'BU' });
@@ -2856,18 +2898,36 @@ class Component extends DCLogic {
       this.later(3800, () => this.daSubmit());
       finish(4200);
     }
+    // Step 3 used to be all of engineering in one 11-second block: you clicked once
+    // and were then held for eleven seconds while five panels filled in, 47% of them
+    // below the fold. Three clicks, three panels, nothing over four seconds.
     if (n === 3) {
       if (!this.state.daSubmitted) this.setState({ daSubmitted:true });
       this.setState({ role:'DE' });
-      this.later(400, () => this.deOpen('REQ-0031'));
-      this.later(1200, () => this.confirmDrd());
-      this.later(2200, () => this.confirmDdd());
-      this.later(3000, () => this.runImpact());
-      this.later(4400, () => this.runDry());
-      this.later(8000, () => this.odApprove());
-      finish(11000);
+      this.later(300, () => this.deOpen('REQ-0031'));
+      this.later(350, () => this.deScrollTo('de-p1'));
+      this.later(900, () => this.confirmDrd());
+      this.later(1700, () => this.confirmDdd());
+      this.later(1750, () => this.deScrollTo('de-p3'));
+      this.later(2400, () => this.runImpact());
+      finish(3800);
     }
     if (n === 4) {
+      if (this.state.impactStatus !== 'done') { this.setState({ impactStatus:'done' }); }
+      this.setState({ role:'DE' });
+      this.later(300, () => this.runDry());
+      this.later(320, () => this.deScrollTo('de-p5'));
+      this.later(1500, () => this.deScrollTo('de-p6'));
+      this.later(3700, () => this.deScrollTo('de-p7'));
+      finish(4200);
+    }
+    if (n === 5) {
+      this.setState({ role:'DE' });
+      this.later(300, () => this.odApprove());
+      this.later(1100, () => this.deScrollTo('de-log'));
+      finish(3400);
+    }
+    if (n === 6) {
       if (!this.state.goldCertified) this.setState({ goldCertified:true });
       this.setState({ role:'BU' });
       this.later(500, () => this.buAsk('What was Gold customer net revenue for full-year 2024, by customer country?'));
@@ -2912,7 +2972,16 @@ class Component extends DCLogic {
         hasTable: !!m.table, tableHead:(m.table?m.table.head:[]).map(t=>({t})), tableRows:(m.table?m.table.rows:[]).map(r=>({cells:cells(r)})),
         hasFoot: !!m.foot, foot:m.foot||'',
         hasOptions: !!m.options, options:(m.options||[]).map(o=>({ label:o.label, onPick:()=>this.buClarifyPick(o.act) })),
-        hasHandoff: !!m.handoff, handoffLabel:m.handoffLabel||'', onHandoff:()=>this.buHandoff()
+        // R4-17: the final frame used to carry an unresolved orange call to action
+        // ("hand off to DA") directly above the certified answer that call to action
+        // had already produced. Once the ticket exists the button is spent, and says so.
+        hasHandoff: !!m.handoff, handoffDone: s.ticketCreated,
+        handoffLabel: s.ticketCreated ? 'Handed off to DA · ticket T-0087 ✓' : (m.handoffLabel||''),
+        handoffNote: s.ticketCreated ? 'Already done — ticket T-0087 is in the DA queue' : 'Creates a MISS ticket in the DA triage queue (step 1 of the feedback loop)',
+        handoffStyle: s.ticketCreated
+          ? "font-family:inherit;font-size:13px;font-weight:700;padding:10px 20px;border:1px solid rgba(27,30,36,.14);border-radius:9px;background:rgba(27,30,36,.045);color:rgba(27,30,36,.42);cursor:default;"
+          : "font-family:inherit;font-size:13px;font-weight:700;padding:10px 20px;border:none;border-radius:9px;background:#C9821B;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(201,130,27,.35);",
+        onHandoff:()=>this.buHandoff()
       };
     });
 
@@ -2980,13 +3049,17 @@ class Component extends DCLogic {
         say:'Step 1 · The question goes in as a business user would ask it — and it comes back refused. No certified capability covers a customer’s tier at the time of the order, so MetaFlow says so, in full, instead of producing a plausible number.' },
       { label:'Hand off', full:'Hand the MISS off as a ticket to the analyst.',
         say:'Step 2 · The refusal becomes work. Ticket T-0087 lands in the analyst’s queue; triage finds the data exists but is only 82.8% covered, produces a caveated fallback number, and files a backfill request to engineering.' },
-      { label:'Engineer → approve', full:'Engineer: lineage impact → dry run → owner approval.',
-        say:'Step 3 · Engineering opens the request: confirm the definition, run the lineage impact analysis, rehearse the patch in a transaction that rolls back, pass 5/5 assertions — and only then does the owner approve OD006 and the capability get registered.' },
+      { label:'Lineage impact', full:'Engineering, first move: confirm the definition, run lineage impact.',
+        say:'Step 3 · Engineering opens the request, confirms the two documents (the business definition, then the technical design), and runs the lineage impact analysis — which certified capabilities does changing this table reach? That has to be answered before anything is touched. The result is panel 3 below.' },
+      { label:'Dry run', full:'Rehearse the patch in a transaction that rolls back, assert every check.',
+        say:'Step 4 · The patch is rehearsed inside a BEGIN…ROLLBACK transaction first: row count, temporal gap, checksum computed twice. Then five assertions go green one at a time — panel 6 is that 5/5, and panel 7 is the rollback plan for the run where they do not.' },
+      { label:'Owner approval', full:'The owner approves OD006 and the capability is registered.',
+        say:'Step 5 · Only now does the owner approve. After approval the patch actually executes, the new capability is written into semantic_capability_list, and the business user is told the case can be answered — three things in that order, all of them in the execution log below.' },
       { label:'Ask again → answer', full:'Ask the same question again — this time it is certified.',
-        say:'Step 4 · The same question, worded the same way. This time it returns a certified answer with green provenance: source asset, metric version, definition, checksum.' }
+        say:'Step 6 · The same question, worded the same way. This time it returns a certified answer with green provenance: source asset, metric version, definition, checksum.' }
     ];
     const gClosing = 'Done. The same question that could not be answered now returns a certified answer — the refusal in step 1 was the first step of getting it. Explore on your own from here: switch roles, or ask anything in the input box.';
-    const gStep = s.guideStep, gBusy = s.playing, gFinished = gStep >= 4 && !!s.actsDone[4];
+    const gStep = s.guideStep, gBusy = s.playing, gFinished = gStep >= 6 && !!s.actsDone[6];
     const guideSteps = GSTEPS.map((g, i) => {
       const n = i + 1, cur = gStep === n, done = !!s.actsDone[n];
       return {

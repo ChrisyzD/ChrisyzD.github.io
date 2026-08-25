@@ -12,32 +12,56 @@
 
 <nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
 
+<!-- The page head is a spread: who/what/when on the spine, and the boundary of my
+     own work in the margin beside it. "My scope" was already a margin note by every
+     rule this site has — a rule down the left, grey, set apart from the argument —
+     it just had nowhere to hang except back over the spine. Now it has a column. -->
+<div class="spread">
+  <div>
 <h1>MetaFlow</h1>
 <p class="lead">A metadata-centric natural-language-to-SQL system: a question is resolved
 through an inspectable relational intermediate representation instead of generating SQL
 directly, so an answer arrives with its source, its definition and its verification
 attached.</p>
 <p class="meta">March 2026 – present · Python, FastAPI, PostgreSQL, React, TypeScript</p>
-<p class="meta scope"><strong>My scope.</strong> Two-person project. I own the metadata layer,
-the gold-case regression suite, the contracts endpoint and the React/TypeScript studio front
-end; my collaborator owns the NL→IR→SQL engine core. I am not naming them here without their
-say-so.</p>
+<!-- The one thing on this site a visitor can operate used to be introduced at 47%
+     scroll depth, under the clip and the two annotated frames — after the page had
+     already shown them the recording of someone else doing it. The door goes in
+     front of the window. -->
+<p class="tryit"><a href="/demos/metaflow-prototype-en.html"><strong>Try the interactive
+prototype →</strong></a><span class="note">The same studio, in English, running in your browser —
+so you can ask the question yourself instead of watching it get asked. It walks you through the
+same six steps as the clip below, one click per step, at your own pace. Built for a desktop
+window; on a phone it scrolls sideways, and the two annotated frames below are the readable
+version of those same screens. There is also the
+<a href="/demos/metaflow-prototype.html">original Chinese version</a>.</span></p>
+  </div>
 
-<figure class="clip fig-clip">
+  <aside class="side">
+    <span class="lbl">My scope</span>
+    <p>Two-person project. I own the metadata layer,
+    the gold-case regression suite, the contracts endpoint and the React/TypeScript studio front
+    end; my collaborator owns the NL→IR→SQL engine core. I am not naming them here without their
+    say-so.</p>
+  </aside>
+</div>
+
+<figure class="clip fig-clip native-1440">
   <video src="/assets/video/metaflow-demo.mp4"
          poster="/assets/img/metaflow-demo-poster.png"
          width="1440" height="900"
          autoplay muted loop playsinline controls preload="metadata" data-clip data-tap
-         aria-label="Twenty-five seconds of the MetaFlow prototype running its own four-act demo:
+         aria-label="Twenty-six seconds of the MetaFlow prototype running its own walkthrough end to end:
          a business question returns an explicit MISS because the certification it needs does not
          exist, the refusal becomes ticket T-0087 and an analyst answers it off the uncertified
          path with a caveat attached, a data engineer runs a lineage impact analysis and a
          transactional dry run and gets owner approval OD006, and the same question is asked
          again and comes back certified at $340,955.56 with every provenance check green."></video>
   <figcaption>
-    <p class="spec">~25 s · four acts · silent · loops<span class="only-mobile"> · a still on a
+    <p class="spec">~26 s · six steps · silent · loops · recorded at 1440×900, so it is 1:1 from
+      1520px of window and resampled below that<span class="only-mobile"> · a still on a
       phone; tap to play</span></p>
-    <p>Twenty-five seconds, nobody driving: the same question is asked at the start and at the
+    <p>Twenty-six seconds, nobody driving: the same question is asked at the start and at the
       end. The first time it comes back as an explicit <strong>MISS</strong> — the certification
       it needs does not exist — and in between, the refusal becomes a ticket, an analyst answers
       it off the uncertified path with the caveat attached and files a backfill request, and an
@@ -47,14 +71,14 @@ say-so.</p>
       column, and reading only those two is the short version of the whole argument: <em>No
       certified capability matched</em> at the start, and at the end <em>All provenance checks
       green</em>, with the source asset, the metric version, the definition and a re-computed
-      checksum attached to a number that had no certified answer twenty-five seconds earlier.
+      checksum attached to a number that had no certified answer twenty-six seconds earlier.
       The two acts in between are the repair — an analyst answering off the uncertified path,
       an engineer closing the gap — and they are the ones the two annotated frames below cover,
       because that middle stretch is dense enough that the recording's own panels overlap and
       the annotations say what a moving screen cannot.</p>
     <p class="bound">Nothing here is clicked by a human — this recording was made with the
-      walkthrough's autorun switched on; in the live prototype below, you click through the same
-      four steps at your own pace. It is a design prototype rather than the running system, and the data
+      walkthrough's autorun switched on; in the live prototype above, you click through the same
+      six steps at your own pace. It is a design prototype rather than the running system, and the data
       is the synthetic <code>jaffle_shop</code> demo set.<span class="only-mobile"> This is a
       1280px interface and it does not survive being shrunk to a phone: what you have above is
       the frame it ends on. The two annotated screenshots directly below are the first and the
@@ -96,13 +120,6 @@ say-so.</p>
   </figure>
 </div>
 
-<p class="tryit"><a href="/demos/metaflow-prototype-en.html"><strong>Try the interactive
-prototype →</strong></a><span class="note">The same studio, in English, running in your browser —
-so you can ask the question yourself instead of watching it get asked. Built for a desktop
-window; on a phone it scrolls sideways, and the two frames above are the readable version of
-those same screens. There is also the
-<a href="/demos/metaflow-prototype.html">original Chinese version</a>.</span></p>
-
 <section>
   <h2>Why an IR instead of SQL</h2>
   <p>Most natural-language-to-SQL systems generate a query and run it. When the number that
@@ -141,36 +158,62 @@ those same screens. There is also the
       just that something is red.</figcaption>
   </figure>
 
-  <p><strong>The studio.</strong> Interface, annotations and data are all English.
-  The data is the <strong><code>jaffle_shop</code> demo dataset</strong>: synthetic rows
-  generated against dbt's public <code>jaffle_shop</code> schema — 50,000 orders spanning 2022
-  to 2025 — not the toy seed data that ships with dbt. The system is organized around four
-  ideas: answers are bounded by a certified capability list, every answer
-  carries provenance, anything out of scope is refused explicitly rather than guessed, and the
-  fix behind a refusal goes through lineage analysis, a dry run and an explicit owner approval
-  before it ships.</p>
+  <div class="spread">
+    <div>
+      <p><strong>The studio.</strong> Interface, annotations and data are all English. The
+      system is organized around four ideas, and the four steps of the walkthrough in the
+      prototype are those four ideas in order: answers are bounded by a certified capability
+      list, anything out of scope is refused explicitly rather than guessed, the fix behind a
+      refusal goes through lineage analysis, a dry run and an explicit owner approval before it
+      ships, and every answer that survives all of that carries its provenance with it.</p>
 
-  <p>The first and the last of those ideas are the two frames at the top of this page: the
-  explicit refusal, and the provenance card that ships with the answer once the gap behind the
-  refusal has been closed.</p>
+      <p>The first and the last of those are the two frames at the top of this page: the
+      explicit refusal, and the provenance card that ships with the answer once the gap behind
+      the refusal has been closed.</p>
 
-  <p class="golink"><a href="/demos/metaflow-prototype-en.html">Open the prototype and ask it
-    something yourself →</a></p>
+      <p class="golink"><a href="/demos/metaflow-prototype-en.html">Open the prototype and ask it
+        something yourself →</a></p>
+    </div>
+
+    <aside class="side">
+      <span class="lbl">The four ideas, as four steps</span>
+      <ol>
+        <li><strong>Bounded.</strong> A question outside the certified capability list returns
+          an explicit MISS naming the blocker.</li>
+        <li><strong>Triaged.</strong> The refusal becomes a ticket; an analyst answers off the
+          uncertified path with the caveat attached and files a backfill request.</li>
+        <li><strong>Governed.</strong> Lineage impact analysis, a transactional dry run,
+          validation assertions, a rollback plan — then an owner decision.</li>
+        <li><strong>Provenanced.</strong> The same question comes back certified, with its
+          source asset, metric version, definition and a re-computed checksum.</li>
+      </ol>
+      <p><strong>The data</strong> is the <code>jaffle_shop</code> demo dataset: synthetic rows
+      generated against dbt's public <code>jaffle_shop</code> schema — 50,000 orders spanning
+      2022 to 2025 — not the toy seed data that ships with dbt.</p>
+    </aside>
+  </div>
 </section>
 
 <section>
   <h2>Results &amp; boundary</h2>
-  <ul>
-    <li><strong>20 gold-case scenarios × 5 pipeline stages</strong> in version control, written
-      before the features they cover.</li>
-    <li>A <strong>PostgreSQL</strong>-backed FastAPI service with a contracts endpoint that
-      enforces data-quality rules as executable tests.</li>
-    <li>In development since <strong>March 2026</strong>.</li>
-    <li><strong>What this page cannot prove.</strong> Two people built it, and the NL→IR→SQL
-      engine core is my collaborator's work, not mine. The repository is private, and every
-      figure here is a count of artifacts rather than a benchmark result — so nothing on this
-      page is independently verifiable from a link.</li>
-  </ul>
+  <div class="spread">
+    <div>
+      <ul>
+        <li><strong>20 gold-case scenarios × 5 pipeline stages</strong> in version control,
+          written before the features they cover.</li>
+        <li>A <strong>PostgreSQL</strong>-backed FastAPI service with a contracts endpoint that
+          enforces data-quality rules as executable tests.</li>
+        <li>In development since <strong>March 2026</strong>.</li>
+      </ul>
+    </div>
+    <aside class="side">
+      <span class="lbl">What this page cannot prove</span>
+      <p>Two people built it, and the NL→IR→SQL engine core is my collaborator's work, not
+      mine.</p>
+      <p>The repository is private, and every figure here is a count of artifacts rather than a
+      benchmark result — so nothing on this page is independently verifiable from a link.</p>
+    </aside>
+  </div>
 </section>
 
 <section class="thoughts">
