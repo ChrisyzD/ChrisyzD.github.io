@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMG biofeedback training system · Yizhe Dai</title>
+<meta name="description" content="A real-time EMG biofeedback system for neurorehabilitation — muscle activity to cursor, with the optimizer hand-ported out of Python — plus the MATLAB muscle-synergy pipeline behind it.">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="canonical" href="https://chrisyzd.github.io/work/emg-biofeedback/">
+</head>
+<body>
+
+<nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
+
+<h1>EMG biofeedback training system</h1>
+<p class="lead">A real-time system that turns a patient's own muscle activity into a cursor in a
+reaching game, plus the muscle-synergy analysis pipeline behind it. Both are used in the lab's
+clinical experiments.</p>
+<p class="meta">October 2024 – April 2026 · Research assistant (part-time), NeuRRo Lab,
+University of Michigan · MATLAB, Python/PyTorch, Unity, C#</p>
+<p class="meta scope"><strong>My scope.</strong> I built the real-time acquisition and control
+loop, the on-device optimizer port, and the MATLAB synergy pipeline. The experiments and the
+clinical questions are the lab's; nothing participant-level appears on this page.</p>
+
+<section>
+  <h2>What &amp; why</h2>
+  <p>Biofeedback rests on one move: make the muscle itself the controller. Activity from the arm
+  drives a cursor, the cursor has to reach a target, and effort that would otherwise be invisible
+  becomes something on screen that either moves or does not.</p>
+  <p>Which turns a clinical idea into a real-time engineering problem. Between electrode and
+  cursor sit band-pass filtering, envelope extraction, EMA smoothing and an MVC calibration, all
+  of which have to happen fast enough that the cursor feels like a limb rather than a video
+  playback — and stable enough that noise does not read as intent.</p>
+</section>
+
+<section>
+  <h2>What I built</h2>
+  <ul>
+    <li><strong>The real-time loop.</strong> Acquisition of up to <strong>16 EMG channels at
+      2 kHz</strong> mapped to on-screen cursor control in both position and velocity modes,
+      with band-pass filtering, envelope extraction, EMA smoothing and MVC calibration to keep
+      noise from reading as movement.</li>
+    <li><strong>An 11-stage experiment protocol</strong> built into the software, so a session
+      runs the same way every time without an operator remembering the order.</li>
+    <li><strong>The optimizer port.</strong> A gradient-descent optimizer with a multi-objective
+      loss — target error, channel balance, regularization — hand-written from
+      <strong>PyTorch into Unity C#</strong>, removing the external dependency so the decoder
+      adapts on-device inside the game loop.</li>
+    <li><strong>The synergy pipeline.</strong> Roughly a thousand lines of MATLAB implementing an
+      NNMF–NNR framework to extract muscle synergies from EMG and track how they co-evolve
+      across gait conditions, with correlation-based alignment holding synergies in
+      correspondence across participants.</li>
+  </ul>
+
+  <figure>
+    <a href="/assets/img/emg-biofeedback.png" target="_blank" rel="noopener">
+    <img src="/assets/img/emg-biofeedback.png" width="1400" height="758"
+         alt="The biofeedback game: a yellow cursor driven by muscle activity sitting inside a grey target, with a reach counter and timer on the left and the live EMG acquisition panel on the right.">
+    </a>
+    <figcaption>What to look at: one frame contains the whole chain — the reach counter and
+      reaching time on the left, the yellow cursor inside the grey target in the middle, and the
+      live signal panel on the right. The system supports up to 16 channels at 2 kHz; this
+      session ran a two-channel differential configuration, which is why most signal slots are
+      empty. <span class="src">No participant is visible and no participant identifiers appear
+      in this frame.</span></figcaption>
+  </figure>
+
+  <figure>
+    <a href="/assets/img/fig-6-reaching-task.svg" target="_blank" rel="noopener">
+    <img src="/assets/img/fig-6-reaching-task.svg" width="800" height="680" loading="lazy"
+         alt="Schematic of the center-out reaching paradigm: a start position at the centre, eight evenly spaced targets on a ring, and one illustrative path from centre to the active target.">
+    </a>
+    <figcaption>What to look at: the task itself. Hold at the centre, reach to one lit target,
+      return — the recorded path on each trial is what gets quantified.
+      <span class="src">Schematic only; no recorded participant data is shown.</span></figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Results &amp; boundary</h2>
+  <ul>
+    <li>Both the biofeedback system and the synergy pipeline are <strong>used in the lab's
+      clinical experiments</strong> — not demos.</li>
+    <li>The synergy pipeline produced between-group statistics and visualizations across
+      <strong>18 participants</strong>, as objective measures for evaluating treatment
+      effect.</li>
+    <li><strong>Nineteen months</strong> on one system, October 2024 to April 2026 — the longest
+      single commitment on my résumé.</li>
+    <li><strong>Boundary:</strong> the software is mine; the study design, the participants and
+      the clinical interpretation are the lab's. I am not reporting findings here, only what I
+      built.</li>
+  </ul>
+</section>
+
+<section class="thoughts">
+  <h2>Further thoughts</h2>
+  <p class="kicker">Working notes — first person, unfinished, and mine to revise. The longest
+    project here, and the one where the gap between “built it” and “know it worked” is
+    widest.</p>
+  <div class="thoughts-body">
+    <p>The decision I am proudest of sounds like the least impressive one: I hand-wrote the
+    optimizer in C# instead of calling it from Python. Not for speed as an end in itself. A
+    biofeedback loop runs while a participant is sitting in front of it, and every external
+    process inside that loop is one more thing that can stall at the worst possible moment.
+    Taking the dependency out meant the decoder could adapt on-device, inside the game loop, with
+    nothing to wait on. The “why” there tells you more about how I make decisions than the port
+    does — and porting an optimizer by hand is only possible if you understand what its loss is
+    actually computing, which is the part I would want to be asked about.</p>
+
+    <p>What I cannot give you is the number that would prove any of it. I do not have latency or
+    frame-rate figures for the ported decoder, before or after. It held up in sessions, and “it
+    held up” is not a measurement. For a real-time system that is exactly the wrong way round:
+    the timing harness should have been the first commit. It is the clearest example I have of
+    building the ruler for other people's work and forgetting to build one for my own.</p>
+
+    <p>The harder problem was in the analysis, not the game. Pulling synergies out of one
+    participant is a factorization; making them comparable across eighteen is the actual work,
+    because the factorization returns its components in no fixed order or orientation. I used
+    correlation-based alignment to hold them in correspondence, and I still think that step
+    deserves more scrutiny than it got — it quietly decides what “the same synergy” means before
+    any statistics are run on top of it. And the honest end of nineteen months is that I shipped
+    instrumentation: I built the measure, and I do not know whether the measure ever changed
+    anyone's care.</p>
+  </div>
+</section>
+
+<hr>
+
+<ul class="pager">
+  <li><a href="/work/cardiac-rehab/">Previous project: Cardiac rehabilitation wearable
+    study →</a></li>
+  <li><a href="/work/metaflow/">MetaFlow — metadata-centric NL-to-SQL →</a></li>
+</ul>
+
+<footer class="site">
+  <p>Yizhe Dai · Boston, MA ·
+    <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/">Home</a></p>
+  <p>Last updated 25 August 2026.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardiac rehabilitation wearable study · Yizhe Dai</title>
+<meta name="description" content="Can wearable step data say when a cardiac rehab patient has actually stopped improving? The data work behind a U-M SURE poster — cleaning rules, temporal features, plateau detection — and what the definition choice does to the answer.">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="canonical" href="https://chrisyzd.github.io/work/cardiac-rehab/">
+</head>
+<body>
+
+<nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
+
+<h1>Cardiac rehabilitation wearable study</h1>
+<p class="lead">Cardiac rehab is prescribed as a fixed 36-session protocol, the same length for
+everyone. The question was whether wearable step data can say when a given patient has actually
+stopped improving.</p>
+<p class="meta">April 2025 – January 2026 · Research assistant (SURE summer program, then
+continued on the study), University of Michigan · Python</p>
+<p class="meta scope"><strong>My scope.</strong> The data and feature side: assembling the
+analysis dataset, setting the cleaning rules, engineering the temporal features, and the
+phenotyping and plateau detection built on them. This is supervised research with named
+co-authors — the poster below is the group's work and I am one author on it, not its
+owner.</p>
+
+<section>
+  <h2>What &amp; why</h2>
+  <p>Thirty-six sessions is a protocol, not a measurement. Some patients plateau well before it
+  ends and are occupying a slot they no longer benefit from; others are still improving when
+  they are discharged. Wearables record what actually happened between sessions, every day, for
+  months — which makes “has this person stopped improving?” an empirical question for the first
+  time.</p>
+  <p>Most of the work was not modelling. It was getting from raw device exports to a per-patient
+  daily timeline anyone could reason about, and then deciding — explicitly, in writing — what
+  “stopped improving” would be allowed to mean.</p>
+</section>
+
+<section>
+  <h2>What I built</h2>
+  <p>Four stages, each one a set of decisions rather than a library call:</p>
+
+  <dl class="stack">
+    <div><dt>Cleaning</dt><dd>DateTime standardization · type unification · missing-value
+      marking · exercise-time capping (&gt; 300 min) · step-count anomaly detection. Reconciled
+      <strong>400K+</strong> raw step records from multiple sources onto one per-patient daily
+      timeline.</dd></div>
+    <div><dt>Features</dt><dd>2-week / 4-week moving averages · week-over-week change rate ·
+      trend slope · coefficient of variation · stable-week count</dd></div>
+    <div><dt>Plateau detection</dt><dd>v1: change rate &lt; 20%, CV &lt; 0.30, duration
+      ≥ 3 weeks → v2: minimum wait 8 weeks, moving-average slope &lt; 200, change rate
+      &lt; 25%, multi-metric. Later extended with a Kalman-filter approach.</dd></div>
+    <div><dt>Phenotyping</dt><dd>K-means (k = 2) over the feature set: higher-baseline /
+      stable-progression / later-plateau <strong>vs</strong> lower-baseline / slower-progress /
+      earlier-plateau</dd></div>
+  </dl>
+
+  <p>The jump from v1 to v2 is the part I would point at, because you can read the diff. v1 was
+  willing to call a plateau after three weeks of low change and low variability; adding a
+  minimum wait of eight weeks and a slope condition is, structurally, an admission that v1 could
+  call one too early. Measure, find the ruler wrong, fix the ruler — then keep both versions
+  visible so the change is auditable.</p>
+
+  <figure>
+    <a href="/assets/img/sure-plateau-definitions.png" target="_blank" rel="noopener">
+    <img src="/assets/img/sure-plateau-definitions.png" width="1200" height="1115"
+         alt="Box plots of plateau start day under three different definitions of stable recovery, for the same patient cohort.">
+    </a>
+    <figcaption>What to look at: same patients, three definitions of “stable recovery” — three
+      visibly different medians and three different spreads. Choosing the definition <em>is</em>
+      the analysis.
+      <span class="src">From: Dai, Liu, Lavieri, Moosavi &amp; Golbus,
+      <em>Patient-Tailored Cardiac Rehab Discharge Policies via Operations Research
+      Methods</em>, U-M SURE poster, 2025.</span></figcaption>
+  </figure>
+
+  <figure>
+    <a href="/assets/img/sure-step-variability.png" target="_blank" rel="noopener">
+    <img src="/assets/img/sure-step-variability.png" width="1200" height="1190" loading="lazy"
+         alt="Box plots of daily step counts across percentiles, split by the dataset's recorded gender field.">
+    </a>
+    <figcaption>What to look at: the boxes widen sharply from left to right. At the top of each
+      patient's own step distribution, patients differ from one another far more than they do at
+      the median. A fixed 36-session protocol treats all of them the same.
+      <span class="src">Same poster. Presented at the U-M SURE Symposium, 2025.</span></figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Results &amp; boundary</h2>
+  <ul>
+    <li><strong>400K+</strong> raw step records reconciled onto one per-patient daily
+      timeline.</li>
+    <li>Cleaning and missing-value rules cut <strong>247 enrolled patients</strong> to a
+      <strong>191-patient analysis cohort</strong> — the exclusion rules are part of the result,
+      not a footnote to it.</li>
+    <li><strong>~68%</strong> of that cohort had suboptimal discharge timing against the standard
+      36-session model.</li>
+    <li><strong>Boundary:</strong> a supervised research project, presented as a co-authored
+      poster. No patient-level data appears on this page; both figures are cohort-level charts
+      from the published poster.</li>
+  </ul>
+</section>
+
+<section class="thoughts">
+  <h2>Further thoughts</h2>
+  <p class="kicker">Working notes — first person, unfinished, and mine to revise. This is the
+    project where I am least sure the finding would survive a determined attempt to break
+    it.</p>
+  <div class="thoughts-body">
+    <p>The plateau figure is the strongest thing on this page and the most uncomfortable. If
+    three defensible definitions of “stable recovery” move the median plateau day by roughly a
+    factor of two, then any headline number I report inherits whichever definition I picked. The
+    correct response is a sensitivity analysis — sweep the thresholds, report a range instead of
+    a point — and I have not run one. So “~68% had suboptimal discharge timing” should be read as
+    one defensible reading of the data, not as a measurement of the world.</p>
+
+    <p>There is a second circularity underneath the cleaning, and it took me a while to see it.
+    Wearable step series are full of gaps, and the standard repairs — forward fill, moving
+    averages — flatten a series. A flattened series is exactly what a plateau detector is looking
+    for. Which means the imputation strategy can manufacture the finding I was searching for, and
+    v1, which asked only for low change and low variability over three weeks, was the version
+    most exposed to it. The minimum wait and the slope condition in v2 are a partial answer at
+    best. The real answer is to re-run the detector on complete-case patients only and see
+    whether the number survives; that is the experiment I owe this project.</p>
+
+    <p>Two smaller debts. I write “~68%” rather than the precise figure I originally computed,
+    because the exact numerator never came back out of the original notebook and the plausible
+    candidates round to either side of 68 — a number I cannot reconstruct is a number I should
+    round. And “suboptimal” is still doing too much work: it merges patients discharged too early
+    with patients discharged too late. Those are two different clinical problems with two
+    different fixes, and reporting them as one percentage is a convenience of mine, not a
+    property of the data.</p>
+  </div>
+</section>
+
+<hr>
+
+<ul class="pager">
+  <li><a href="/work/emg-biofeedback/">Next project: EMG biofeedback training system →</a></li>
+  <li><a href="/work/metaflow/">MetaFlow — the same argument about definitions, in a data
+    system →</a></li>
+</ul>
+
+<footer class="site">
+  <p>Yizhe Dai · Boston, MA ·
+    <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/">Home</a></p>
+  <p>Last updated 25 August 2026.</p>
+</footer>
+
+</body>
+</html>

@@ -94,6 +94,14 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 .item { padding-top: 24px; }
 .item + .item { margin-top: 40px; border-top: 1px solid var(--rule); }
 
+/* A ruled list rather than a stack of essays: used for the résumé-skeleton
+   blocks on the home page (experience, education), which have to be present
+   and enumerable without turning the index back into one long scroll. */
+.compact .item { padding-top: 16px; }
+.compact .item + .item { margin-top: 16px; }
+.compact h3 { font-size: 17px; }
+.compact .item > p:last-child { margin-bottom: 0; }
+
 /* "title ——— dates": two ends on desktop, stacked on mobile.
    Deliberately not a <table>: tables are the classic 375px failure mode. */
 .row { display: flex; flex-direction: column; margin-bottom: 8px; }
@@ -106,6 +114,64 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 .contact { list-style: none; padding: 0; margin: 16px 0 0; }
 .contact li { margin: 0; }
 .contact a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* ---------- work cards (home index) ---------- */
+/* The home page is an index, not the work itself. Each card carries one
+   sentence and that project's key figure, and links to its own page.
+   No shadow, no gradient, no hover lift: the only state change is the border
+   and the title colour. */
+
+.cards { display: grid; gap: 24px; margin: 0; padding: 0; list-style: none; }
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;       /* so the arrow lines up across a row */
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 16px;
+}
+.card:hover { border-color: var(--link); }
+.card:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
+
+/* contain, not cover: these are charts and schematics, and cropping a box plot
+   to fill a box turns evidence into decoration */
+.card .thumb {
+  display: block;
+  width: 100%;
+  height: auto;                 /* let aspect-ratio win over the intrinsic height attr */
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+.card h3 { margin-bottom: 4px; }
+.card h3 a { color: var(--text); text-decoration: none; }
+/* the whole card is the click target; the title is the one link that names it */
+.card h3 a::after { content: ""; position: absolute; inset: 0; }
+.card h3 a:focus-visible { outline: none; }
+.card:hover h3 a { color: var(--link); text-decoration: underline; }
+.card p { font-size: 16px; margin-bottom: 0; }
+.card .role { margin-bottom: 8px; }
+.card .go { margin-top: auto; padding-top: 12px; color: var(--link); font-size: 15px; }
+
+/* ---------- deep pages ---------- */
+
+/* Team boundary and my own scope, stated once at the top of every project
+   page instead of buried in a footnote. */
+.scope { border-left: 2px solid var(--rule); padding-left: 12px; margin-bottom: 0; }
+
+/* Further thoughts: marginalia, marked as such. */
+.thoughts-body { border-left: 2px solid var(--rule); padding-left: 16px; }
+.thoughts-body p:last-child { margin-bottom: 0; }
+.kicker { font-size: 14px; color: var(--meta); margin: 0 0 16px; }
+
+.pager { list-style: none; padding: 0; margin: 0 0 24px; font-size: 15px; }
+.pager li { margin-bottom: 4px; }
 
 /* ---------- figures ---------- */
 
@@ -150,6 +216,9 @@ footer.site a { color: var(--link); }
   .row { flex-direction: row; justify-content: space-between; align-items: baseline; gap: 16px; }
   .contact { display: flex; gap: 24px; }
   .contact a { min-height: 0; }
+  .cards { grid-template-columns: 1fr 1fr; }
+  .pager { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  .pager li { margin-bottom: 0; }
 }
 
 /* ---------- motion ---------- */
@@ -167,6 +236,10 @@ footer.site a { color: var(--link); }
   a { color: #000; text-decoration: none; }
   a[href^="http"]::after,
   a[href^="/"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
-  figure { break-inside: avoid; }
+  figure, .card { break-inside: avoid; }
+  .card { border: 0; padding: 0; }
+  .card .thumb, .card .go { display: none; }   /* on paper the card is just an entry */
+  .cards { gap: 16px; }
+  .thoughts-body, .scope { border-left: 0; padding-left: 0; }
   section { margin-bottom: 24px; }
 }

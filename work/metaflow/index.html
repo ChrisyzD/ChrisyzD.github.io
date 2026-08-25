@@ -4,43 +4,35 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MetaFlow — metadata-centric NL-to-SQL · Yizhe Dai</title>
-<meta name="description" content="MetaFlow resolves natural-language questions into SQL through an inspectable relational IR. What it is, who did what, how I check it, and an interactive design prototype.">
+<meta name="description" content="MetaFlow resolves natural-language questions into SQL through an inspectable relational IR. What it is, what I built, where the boundary of my work is, and what I still think is unresolved about it.">
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="canonical" href="https://chrisyzd.github.io/work/metaflow/">
 </head>
 <body>
 
-<nav class="top"><a href="/">← Yizhe Dai</a></nav>
+<nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
 
 <h1>MetaFlow</h1>
-<p class="lead">A metadata-centric natural-language-to-SQL system: questions are resolved
+<p class="lead">A metadata-centric natural-language-to-SQL system: a question is resolved
 through an inspectable relational intermediate representation instead of generating SQL
 directly, so an answer arrives with its source, its definition and its verification
 attached.</p>
 <p class="meta">March 2026 – present · Python, FastAPI, PostgreSQL, React, TypeScript</p>
+<p class="meta scope"><strong>My scope.</strong> Two-person project. I own the metadata layer,
+the gold-case regression suite, the contracts endpoint and the React/TypeScript studio front
+end; my collaborator owns the NL→IR→SQL engine core. I am not naming them here without their
+say-so.</p>
 
 <section>
-  <h2>Who did what</h2>
-  <p>MetaFlow is a <strong>two-person project</strong>. Putting the boundary second on this
-  page rather than in a footnote is deliberate — you should not have to hunt for it.</p>
-  <ul>
-    <li><strong>I own</strong> the metadata layer, the gold-case regression suite, the
-      contracts endpoint, and the React/TypeScript studio front end.</li>
-    <li><strong>My collaborator owns</strong> the NL→IR→SQL engine core.</li>
-  </ul>
-  <p class="note">I am not naming my collaborator here without their say-so.</p>
-</section>
-
-<section>
-  <h2>The idea</h2>
-  <p>A question first lands in a relational intermediate representation — a structured object
-  that states what the system intends to compute — and SQL is compiled from that. The reason
+  <h2>What &amp; why</h2>
+  <p>Most natural-language-to-SQL systems generate a query and run it. When the number that
+  comes back is wrong, nothing tells you where it went wrong: you read the SQL top to bottom
+  and guess which clause betrayed you.</p>
+  <p>So a question here lands first in a relational intermediate representation — a structured
+  object stating what the system intends to compute — and SQL is compiled from that. The reason
   is not elegance. It is that an IR is something a person can read <em>before</em> anything
-  runs, and something a machine can check.</p>
-  <p>When SQL is generated directly, a wrong answer is a debugging problem: you read the query
-  top to bottom and guess which clause betrayed you. When there is an IR, a wrong answer has an
-  address — this field bound to the wrong measure, that filter dropped. Wrongness stops being a
-  mood and becomes a location.</p>
+  runs, and something a machine can check. A wrong answer stops being a mood and becomes an
+  address: this field bound to the wrong measure, that filter dropped.</p>
   <figure>
     <a href="/assets/img/fig-1-ir-path.svg" target="_blank" rel="noopener">
     <img src="/assets/img/fig-1-ir-path.svg" width="800" height="540"
@@ -52,14 +44,18 @@ attached.</p>
 </section>
 
 <section>
-  <h2>How I check it</h2>
-  <p>Before we built features, we pinned <strong>20 gold-case scenarios</strong>. Each is
-  pinned across all <strong>five pipeline stages</strong>, with the expected output at every
-  stage, kept in version control. When a schema moves or a definition changes, I do not have to
-  ask whether something broke — I re-run the suite and it names the stage and the case.</p>
-  <p>Data quality works the same way. Contracts are written as executable expectations, and the
-  FastAPI backend exposes a contracts endpoint that enforces them, so a rule I wrote down is a
-  rule that runs. Contract as test.</p>
+  <h2>What I built</h2>
+
+  <p><strong>The ruler, before the features.</strong> We pinned <strong>20 gold-case
+  scenarios</strong> before building. Each is pinned across all <strong>five pipeline
+  stages</strong>, with the expected output at every stage, kept in version control. When a
+  schema moves or a definition changes, I do not have to ask whether something broke — I re-run
+  the suite and it names the stage and the case.</p>
+
+  <p><strong>Contracts that run.</strong> Data-quality rules are written as executable
+  expectations, and the FastAPI backend exposes a contracts endpoint that enforces them, so a
+  rule I wrote down is a rule that runs. Contract as test.</p>
+
   <figure>
     <a href="/assets/img/fig-2-goldcase-grid.svg" target="_blank" rel="noopener">
     <img src="/assets/img/fig-2-goldcase-grid.svg" width="800" height="420" loading="lazy"
@@ -68,20 +64,17 @@ attached.</p>
     <figcaption>What to look at: the marked cell — a failure reports which stage, on which
       case, not just that something is red.</figcaption>
   </figure>
-</section>
 
-<section>
-  <h2>Prototype</h2>
-  <p>These are screens from the design prototype for the studio, annotated in English.
-  <strong>Design prototype — not the running system.</strong> They show the ideas the system is
-  built around: answers are bounded by a certified capability list, every answer carries
-  provenance, anything out of scope is refused explicitly rather than guessed, and the fix
-  behind a refusal goes through lineage analysis, a dry-run and an explicit owner approval
-  before it ships.</p>
+  <p><strong>The studio.</strong> The screens below are from the design prototype for the
+  front end, annotated in English. <strong>Design prototype — not the running system.</strong>
+  They show the four ideas the system is organised around: answers are bounded by a certified
+  capability list, every answer carries provenance, anything out of scope is refused explicitly
+  rather than guessed, and the fix behind a refusal goes through lineage analysis, a dry run
+  and an explicit owner approval before it ships.</p>
 
   <figure>
     <a href="/assets/img/metaflow-provenance.png" target="_blank" rel="noopener">
-    <img src="/assets/img/metaflow-provenance.png" width="1200" height="653"
+    <img src="/assets/img/metaflow-provenance.png" width="1200" height="653" loading="lazy"
          alt="The provenance envelope panel from the MetaFlow prototype, with each field glossed in English: source asset, metric version, definition binding, certification status and checksum.">
     </a>
     <figcaption>What to look at: this card is attached to every answer. It names the certified
@@ -105,11 +98,22 @@ attached.</p>
 
   <figure>
     <a href="/assets/img/metaflow-capabilities.png" target="_blank" rel="noopener">
-    <img src="/assets/img/metaflow-capabilities.png" width="1400" height="1341" loading="lazy"
-         alt="MetaFlow prototype: a certified capability catalog on the left, and a question that hits a certified definition returning a monthly revenue table.">
+    <picture>
+      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-capabilities-mobile.png">
+      <img src="/assets/img/metaflow-capabilities.png" width="1400" height="1341" loading="lazy"
+           alt="MetaFlow prototype capability catalog, marked 1. On wider screens the same
+           figure also shows a box of metrics that failed certification, marked 2, and a
+           certified answer naming its metric, currency and grain, marked 3.">
+    </picture>
     </a>
-    <figcaption>What to look at: the catalog on the left is the whole answerable surface, and
-      the metrics that failed certification are listed too — visible, and still unanswerable.
+    <figcaption><span class="only-mobile">What to look at: this crop shows the certified
+      capability catalog — the whole answerable surface, marked 1. The rest of this figure
+      (marked 2: metrics that failed certification and stay unanswerable; marked 3: a certified
+      answer) only appears at wider widths; tap the image above to open it at full size.</span>
+      <span class="only-desktop">What to look at: the catalog on the left, marked 1, is the
+      whole answerable surface. A question that lands inside it comes back naming its metric,
+      currency and grain, marked 3; the metrics that failed certification sit in the box at the
+      bottom left and stay unanswerable, marked 2.</span>
       <span class="src">UI is in Chinese; data is the public <code>jaffle_shop</code>
       testkit.</span></figcaption>
   </figure>
@@ -118,7 +122,7 @@ attached.</p>
     <a href="/assets/img/metaflow-de-console.png" target="_blank" rel="noopener">
     <picture>
       <source media="(max-width: 899px)" srcset="/assets/img/metaflow-de-console-workflow-mobile.png">
-      <img src="/assets/img/metaflow-de-console-workflow.png" width="1142" height="1519"
+      <img src="/assets/img/metaflow-de-console-workflow.png" width="1142" height="1519" loading="lazy"
            alt="The DE engineering console for REQ-0031: DRD and DDD confirmed, a lineage
            impact analysis marked 1 flagging one downstream capability for recertification, a
            patch, a transactional dry-run marked 2, five passing validation checks, and a
@@ -164,21 +168,62 @@ attached.</p>
       capability, and notifies the business user whose question started the ticket.</li>
   </ol>
 
-  <p><a href="/demos/metaflow-prototype.html">Open the interactive prototype ↗</a><br>
-    <span class="note">UI is in Chinese; data is the public <code>jaffle_shop</code>
-    testkit.</span></p>
+  <p><a href="/demos/metaflow-prototype-en.html">Open the interactive prototype ↗</a>
+    <span class="note">(English) · <a href="/demos/metaflow-prototype.html">original zh</a> ·
+    data is the public <code>jaffle_shop</code> testkit.</span></p>
 </section>
 
 <section>
-  <h2>Stack &amp; status</h2>
-  <p>Python · FastAPI · PostgreSQL · React · TypeScript. In development since March 2026;
-  the repository is private.</p>
+  <h2>Results &amp; boundary</h2>
+  <ul>
+    <li><strong>20 gold-case scenarios × 5 pipeline stages</strong> in version control, written
+      before the features they cover.</li>
+    <li>A <strong>PostgreSQL</strong>-backed FastAPI service with a contracts endpoint that
+      enforces data-quality rules as executable tests.</li>
+    <li>In development since <strong>March 2026</strong>. The repository is private, so nothing
+      on this page is independently verifiable from a link — the screens above are a design
+      prototype and the numbers are counts of artefacts, not benchmark results.</li>
+    <li><strong>Team boundary:</strong> two people. The NL→IR→SQL engine core is my
+      collaborator's work, not mine.</li>
+  </ul>
+</section>
+
+<section class="thoughts">
+  <h2>Further thoughts</h2>
+  <p class="kicker">Working notes — first person, unfinished, and mine to revise. They are here
+    because the argument for a system like this is only as good as its author's willingness to
+    say where it is thin.</p>
+  <div class="thoughts-body">
+    <p>The number missing from this page is the engine's pass rate. It would be the most
+    persuasive line here and I am not going to write it, because I have not run that evaluation
+    end to end. The suite I built reports which stage broke on which case; it does not currently
+    produce a headline score I would defend under questioning. I would rather this page be short
+    a number than carry one I reverse-engineered from a feeling.</p>
+
+    <p>The gold cases were written by the same person who built the metadata layer. That is
+    convenient, and it means the suite encodes my blind spots along with my intent. Twenty
+    scenarios pinned across five stages catch regressions against what I already thought to
+    check; they say nothing about the case I never imagined. So the honest description of the
+    ruler is that it grows only when something fails in a way somebody noticed — which is an
+    argument for getting it in front of people who did not build it, not an argument for pinning
+    more cases myself.</p>
+
+    <p>I keep the prototype label on those screens for a reason: a good mock is more complete
+    than the system behind it, and on a personal site nobody is checking. The same caution
+    applies to the impact analysis. What it flags is a whole downstream capability — that is the
+    coarse, table-level version of lineage, and it is the version that is tractable. Lineage that
+    tells you <em>which column</em> is affected is a much harder thing to build than the diagram
+    admits, and I would rather say that here than be asked it in a room.</p>
+  </div>
 </section>
 
 <hr>
 
-<p><a href="/writing/closed-loop/">Read the essay: The loop — notes on making an NL-to-SQL
-  answer checkable →</a></p>
+<ul class="pager">
+  <li><a href="/writing/closed-loop/">Essay: The loop — notes on making an NL-to-SQL answer
+    checkable →</a></li>
+  <li><a href="/work/data-flywheel/">Next project: LLM data flywheel →</a></li>
+</ul>
 
 <footer class="site">
   <p>Yizhe Dai · Boston, MA ·

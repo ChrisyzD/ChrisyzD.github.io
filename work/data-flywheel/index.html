@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM data flywheel for in-vehicle voice assistants · Yizhe Dai</title>
+<meta name="description" content="Undergraduate thesis: a user simulator, an LLM judge and targeted regeneration for an in-vehicle voice assistant. What I built, what it moved, and what the judge cannot tell me.">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="canonical" href="https://chrisyzd.github.io/work/data-flywheel/">
+</head>
+<body>
+
+<nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
+
+<h1>LLM data flywheel</h1>
+<p class="lead">Training data for a multi-model in-vehicle voice assistant. Instead of
+generating more data everywhere, measure first — then regenerate only where the failures
+are.</p>
+<p class="meta">June – August 2026 · Undergraduate thesis, UM–SJTU Joint Institute · Python,
+LLM agents, retrieval</p>
+<p class="meta scope"><strong>My scope.</strong> I owned the data pillar: the user simulator,
+the rollout and judging harness, the deterministic governance layer, and the targeted
+regeneration. The figures below are end-to-end system numbers; the pillar I owned is one input
+into them. Done part-time, alongside the Lark internship over the same summer.</p>
+
+<section>
+  <h2>What &amp; why</h2>
+  <p>When an assistant is weak, the reflex is to generate more training data. That scales cost
+  linearly and quality barely at all, because most of the new data lands where the model was
+  already fine.</p>
+  <p>The alternative is to build the ruler first and let it aim the spending. Simulate users,
+  roll the assistant out against them, score the rollouts, and then read the error breakdown
+  rather than the score — because the breakdown is what tells you which functions to regenerate
+  against. The score is a summary; the breakdown is a work order.</p>
+</section>
+
+<section>
+  <h2>What I built</h2>
+  <ul>
+    <li><strong>A user simulator</strong> with <strong>41 persona archetypes</strong> and
+      explicit state control, so a conversation has a goal and a memory rather than drifting.</li>
+    <li><strong>Retrieval-grounded rollouts</strong>: candidate tools retrieved at
+      <strong>top-K = 20</strong> and grounded into the conversation, so the assistant is
+      answering against a real tool surface instead of an imagined one.</li>
+    <li><strong>An LLM-judge harness</strong> running on a GPU cluster, plus a deterministic
+      governance layer — hard rules that pass or fail without a model's opinion — in front of
+      it.</li>
+    <li><strong>A four-quadrant corpus</strong>: positive and negative examples crossed with
+      single-turn and multi-turn, so the fine-tune sees refusals and recoveries, not only
+      successes.</li>
+    <li><strong>Targeted regeneration</strong> against the <strong>11 highest-error
+      functions</strong> the judge's breakdown exposed, rather than uniform generation.</li>
+  </ul>
+
+  <figure>
+    <a href="/assets/img/fig-5-data-flywheel.svg" target="_blank" rel="noopener">
+    <img src="/assets/img/fig-5-data-flywheel.svg" width="800" height="776"
+         alt="Diagram of a six-step training-data flywheel: simulate, roll out, judge, locate the eleven highest-error functions, regenerate, re-evaluate.">
+    </a>
+    <figcaption>What to look at: the step that does the work is <em>locate</em>. The judge's
+      value was not the score — it was the error breakdown that made eleven functions visible,
+      so regeneration could be aimed instead of sprayed.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Results &amp; boundary</h2>
+  <ul>
+    <li><strong>17,200</strong> verified (reward = 1) fine-tuning dialogues came out of the
+      pipeline.</li>
+    <li>Fine-tuning on that corpus raised judge-adjusted answer acceptance
+      <strong>72.8% → 82.7%</strong>.</li>
+    <li>The strict multi-turn all-correct rate went <strong>39.9% → 60.0%</strong>.</li>
+    <li>No-tool false positives — the assistant answering when it should have called a tool —
+      fell <strong>4,424 → 1,410</strong>.</li>
+    <li><strong>Boundary:</strong> this is an undergraduate thesis, not production. Every figure
+      above is scored by an LLM judge, which is exactly the thing I am least comfortable with;
+      see below.</li>
+  </ul>
+</section>
+
+<section class="thoughts">
+  <h2>Further thoughts</h2>
+  <p class="kicker">Working notes — first person, unfinished, and mine to revise. This project
+    produced the best numbers on the site, which is precisely why it needs the most caveats.</p>
+  <div class="thoughts-body">
+    <p>The uncomfortable part is that the judge grades work the judge helped produce.
+    <code>reward = 1</code> is the judge's verdict, the corpus was filtered on that verdict, and
+    the improvement afterwards was scored by a judge rather than by a person. Whether that
+    scoring was independent enough of the filtering is exactly the question I cannot answer from
+    memory — so some fraction of 72.8 → 82.7 is the assistant getting better, some fraction may
+    be the assistant learning what a judge likes, and I cannot give you the split. The check that
+    would settle it is a held-out slice scored by hand, or scored by a judge from a different
+    model family; I cannot point you at one, and a check I cannot point at is not a check I
+    should lean on. Until then the number is a strong internal signal and a weak external claim,
+    and I would rather say so than let it be read as the second thing.</p>
+
+    <p>17,200 is a numerator I can quote and a denominator I cannot. I know how many verified
+    dialogues came out; I cannot put the generated-and-discarded count beside it here. That yield
+    is the interesting quantity — it is what distinguishes a simulator producing usable
+    conversations from a governance layer doing all the filtering downstream of a noisy one. It
+    is the reason I keep this figure as a count of what exists rather than a rate of anything,
+    and it is the first number I would put on the wall if I picked this up again.</p>
+
+    <p>“I owned the data pillar” is a convenient phrase and it hides a seam. The four numbers
+    above belong to the whole system; the pillar is one input into them. When I talk about this
+    project I try to keep that order — here is what the system did, here is the part of it that
+    was mine — rather than letting the two blur into each other, because the blurring is
+    effortless and one-directional and always flatters me.</p>
+  </div>
+</section>
+
+<hr>
+
+<ul class="pager">
+  <li><a href="/writing/closed-loop/">Essay: The loop — the same cycle, written out →</a></li>
+  <li><a href="/work/cardiac-rehab/">Next project: Cardiac rehabilitation wearable study →</a></li>
+</ul>
+
+<footer class="site">
+  <p>Yizhe Dai · Boston, MA ·
+    <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/">Home</a></p>
+  <p>Last updated 25 August 2026.</p>
+</footer>
+
+</body>
+</html>
