@@ -112,6 +112,16 @@ figure img, figure svg { display: block; width: 100%; height: auto; border: 1px 
 figcaption { font-size: 13px; line-height: 1.55; color: var(--meta); margin-top: 8px; }
 figcaption .src { display: block; margin-top: 4px; }
 
+/* Matches the (max-width: 899px) <source> breakpoint used for the mobile
+   capabilities crop: the two crops show different content, so the caption
+   describing them has to switch at the same width, not the general 44rem
+   type breakpoint below. */
+.only-mobile { display: none; }
+@media (max-width: 899px) {
+  .only-mobile { display: inline; }
+  .only-desktop { display: none; }
+}
+
 /* ---------- small table (SURE pipeline) ---------- */
 
 .stack { border-top: 1px solid var(--rule); margin: 16px 0; }
