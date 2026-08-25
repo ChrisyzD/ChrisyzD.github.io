@@ -24,30 +24,38 @@ clinical questions are the lab's; nothing participant-level appears on this page
 
 <figure class="wide clip">
   <video src="/assets/video/emg-task-loop.mp4"
-         poster="/assets/img/emg-biofeedback.png"
-         width="1280" height="694"
+         poster="/assets/img/emg-task-poster.png"
+         width="1280" height="686"
          autoplay muted loop playsinline controls preload="metadata" data-clip
-         aria-label="Eight seconds of the biofeedback system running: a yellow cursor driven by
-         muscle activity travels across the canvas to the target on the left, the target turns
-         green as the cursor arrives, the reach counter goes from 0 to 1, and the red EMG trace
-         in the Delsys panel on the right rises off its baseline through the reach and goes flat
-         again afterwards."></video>
+         aria-label="Eight seconds of the biofeedback system running, cut to the three regions of
+         the screen that carry it: the software's reach counter at the top left, the Delsys EMG
+         panel beside it zoomed to the bottom of its nought-to-one axis, and the reaching canvas
+         across the bottom. A yellow cursor driven by muscle activity leaves the centre target
+         and travels left; the left target turns green as the cursor lands on it; the counter
+         goes from 0 to 1; and the red EMG trace rises off its baseline through the reach and
+         falls flat again afterwards."></video>
   <figcaption>
+    <p class="spec">8 s · silent · loops</p>
     <p>Eight seconds of the loop actually running: the yellow dot is a cursor driven by muscle
       activity and nothing else — no mouse, no keyboard — and the reach counter at the top left
       is the entire score.</p>
-    <p><span class="look">Watch two places at once:</span> the target on the left turns green as
-      the cursor arrives and the counter ticks 0 → 1, while on the right the red trace in the
-      Delsys panel rises off its baseline through the reach and goes flat again once the target
-      is hit.</p>
-    <p>That rise is small against the panel's 0–1 axis because what is plotted is the smoothed
-      envelope the controller actually reads rather than raw EMG — and the distance between
-      those two things is the band-pass filtering, envelope extraction, EMA smoothing and MVC
-      calibration described below, which is what makes the cursor move like a limb instead of
-      twitching at noise.</p>
-    <p class="bound">This session ran a two-channel differential configuration rather than the
-      sixteen channels the system supports, which is why the panel is plotting two traces. No
-      participant is visible and no participant identifiers appear in any frame.</p>
+    <p><span class="look">Watch two places at once:</span> the target on the left turns green the
+      moment the cursor lands on it and the counter ticks <strong>0 → 1</strong>, while beside
+      the counter the red trace in the Delsys panel rises off its baseline through the reach and
+      goes flat again once the target is hit.</p>
+    <p>What is plotted there is the smoothed envelope the controller actually reads rather than
+      raw EMG, and it peaks at roughly <strong>0.07</strong> of the panel's 0–1 axis — so the
+      panel is shown zoomed to the bottom of that axis, with its own 0.1 and 0.2 gridlines left
+      in to say by how much. The distance between that envelope and the raw signal is the
+      band-pass filtering, envelope extraction, EMA smoothing and MVC calibration described
+      below, which is what makes the cursor move like a limb instead of twitching at noise.</p>
+    <p class="bound">Three regions of one unbroken eight-second stretch of the recording, re-cut
+      so each is legible at this size — same frames, same clock, nothing retouched and nothing
+      assembled across time. The rest of that screen was a Windows desktop, six operator buttons
+      and a stray close box, and none of it was evidence. The session ran a two-channel
+      differential configuration rather than the sixteen channels the system supports, which is
+      why the panel plots two traces. No participant is visible and no participant identifiers
+      appear in any frame.</p>
   </figcaption>
 </figure>
 

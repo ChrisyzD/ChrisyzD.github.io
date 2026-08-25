@@ -9,6 +9,11 @@
       carries the point anyway.
    2. Off-screen clips pause. A 25-second loop running three thousand pixels
       above the reader spends a phone battery for nobody.
+   3. One clip is a dense 1280px interface. Below 900px nothing inside it resolves,
+      so below 900px it does not start itself either: the reader gets the poster —
+      the last act, all provenance checks green — and taps to play. Marked in the
+      HTML with data-tap, because that is a fact about that clip's contents, not a
+      rule about videos.
 
    A reader who pauses a clip by hand stays paused: scrolling past and back does
    not overrule them. That is the whole reason for the byUs / userPaused pair. */
@@ -19,9 +24,11 @@
 
   var reduced = window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var narrow  = window.matchMedia &&
+                window.matchMedia('(max-width: 899px)').matches;
 
   Array.prototype.forEach.call(clips, function (video) {
-    if (reduced) {
+    if (reduced || (narrow && video.hasAttribute('data-tap'))) {
       video.removeAttribute('autoplay');
       video.autoplay = false;
       video.loop = false;

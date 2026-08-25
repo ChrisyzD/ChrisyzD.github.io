@@ -34,7 +34,12 @@ body {
   margin-inline: auto;
 }
 
-body.essay { max-width: 34em; }     /* narrower measure for long-form reading */
+/* The essay wants a shorter line than the project pages, and it used to get one by
+   narrowing the whole page — which moved its left edge 30px right and made the column
+   jump sideways when you clicked into it from the index. Same left edge as every other
+   page now; only the line stops earlier. */
+body.essay { max-width: 42rem; }
+body.essay > * { max-width: 32em; }
 
 /* ---------- type ---------- */
 
@@ -96,6 +101,12 @@ nav.top { font-size: 15px; margin-bottom: 24px; color: var(--meta); }
 /* 44px touch target on phones, where this nav is the only way to reach Experience
    without scrolling three thousand pixels. The visual height does not change. */
 nav.top a { display: inline-flex; align-items: center; min-height: 44px; margin-right: 16px; }
+/* On the home page this row is six same-page anchors sitting 24px under three contact
+   links in the identical blue underline — nine equal-weight links, none of them saying
+   which matters. A jump to a place you are already on is navigation, not a destination.
+   Deep pages keep theirs blue: there the same element is the only way out. */
+nav.top a[href^="#"] { color: var(--meta); }
+nav.top a[href^="#"]:hover { color: var(--link); }
 
 section { margin-bottom: 64px; }
 section:last-of-type { margin-bottom: 40px; }
@@ -150,6 +161,17 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 .card:hover { border-color: var(--link); }
 .card:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
 
+/* Two of the four cards open a page whose first object is a clip. Those two carry one
+   frame of it. Not decoration: the sentence above this grid promises "two of them open
+   with a clip of the thing actually running", and without these the whole index — four
+   identical bordered boxes down a 3600px page — never once changes density. Kept to a
+   3:1 strip so it anchors the card rather than becoming the card, and placed under the
+   sentence rather than over the title: a picture on top of a card is the most template
+   arrangement there is, and it would knock the four titles out of line with each
+   other for no gain. */
+.card .shot { display: block; width: 100%; height: auto; border: 1px solid var(--rule);
+              border-radius: 2px; margin-top: 16px; background: #f5f6f7; }
+
 .card h3 { margin-bottom: 4px; }
 .card h3 a { color: var(--text); text-decoration: none; }
 /* the whole card is the click target; the title is the one link that names it */
@@ -168,6 +190,17 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
 /* A real link, above the title's full-card overlay — so the demo is reachable
    without the overlay swallowing it. */
 .card .go a { position: relative; z-index: 1; }
+
+/* …but reachable was not the same as honest. Hovering the demo link lit the whole
+   card border blue and underlined the card's title, so every visual signal said
+   "you are going to the MetaFlow case page" while the pointer sat on a link to the
+   prototype. Two destinations, two states. Browsers without :has() keep the old
+   behaviour, which is wrong but not broken. */
+@supports selector(:has(*)) {
+  .card:has(.go a:hover) { border-color: var(--rule); }
+  .card:has(.go a:hover) h3 a { color: var(--text); text-decoration: none; }
+  .card:has(.go a:hover) h3 .arw { color: var(--meta); }
+}
 
 /* Every "→" exit on the home page is a 44px row on a phone, not an 18px line of
    text. iOS asks for 44; these were 18–21. The visual size of the type does not
@@ -196,8 +229,12 @@ h1 ~ p + section, .meta + section { margin-top: 40px; }
    phone while the site's own rule said 44px. On desktop it goes back to inline. */
 .tryit a, .note a { display: inline-flex; align-items: center; min-height: 44px; }
 
-/* The 404 list is the only place a bare <ul> of links is the whole page. */
-.linklist a { display: inline-flex; align-items: center; min-height: 44px; }
+/* The 404 list is the only place a bare <ul> of links is the whole page.
+   min-height gave single-line items a 44px box and double-line items nothing extra,
+   so one column of seven links read out in three different line spacings. Padding
+   adds the same amount to every item however many lines it wraps to. */
+.linklist { list-style: none; padding: 0; }
+.linklist a { display: inline-flex; align-items: center; padding-block: 8px; }
 
 /* Further thoughts: marginalia, marked as such. No standing header above it —
    these sections used to open with a line announcing how many points were coming,
@@ -236,23 +273,50 @@ figcaption .src { display: block; margin-top: 4px; }
    horizontal overflow on narrow desktop windows. */
 .clip { margin: 24px -20px 40px; }
 .clip video { background: #f5f6f7; border-left: 0; border-right: 0; border-radius: 0; }
+
+/* One of the two clips is a 1280px interface with 12px type in it. Full-bleed on a
+   phone hands the site's widest layout slot — the one place the layout changes shape
+   rather than just getting narrower — to the single object a phone cannot resolve,
+   and the only thing left readable in it at that size is the disclaimer burnt into
+   its bottom edge. So this one stays inside the gutter, and below 900px it does not
+   start itself: you get the poster (the last act, all provenance checks green) and a
+   play button, and the two re-cropped screenshots further down the page are what
+   carries the argument at phone width. */
+.clip-dense { margin-inline: 0; }
+.clip-dense video { border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
+                    border-radius: 2px; }
 /* The clip breaks the prose measure; its explanation does not. A wide frame
    over a normal column of text reads as one object with a caption, not as two
    competing widths. */
 .clip figcaption { font-size: 15px; line-height: 1.6; color: var(--text); margin-top: 16px;
                    max-width: 42rem; margin-inline: auto; padding: 0 20px; }
+/* …except this one, which is not full-bleed at any width, so it never needs the
+   gutter cancelled. Without this its caption sits 20px right of every paragraph on
+   the page — the same step this round removed from the desktop layout. */
+.clip-dense figcaption { padding: 0; }
 .clip figcaption p { margin: 0 0 8px; }
 .clip figcaption p:last-child { margin-bottom: 0; }
 /* Third beat of the caption: the boundary, in the same grey as every other
    caveat on the site. */
 .clip figcaption .bound { color: var(--meta); font-size: 14px; }
 .clip figcaption .look { font-weight: 600; }
+/* A clip that nobody is hovering has no chrome at all — no duration, no play marker,
+   nothing that says "this is a video and it is finite". The browser only admits it on
+   hover, and then in its own black bar. One static line states it instead, in the
+   site's mono, so it does not depend on a pointer being present. */
+.clip figcaption .spec { font-family: var(--font-mono); font-size: 13px; color: var(--meta);
+                         letter-spacing: .01em; margin: 0 0 8px; }
 
 /* Screenshots of a dense UI carry 12–13px type of their own. At the 42rem prose
    measure they land at roughly half scale and stop being evidence. Prose stays at
    42rem; these break out of it. Nothing else on the site does. */
 @media (min-width: 60rem) {
   figure.wide { width: min(94vw, 960px); margin-inline: calc(50% - min(47vw, 480px)); }
+  /* The figure breaks the measure; its caption does not. Left to itself the caption
+     inherits the figure's 960 and lands 164px left of every paragraph on the page —
+     a third left edge, and 14px grey type running 130 characters to the line. Prose
+     is prose: same width, same edge, whatever it is sitting under. */
+  figure.wide figcaption { max-width: 42rem; margin-inline: auto; padding: 0 20px; }
 }
 
 /* Matches the (max-width: 899px) <source> breakpoint used for the mobile
@@ -284,9 +348,13 @@ figcaption .src { display: block; margin-top: 4px; }
 .deltas dd .to { color: var(--meta); padding: 0 4px; }
 .deltas + .note { margin-top: -8px; }
 
-/* One line in the essay is its conclusion. It was set as body text in the
-   middle of a stack of body text. */
-.pull { font-size: 21px; line-height: 1.4; letter-spacing: -0.01em; margin: 40px 0; }
+/* One line in the essay is its conclusion. It was set as body text in the middle of a
+   stack of body text; then it was set larger, which only made it read as a paragraph
+   somebody forgot to shrink. The site already has a grammar for "this is marked" —
+   .scope, .thoughts-body, .tryit are all a rule down the left — so this joins it
+   rather than inventing quotation marks. */
+.pull { font-size: 21px; line-height: 1.4; letter-spacing: -0.01em; margin: 40px 0;
+        border-left: 2px solid var(--rule); padding-left: 16px; }
 
 /* ---------- footer ---------- */
 
@@ -312,11 +380,24 @@ footer.site a { color: var(--link); }
   .deltas dd { margin: 0; }
   .contact a { min-height: 0; }
   nav.top a, .pager a, footer.site a { display: inline; min-height: 0; }
-  .card .go a, .golink a, .tryit a, .note a, .linklist a { display: inline; min-height: 0; }
+  .golink a, .tryit a, .note a, .linklist a { display: inline; min-height: 0; }
+  /* The one exit that is not the card's own destination keeps a box around it. 18px
+     of line meant two pixels of vertical slip landed you on a different page. The
+     type does not change size; only the target does. */
+  .card .go a { min-height: 28px; }
   .clip { margin-inline: 0; }
   .clip video { border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
                 border-radius: 2px; }
+  /* At this width the clip is exactly the prose column, so the caption cancels the
+     gutter padding it needs when the clip is full-bleed. Above 60rem the clip breaks
+     out to 960 and the caption gets it back — see the figure.wide rule above. */
   .clip figcaption { padding: 0; }
+  /* Marginalia rules hang outside the measure so the text they mark keeps the page's
+     one left edge. A 2px line plus its padding used to push the paragraph 18px right
+     of every other paragraph — read as a failure to align, not as a margin note.
+     Below this width there is no room outside the column to hang anything in. */
+  .scope { margin-left: -14px; }
+  .thoughts-body, .pull { margin-left: -18px; }
   .cards { grid-template-columns: 1fr 1fr; }
   /* The demo row sits at the bottom of its card so the four titles line up
      across the grid regardless of which card carries it. */
@@ -326,10 +407,17 @@ footer.site a { color: var(--link); }
 }
 
 /* Four index cards two-up at the prose measure gave each one a 320px column and
-   a title that wrapped to three lines. The card block, and only the card block,
-   gets the wider column. */
+   a title that wrapped to three lines. The work index, and only the work index,
+   gets the wider column — and its heading and its intro go with it. A section rule
+   that stops 164px short of the cards it introduces is not hierarchy, it is a
+   heading that does not govern its content. The intro keeps a prose measure inside
+   the wider block, so the section still has exactly one left edge. */
 @media (min-width: 60rem) {
-  .cards { width: min(94vw, 960px); margin-inline: calc(50% - min(47vw, 480px)); }
+  .cards, #work > h2, #work > .meta {
+    width: min(94vw, 960px);
+    margin-inline: calc(50% - min(47vw, 480px));
+  }
+  #work > .meta { max-width: 42rem; margin-right: auto; }
 }
 
 /* ---------- motion ---------- */
@@ -349,14 +437,18 @@ footer.site a { color: var(--link); }
   a[href^="http"]::after,
   a[href^="/"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
   figure, .card { break-inside: avoid; }
-  figure.wide, .cards { width: auto; margin-inline: 0; }
+  figure.wide, .cards, #work > h2, #work > .meta { width: auto; max-width: none;
+                                                   margin-inline: 0; }
+  figure.wide figcaption { max-width: none; margin-inline: 0; padding: 0; }
+  body.essay > * { max-width: none; }
   .card { border: 0; padding: 0; }
   .card .go { display: none; }   /* on paper the card is just an entry */
+  .card .shot { display: none; } /* the frame is evidence of motion; paper has none */
   .cards { gap: 16px; }
   /* A video does not print. Its caption says what it showed, so the caption is
      what survives; the line below tells a reader on paper where to watch it. */
   .clip video { display: none; }
   .clip figcaption::before { content: "[Video — chrisyzd.github.io] "; color: #444; }
-  .thoughts-body, .scope { border-left: 0; padding-left: 0; }
+  .thoughts-body, .scope { border-left: 0; padding-left: 0; margin-left: 0; }
   section { margin-bottom: 24px; }
 }

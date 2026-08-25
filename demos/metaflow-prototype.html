@@ -1723,12 +1723,17 @@
     display: block;
     margin: 0;
     padding: 10px 16px;
-    background: #1B1E24;
-    color: #fff;
+    /* This bar used to be #1B1E24 sitting directly on top of the prototype's own
+       dark header: two different blacks touching with no seam, which reads as a
+       rendering fault rather than as two layers of information. It is the site
+       talking about the prototype, so it is set in the site's colours. */
+    background: #fff;
+    color: #16181d;
+    border-bottom: 1px solid #e3e5e8;
     font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     text-align: center;
   }
-  #mf-proto-notice a { color: #9cc2ff; text-decoration: underline; text-underline-offset: 2px; }
+  #mf-proto-notice a { color: #0b5cad; text-decoration: underline; text-underline-offset: 2px; }
   /* Scroll at the document level, not on an inner wrapper: an overflow-x:auto on
      #dc-root > .sc-host traps the overflow inside that div, so the page itself
      never becomes scrollable (document.scrollWidth stays at the viewport width)
@@ -1758,7 +1763,10 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 /* The only way back to the site from this full-screen prototype. It used to exist
    only inside the (max-width:899px) mobile banner, so on a laptop — where the demo
    link is actually meant to be opened — there was no exit but the back button. */
-#mf-back{color:rgba(232,234,238,.62);text-decoration:none;white-space:nowrap;}
+/* The only way out of a page that takes over the whole screen should not be the
+   quietest thing on its own bar. Still not a button — just legible, and with a
+   box around it big enough to hit. */
+#mf-back{color:rgba(232,234,238,.8);text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;min-height:28px;}
 #mf-back:hover{color:#fff;text-decoration:underline;text-underline-offset:2px;}
 *{box-sizing:border-box;}
 ::-webkit-scrollbar{width:9px;height:9px;}
@@ -1773,7 +1781,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 
   <!-- ═══════ 全局顶栏 · v1.0.1 ═══════ -->
   <header style="flex:none;height:50px;display:flex;align-items:center;gap:18px;padding:0 16px;background:#191C22;color:#E8EAEE;">
-    <a id="mf-back" href="/work/metaflow/" style="flex:none;font-size:12px;font-weight:600;padding-right:18px;border-right:1px solid rgba(232,234,238,.15);">← Yizhe Dai · 返回 MetaFlow 项目页</a>
+    <a id="mf-back" href="/work/metaflow/" style="flex:none;font-size:13px;font-weight:600;padding-right:18px;border-right:1px solid rgba(232,234,238,.15);">← Yizhe Dai · 返回 MetaFlow 项目页</a>
     <div style="display:flex;align-items:center;gap:9px;">
       <div style="width:22px;height:22px;border-radius:6px;background:#4A63D8;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;">M</div>
       <span style="font-weight:700;font-size:14.5px;letter-spacing:.3px;">MetaFlow</span>
