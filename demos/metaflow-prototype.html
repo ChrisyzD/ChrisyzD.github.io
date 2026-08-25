@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MetaFlow prototype (design artifact) — Yizhe Dai</title>
+<meta name="description" content="Interactive design prototype for MetaFlow, a metadata-centric NL-to-SQL system. Chinese UI, synthetic jaffle_shop data. Fixed-width desktop layout.">
 <script>
 // GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with `cd dc-runtime && bun run build`.
 "use strict";
@@ -1710,8 +1712,32 @@
 })();
 
 </script>
+<style>
+/* --- mobile wrapper, added on top of the generated prototype below; not part of the
+   generated artifact and does not touch it. Fixed-width desktop layout is intentional
+   (design artifact, not the running system), so this does not attempt to make the
+   prototype itself responsive — it just makes the situation legible on a small screen. */
+#mf-proto-notice { display: none; }
+@media (max-width: 899px) {
+  #mf-proto-notice {
+    display: block;
+    margin: 0;
+    padding: 10px 16px;
+    background: #1B1E24;
+    color: #fff;
+    font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    text-align: center;
+  }
+  #mf-proto-notice a { color: #9cc2ff; text-decoration: underline; text-underline-offset: 2px; }
+  #dc-root > .sc-host { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  #dc-root > .sc-host > div { min-width: 1400px; }
+}
+</style>
 </head>
 <body>
+<div id="mf-proto-notice">This prototype is a fixed-width desktop artifact — best viewed
+  on a larger screen. Annotated screenshots are on the
+  <a href="/work/metaflow/">MetaFlow page</a>.</div>
 <x-dc>
 <helmet>
 <style>

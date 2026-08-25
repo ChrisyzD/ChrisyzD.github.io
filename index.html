@@ -60,8 +60,11 @@
     </ul>
 
     <figure>
-      <img src="/assets/img/metaflow-capabilities.png" width="1400" height="1341"
-           alt="MetaFlow prototype: a certified capability catalog on the left, and a question that hits a certified definition returning a monthly revenue table.">
+      <picture>
+        <source media="(max-width: 899px)" srcset="/assets/img/metaflow-capabilities-mobile.png">
+        <img src="/assets/img/metaflow-capabilities.png" width="1400" height="1341"
+             alt="MetaFlow prototype: a certified capability catalog on the left, and a question that hits a certified definition returning a monthly revenue table.">
+      </picture>
       <figcaption>What to look at: the catalog on the left is the whole answerable surface.
         A question that lands inside it comes back naming its metric, currency and grain;
         the metrics that failed certification sit in the box at the bottom left and stay
@@ -141,9 +144,8 @@
       <img src="/assets/img/sure-plateau-definitions.png" width="1200" height="1115" loading="lazy"
            alt="Box plots of plateau start day under three different definitions of stable recovery, for the same patient cohort.">
       <figcaption>What to look at: same patients, three definitions of “stable recovery” —
-        three different medians and three very different spreads. The poster's own summary:
-        different plateau definitions can lead to a 2× difference in estimated plateau timing
-        (50 vs 100 days). Choosing the definition <em>is</em> the analysis.
+        three visibly different medians and three different spreads. Choosing the
+        definition <em>is</em> the analysis.
         <span class="src">From: Dai, Liu, Lavieri, Moosavi &amp; Golbus,
         <em>Patient-Tailored Cardiac Rehab Discharge Policies via Operations Research
         Methods</em>, U-M SURE poster, 2025.</span></figcaption>
