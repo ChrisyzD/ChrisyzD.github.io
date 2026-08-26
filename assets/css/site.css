@@ -410,7 +410,10 @@ nav.top::before {
   position: absolute;
   z-index: -1;
   top: 0;
-  bottom: 0;
+  /* -1px, not 0: the containing block is the padding box, and the bar's last
+     pixel row is its border. At 0 the background stopped one row short and a
+     hanging rail showed through that row for 2px beside the spine. */
+  bottom: -1px;
   left: calc(var(--gutter) * -1);
   right: calc(var(--gutter) * -1);
   background: var(--bg);
@@ -942,11 +945,11 @@ footer.site a { color: var(--link); }
   nav.top .more { display: inline; }
   /* Same 49px, reached the other way: the touch rows collapse back to a 24px line
      of type, so the bar buys its height in padding instead. The 8px above the rule
-     is the h2's own 8px — a row of labels over a full-width rule is the shape this
-     site already uses for every section heading on it, and the bar is that shape
-     doing it for the whole document. The 40px underneath is the air the body's old
-     64px of top padding used to provide; 24px of what it provided is now inside
-     the bar, which is where the bar's cost partly went. */
+     is the h2's own 8px — same spacing scale, not the same object: the bar is a
+     plane's edge, not a section heading, which is why its rule is --edge and not
+     --rule. The 40px underneath is the air the body's old 64px of top padding used
+     to provide; 24px of what it provided is now inside the bar, which is where the
+     bar's cost partly went. */
   nav.top { padding: 16px 0 8px; margin-bottom: 40px; }
   .golink a, .tryit > a, .linklist a { display: inline; min-height: 0; }
   /* The one exit that is not the card's own destination keeps a box around it. 18px
