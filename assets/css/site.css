@@ -89,6 +89,11 @@
   --prose:    100%;    /* where a sentence stops */
   --hang:     0px;     /* how far a margin note's rule sits left of the spine */
   --card-img: 100%;    /* the index card's evidence column */
+  /* The poster plate is the one block whose width is set by what is inside it
+     rather than by the track: 1200px of native export, 24px of padding on each
+     side, 1px of border on each side. Named here because the heading above it
+     has to take the same number — see law (a). */
+  --plate:    1250px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -527,13 +532,23 @@ figcaption .src { display: block; margin-top: 4px; }
    40 pixels, and each carried its own differently-shaped source line. They are
    not two figures. They are two excerpts from one artifact, so they sit in one
    ground with one source line under both, and the parity reads as quotation
-   rather than as collage. Nothing inside either image is touched. */
+   rather than as collage. Nothing inside either image is touched.
+
+   And the ground takes the width of what it holds, not the width of the track. It
+   used to take the track while the two 1200px exports inside it took their own
+   native width and sat at the left end of it: 25px of padding on the left, 135px
+   on the right, twice, on the one page that reproduces a published, co-authored
+   artifact. Law (a) run backwards — the frame sized by the grid, the content by
+   itself, and the whole difference dumped on one side. 1200 native + 24 of padding
+   each side + 1 of border each side is what this box is for, so that is what it is;
+   below that width it simply fills, and both edges are its own either way. */
 .plate {
   border: 1px solid var(--rule);
   border-radius: 2px;
   background: var(--ground);
   padding: 24px;
   margin: 40px 0;
+  max-width: var(--plate);
 }
 .plate figure { margin: 0; }
 .plate figure + figure { margin-top: 40px; }
@@ -578,6 +593,18 @@ figcaption .src { display: block; margin-top: 4px; }
    site's mono, so it does not depend on a pointer being present. */
 .clip figcaption .spec { font-family: var(--font-mono); font-size: 13px; color: var(--meta);
                          letter-spacing: .01em; margin: 0 0 8px; }
+
+/* Below the two-column width the caption's three beats are three stacked blocks,
+   and the third one had no top margin while the last paragraph of the second had
+   no bottom one — so the grey boundary note met the black reading at exactly 0px
+   and the two read as one paragraph. This is the same failure the .side rule two
+   hundred lines up already fixed once, under a different class name; the fix is
+   the same and it is the page's own 16px. Where the caption IS two columns the
+   column gap does this job and these margins are back to 0 (TIER 4). */
+@media (max-width: 74.99rem) {
+  .clip figcaption > .spec  { margin-bottom: 16px; }
+  .clip figcaption > .bound { margin-top: 16px; }
+}
 
 /* Matches the (max-width: 899px) <source> breakpoint used for the mobile
    re-crops: the two crops show different content, so the caption describing
@@ -740,7 +767,13 @@ footer.site a { color: var(--link); }
   @media (min-width: 44rem) {
     section > h2 { max-width: var(--prose); }
     section:has(.fig-diagram) > h2 { max-width: min(900px, 100%); }
-    section:has(.plate, .cards, .pair, .deltas.band, .clip, .spread) > h2 { max-width: var(--track); }
+    /* The plate stops at its own contents rather than at the track, so a rule that
+       frames nothing but a plate stops there too. Before the track line, not after:
+       where a section holds a plate AND something that does take the track — which
+       is the case for the one plate on this site — the wider block is what the rule
+       is framing, and the line below wins on source order. */
+    section:has(.plate) > h2 { max-width: min(var(--plate), 100%); }
+    section:has(.cards, .pair, .deltas.band, .clip, .spread) > h2 { max-width: var(--track); }
   }
 }
 
@@ -811,8 +844,39 @@ footer.site a { color: var(--link); }
   }
   .clip figcaption > .spec  { padding-bottom: 12px; }
 
+  /* Third instance of the same move, on the résumé-skeleton list. A .compact entry
+     is a title/date row, a grey line naming the place and the stack, and one or two
+     paragraphs — and the grey line is the only part of it that comments on the rest
+     rather than continuing it. On the home page the Experience list was the one long
+     block with no second column: 1,150px of single column against 480px of nothing,
+     between four two-column cards above it and two .spread blocks below. The rule
+     between two entries widens with them, because it is still as wide as what it
+     divides. The role line keeps its source position — it is under the title on a
+     phone, on paper and with no stylesheet — and is placed, not moved. */
+  .compact.laned .item {
+    display: grid;
+    grid-template-columns: var(--prose) minmax(0, 1fr);
+    column-gap: 40px;
+    align-items: start;
+    max-width: var(--track);
+  }
+  .compact.laned .item > * { grid-column: 1; }
+  /* Spanning rather than sitting in row 1: a role line that wraps to two lines would
+     otherwise make row 1 taller than the title it shares that row with, and push the
+     first paragraph down by an amount that differs per entry — four different gaps
+     under four titles, which is the objection this file makes about gutters, one
+     axis over. Spanned and top-aligned, it starts level with the title and the left
+     column keeps its own rhythm. */
+  .compact.laned .item > .role {
+    grid-column: 2; grid-row: 1 / span 10; align-self: start;
+    margin: 0; max-width: 560px;
+    border-left: 2px solid var(--rule); padding-left: 18px;
+  }
+
   @supports selector(:has(*)) {
     section:has(.fig-diagram) > h2 { max-width: var(--track); }
+    /* …and a heading over that list is as wide as the list now is. */
+    section:has(.compact.laned) > h2 { max-width: var(--track); }
   }
 }
 
@@ -875,9 +939,12 @@ footer.site a { color: var(--link); }
   .scope, .thoughts-body, .pull, .plate .src, .side { max-width: none; }
   /* Paper has one column. A margin note prints under the passage it belongs to,
      which is where it sits on a phone too. */
-  .spread, .fig-diagram, .clip figcaption { display: block; }
+  .spread, .fig-diagram, .clip figcaption, .compact.laned .item { display: block; }
   .clip figcaption > .spec, .clip figcaption > .bound {
     border-left: 0; padding-left: 0; max-width: none; margin: 8px 0 0;
+  }
+  .compact.laned .item > .role {
+    border-left: 0; padding-left: 0; max-width: none; margin: 0 0 8px;
   }
   .side { margin-top: 12px; border-left: 0; padding-left: 0; }
   .side .lbl { color: #444; }
@@ -889,7 +956,7 @@ footer.site a { color: var(--link); }
   a[href^="http"]::after,
   a[href^="/"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
   figure, .card, .plate { break-inside: avoid; }
-  figure, .fig-diagram, .fig-plate, .fig-clip, .cards, .pair { max-width: none; }
+  figure, .fig-diagram, .fig-plate, .fig-clip, .cards, .pair, .plate { max-width: none; }
   .plate { background: none; border: 0; padding: 0; }
   .card { border: 0; padding: 0; display: block; }
   .card .ct { max-width: none; }

@@ -1719,14 +1719,32 @@
    prototype itself responsive — it just makes the situation legible on a small screen. */
 #mf-proto-notice { display: none; }
 /* 50px 顶栏是四组定宽 + 一个 spacer。1200px 以下它们放不下，被顶出右边缘的正好是
-   引导演示的开关——回到引导的唯一入口，而 ≤1041px 时它渲染成「收起引导」的半截或者
-   干脆不见。中间那两行 mono 是这条顶栏上最不承重的东西（同样两个事实在落地卡和案例页
-   上都说过），所以行内放不下的时候，走的是它们。 */
+   引导演示的开关——回到引导的唯一入口（现在它也只剩这一个标签），而 ≤1041px 时它
+   渲染成「▶ 引导演…」的半截或者干脆不见。中间那两行 mono 是这条顶栏上最不承重的
+   东西（同样两个事实在落地卡和案例页上都说过），所以行内放不下的时候，走的是它们。 */
 @media (max-width: 1199px) {
   .mf-hd-meta { display: none; }
   /* 行本身每条缝再收 6px，又省下 30。 */
   #mf-topbar { gap: 12px !important; padding-inline: 12px !important; }
 }
+/* 凭证卡是案例页点名要读者去看的那一样东西（"附着 source asset"），而它收尾时给出的
+   资产名 semantic.semantic_gold_customer_revenue_2024 是 44 个字符的 11.5px 等宽字，
+   需要约 304px。这一栏原本 296px：去掉内边距只剩 263，进到卡里只剩 234，于是这个字段
+   在下划线处断行，第二行挂着一个孤零零的 revenue_2024。断在录屏收尾帧、海报静帧、
+   live demo 第 6 步——读者能遇到它的全部三个位置。加宽的 77px 从对话区来，那里有富余：
+   1440 下主区 882 → 798，区内没有任何东西改变排布。1200px 以下没有富余可让，这一栏
+   维持原宽、名字照旧换行（至少两截都还在；再窄到手机，引导本来就不启动）。 */
+@media (min-width: 1200px) {
+  #mf-bu-cred { width: 380px !important; }
+}
+/* 焦点被放在哪里，就得让人看见焦点在哪里。卡片打开时焦点已经落在「开始 · 第 1 步」上，
+   而这件事只有键盘读者看得见才有用；浏览器默认不为「代码放上去的焦点」画环，除非页面
+   明确要（见下面的 focus({focusVisible:true})）。用站点给链接用的同一个环，取卡片自己
+   的圆角。 */
+#mf-guide-card button:focus-visible {
+  outline: 2px solid #4A63D8; outline-offset: 3px; border-radius: 9px;
+}
+
 @media (max-width: 899px) {
   #mf-proto-notice {
     display: block;
@@ -1797,7 +1815,9 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 <div style="display:flex;flex-direction:column;height:100vh;overflow:hidden;">
 
   <!-- ═══════ 全局顶栏 · v1.0.1 ═══════ -->
-  <header style="flex:none;height:50px;display:flex;align-items:center;gap:18px;padding:0 16px;background:#191C22;color:#E8EAEE;">
+  <!-- id 是给上面那条 (max-width:1199px) 规则用的：英文版有，中文版一直漏了，
+       于是「顶栏在窄窗口下每条缝收 6px」这件事在中文版上从来没生效过。 -->
+  <header id="mf-topbar" style="flex:none;height:50px;display:flex;align-items:center;gap:18px;padding:0 16px;background:#191C22;color:#E8EAEE;">
     <a id="mf-back" href="/work/metaflow/" style="flex:none;font-size:13px;font-weight:600;padding-right:18px;border-right:1px solid rgba(232,234,238,.15);">←&#160;<span class="mf-hd-meta">Yizhe Dai&#160;·&#160;</span>返回 MetaFlow 项目页</a>
     <div style="display:flex;align-items:center;gap:9px;">
       <div style="width:22px;height:22px;border-radius:6px;background:#4A63D8;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;">M</div>
@@ -1811,7 +1831,13 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       <button onClick="{{ goDE }}" style="{{ roleBtnDE }}">DE 数据工程师</button>
     </div>
     <div style="flex:1;"></div>
-    <button onClick="{{ guideToggle }}" style="{{ guideBtnStyle }}" style-hover="{{ guideBtnHover }}">{{ guideBtnLabel }}</button>
+    <!-- 只在引导「关」的时候出现。同一件事原本有三种说法——卡上「跳过，我自己点」、
+         这里「收起引导」、底栏「退出引导，自由探索」——而这一颗是顶栏上最重的元素，
+         于是开场那一屏里视觉权重最高的按钮在劝你别看这一屏。卡和底栏各自带着自己的
+         出口、措辞统一；这颗按钮现在只剩一个职责：你走出去之后，回来的那条路。 -->
+    <sc-if value="{{ guideOff }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ guideToggle }}" style="{{ guideBtnStyle }}" style-hover="{{ guideBtnHover }}">{{ guideBtnLabel }}</button>
+    </sc-if>
     <div style="position:relative;" onMouseEnter="{{ infoEnter }}" onMouseLeave="{{ infoLeave }}">
       <div style="width:26px;height:26px;border-radius:50%;border:1px solid rgba(232,234,238,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-style:italic;font-family:Georgia,serif;cursor:default;color:rgba(232,234,238,.7);">i</div>
       <sc-if value="{{ infoOpen }}" hint-placeholder-val="{{ false }}">
@@ -1961,7 +1987,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       </div>
     </main>
 
-    <aside style="flex:none;width:296px;border-left:1px solid rgba(27,30,36,.09);background:#FBFBFC;overflow-y:auto;padding:16px;">
+    <aside id="mf-bu-cred" style="flex:none;width:296px;border-left:1px solid rgba(27,30,36,.09);background:#FBFBFC;overflow-y:auto;padding:16px;">
       <div style="font-size:12.5px;font-weight:700;margin-bottom:3px;">答案凭证卡</div>
       <div style="font-size:11px;color:rgba(27,30,36,.5);margin-bottom:14px;">Provenance Envelope · 每个答案必附</div>
       <sc-if value="{{ noCred }}" hint-placeholder-val="{{ true }}">
@@ -2430,7 +2456,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
         </sc-for>
       </div>
       <div id="mf-guide-acts" style="flex:none;display:flex;align-items:center;gap:12px;margin-left:auto;">
-        <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">退出引导，自由探索</button>
+        <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">我自己探索</button>
         <button onClick="{{ guideNext }}" disabled="{{ guideBusy }}" style="{{ guideNextStyle }}">{{ guideNextLabel }}</button>
       </div>
     </div>
@@ -2439,9 +2465,9 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   <!-- ═══════ 落地面板 · 不点它就什么都不播 ═══════ -->
   <sc-if value="{{ guideLanding }}" hint-placeholder-val="{{ true }}">
     <div id="mf-guide-scrim" style="position:fixed;top:50px;left:0;right:0;bottom:0;z-index:90;background:rgba(15,17,22,.6);display:flex;align-items:center;justify-content:center;padding:24px;animation:mfIn .2s ease both;">
-      <div style="width:660px;max-width:100%;background:#fff;border-radius:16px;box-shadow:0 24px 70px rgba(15,17,22,.45);padding:26px 30px 24px;">
+      <div id="mf-guide-card" role="dialog" aria-modal="true" aria-labelledby="mf-guide-card-h" style="width:660px;max-width:100%;background:#fff;border-radius:16px;box-shadow:0 24px 70px rgba(15,17,22,.45);padding:26px 30px 24px;">
         <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;color:#4A63D8;">引导演示 · 六步 · 每一步由你点</div>
-        <div style="font-size:20px;font-weight:700;line-height:1.5;margin-top:10px;">这段演示讲的是：一个一开始答不了的问题——以及要做到哪些事，它才答得了。</div>
+        <div id="mf-guide-card-h" style="font-size:20px;font-weight:700;line-height:1.5;margin-top:10px;">这段演示讲的是：一个一开始答不了的问题——以及要做到哪些事，它才答得了。</div>
         <div style="display:flex;flex-direction:column;gap:9px;margin-top:18px;">
           <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="6">
             <div style="display:flex;align-items:flex-start;gap:11px;">
@@ -2452,7 +2478,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
         </div>
         <div style="display:flex;align-items:center;gap:16px;margin-top:22px;">
           <button id="mf-guide-start" onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
-          <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">跳过，我自己点</button>
+          <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">我自己探索</button>
         </div>
         <div style="font-size:13.5px;line-height:1.75;color:#1B1E24;margin-top:16px;">没有任何东西会自动播。每一步都由你按下之后才开始，按下之后那一段自己走几秒——六次点击，大约半分钟的画面，每一步之间它都等你。随时可以退出引导（或按 Esc）——三个角色和自由提问一直都在。</div>
       </div>
@@ -2511,8 +2537,25 @@ class Component extends DCLogic {
     };
     // Esc leaves the walkthrough. Without it the only way past the landing card for
     // someone not using a mouse was six Tab stops through controls the scrim covered.
+    // Tab 也一并关进卡里。理由和任何弹层一样，外加一条这一页独有的：蒙层是特意从
+    // 50px 顶栏下面开始的，于是整条顶栏一直留在 Tab 序里、藏在蒙层背后。实测的顺序
+    // 是 开始 → 跳过 → （文档本身）→ 返回链接 → BU → DA → DE → 引导开关 → 开始，
+    // 八站全落在读者看不出状态的控件上，而其中最容易按到的两个（跳过、开关）都是
+    // 关掉刚刚打开的东西。关进卡里之后，Tab 序就只有卡上那两颗按钮；出口是 Esc 和
+    // 第二颗按钮——正是卡上写的那两条。
     this.onKey = (e) => {
       if (e.key === 'Escape' && this.state.guideMode !== 'off') { e.preventDefault(); this.guideExit(); }
+      if (e.key !== 'Tab' || this.state.guideMode !== 'landing') return;
+      const card = document.getElementById('mf-guide-card');
+      if (!card) return;
+      const stops = [...card.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+        .filter(el => !el.disabled && el.offsetParent !== null);
+      if (!stops.length) return;
+      const first = stops[0], last = stops[stops.length - 1], here = document.activeElement;
+      // 焦点已经跑到卡外（点了蒙层、或刷新后焦点停在文档上）时，回到主动作，
+      // 而不是回到文档里恰好排在下一位的那个东西。
+      if (!card.contains(here)) { e.preventDefault(); first.focus(); return; }
+      if (e.shiftKey ? here === first : here === last) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
     };
     document.addEventListener('keydown', this.onKey);
     if (this.state.guideMode === 'off') {   // ?autorun=1, or a phone
@@ -2542,7 +2585,7 @@ class Component extends DCLogic {
     if (app) { if (landing) app.setAttribute('inert', ''); else app.removeAttribute('inert'); }
     if (landing && !this.landingFocused) {
       const btn = document.getElementById('mf-guide-start');
-      if (btn) { btn.focus(); this.landingFocused = true; }
+      if (btn) { btn.focus({ focusVisible: true }); this.landingFocused = true; }
     }
     if (!landing) this.landingFocused = false;
   }
@@ -3080,7 +3123,11 @@ class Component extends DCLogic {
     const gClosing = '走完了。刚才答不了的那个问题，现在返回的是认证答案 —— 第 1 步那次拒绝，正是拿到它的第一步。从这里开始自己探索：切角色，或者在输入框里随便问。';
     const gStep = s.guideStep, gBusy = s.playing, gFinished = gStep >= 6 && !!s.actsDone[6];
     const guideSteps = GSTEPS.map((g, i) => {
-      const n = i + 1, cur = gStep === n, done = !!s.actsDone[n];
+      // 最后一步跑完之后，「当前」这个状态就不再指任何东西了。原本它继续指着第 6 步，
+      // 于是 chip 行显示 ✓ ✓ ✓ ✓ ✓ ⑥——六分之五，还带着蓝色的「你在这里」样式——
+      // 而它正上方的旁白刚写完「Done.」。弧线收在一个认证答案上，进度行却在跟它打架。
+      // 跑完就是：六个全打勾，没有哪一个是「当前」。
+      const n = i + 1, cur = gStep === n && !gFinished, done = !!s.actsDone[n];
       return {
         num: (done && !cur) ? '✓' : String(n), landNum: String(n), label: g.label, full: g.full,
         onGo: () => this.guideGo(n),
@@ -3089,22 +3136,20 @@ class Component extends DCLogic {
       };
     });
     const guideSay = gFinished ? gClosing : GSTEPS[Math.max(0, gStep - 1)].say;
-    const guideNextLabel = gBusy ? '第 ' + gStep + ' 步演示中…' : (gFinished ? '结束 · 自己探索 →' : '下一步 · 第 ' + (gStep + 1) + ' 步 →');
+    const guideNextLabel = gBusy ? '第 ' + gStep + ' 步演示中…' : (gFinished ? '结束 · 我自己探索 →' : '下一步 · 第 ' + (gStep + 1) + ' 步 →');
 
     return {
       // top bar
       roleBtnBU:roleBtn('BU'), roleBtnDA:roleBtn('DA'), roleBtnDE:roleBtn('DE'),
       goBU:()=>this.setState({role:'BU'}), goDA:()=>this.setState({role:'DA'}), goDE:()=>this.setState({role:'DE'}),
-      guideToggle:()=>this.guideToggle(), guideBtnLabel: s.guideMode==='off' ? '▶ 引导演示' : '收起引导',
-      // 落地卡亮着的时候屏幕上有两颗一样实心的蓝按钮：卡片中央的「开始 · 第 1 步 →」，
-      // 和顶栏这一颗——而顶栏这颗更亮，因为遮罩是故意从 50px 顶栏以下才开始的（角色切换
-      // 器要保持可见）。结果整个开屏最抢眼的按钮，是把这件事关掉的那颗；而卡片里本来就
-      // 有「跳过，我自己看」在做同一件事。一屏只留一颗主按钮：引导真的跑起来之前，这颗
-      // 降到和角色切换器一样的描边重量。
-      guideBtnStyle: 'flex:none;white-space:nowrap;font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;' + (s.guideMode==='landing'
-        ? 'border:1px solid rgba(232,234,238,.28);background:transparent;color:rgba(232,234,238,.8);'
-        : 'border:none;background:#4A63D8;color:#fff;'),
-      guideBtnHover: s.guideMode==='landing' ? 'color:#fff;border-color:rgba(232,234,238,.6);' : 'background:#3B51BC;',
+      // 模板只在引导「关」的时候渲染这颗按钮，所以它只剩一个标签、一种重量：回来的路。
+      // 原本三种状态都渲染，于是屏幕中央的卡片正在请你按「开始」的同一时刻，顶栏挂着一颗
+      // 实心蓝的「收起引导」——而顶栏这颗更亮，因为遮罩是故意从 50px 顶栏以下才开始的
+      // （角色切换器要保持可见）。一屏只留一颗主按钮。
+      guideOff: s.guideMode==='off',
+      guideToggle:()=>this.guideToggle(), guideBtnLabel: '▶ 引导演示',
+      guideBtnStyle: 'flex:none;white-space:nowrap;font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;border:none;background:#4A63D8;color:#fff;',
+      guideBtnHover: 'background:#3B51BC;',
       infoEnter:()=>this.setState({infoOpen:true}), infoLeave:()=>this.setState({infoOpen:false}),
       infoOpen:s.infoOpen, infoTitle:`${s.role} 角色约束`, infoRows,
       hasNotice: !!s.notice, noticeText: s.notice || '',

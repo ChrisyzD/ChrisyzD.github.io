@@ -1720,15 +1720,40 @@
 #mf-proto-notice { display: none; }
 /* The 50px top bar is four fixed-width groups and a spacer. Below 1200px they stop
    fitting, and the thing that got pushed off the right edge was the walkthrough
-   toggle — the way back into the guided run, and at ≤1041px it was rendering as
-   "Hide walkthro…" or not at all. The two mono strings in the middle are the least
-   load-bearing thing on that bar (the same two facts are stated on the landing card
-   and on the case page), so they are what goes when the row runs out of room. */
+   toggle — the way back into the guided run (it now carries no other label), and at
+   ≤1041px it was rendering as "▶ Walkthro…" or not at all. The two mono strings in
+   the middle are the least load-bearing thing on that bar (the same two facts are
+   stated on the landing card and on the case page), so they are what goes when the
+   row runs out of room. */
 @media (max-width: 1199px) {
   .mf-hd-meta { display: none; }
   /* and the row itself tightens by 6px per seam, which buys back another 30. */
   #mf-topbar { gap: 12px !important; padding-inline: 12px !important; }
 }
+/* The provenance card is the one thing in this prototype the case page points at by
+   name ("with the source asset attached"), and the asset it ends on is
+   semantic.semantic_gold_customer_revenue_2024 — 44 characters of 11.5px mono, which
+   needs ~304px. The column was 296px wide: 263 inside the padding, 234 inside the
+   card, so the field it exists to show broke at an underscore and left a stranded
+   "revenue_2024" on a second line. It broke in the recording's closing frame, in the
+   poster still, and in the live demo's last step — the same three places a reader
+   meets it. The width comes out of the conversation column, which had room: at 1440
+   the main area goes 882 → 798 and nothing in it reflows. Below 1200px there is no
+   spare width to take, so the column stays where it was and the name wraps (the two
+   halves are at least both visible there; on a phone the walkthrough does not run at
+   all). */
+@media (min-width: 1200px) {
+  #mf-bu-cred { width: 380px !important; }
+}
+/* Focus has to be visible where it has been put. The card opens with focus already
+   on "Start · step 1", which is only useful to a keyboard reader if the reader can
+   see that; the browser's own ring is suppressed for programmatic focus unless the
+   page asks for it (see focus({focusVisible:true}) below). Same ring as the site
+   uses on links, at the card's own radius. */
+#mf-guide-card button:focus-visible {
+  outline: 2px solid #4A63D8; outline-offset: 3px; border-radius: 9px;
+}
+
 @media (max-width: 899px) {
   #mf-proto-notice {
     display: block;
@@ -1817,7 +1842,16 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       <button onClick="{{ goDE }}" style="{{ roleBtnDE }}">DE · Data Engineer</button>
     </div>
     <div style="flex:1;"></div>
-    <button onClick="{{ guideToggle }}" style="{{ guideBtnStyle }}" style-hover="{{ guideBtnHover }}">{{ guideBtnLabel }}</button>
+    <!-- Only while the walkthrough is OFF. There were three different ways to say the
+         same thing on this screen — "Skip — I will explore it myself" on the card,
+         "Hide walkthrough" here, "Exit and explore freely" in the bar — and this one
+         was the heaviest element on the top row, so the most prominent button on the
+         opening screen argued against the opening screen. The card and the bar each
+         carry their own way out, worded the same; this button now has one job, which
+         is the way back IN after you have taken it. -->
+    <sc-if value="{{ guideOff }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ guideToggle }}" style="{{ guideBtnStyle }}" style-hover="{{ guideBtnHover }}">{{ guideBtnLabel }}</button>
+    </sc-if>
     <div style="position:relative;" onMouseEnter="{{ infoEnter }}" onMouseLeave="{{ infoLeave }}">
       <div style="width:26px;height:26px;border-radius:50%;border:1px solid rgba(232,234,238,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-style:italic;font-family:Georgia,serif;cursor:default;color:rgba(232,234,238,.7);">i</div>
       <sc-if value="{{ infoOpen }}" hint-placeholder-val="{{ false }}">
@@ -1967,7 +2001,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       </div>
     </main>
 
-    <aside style="flex:none;width:296px;border-left:1px solid rgba(27,30,36,.09);background:#FBFBFC;overflow-y:auto;padding:16px;">
+    <aside id="mf-bu-cred" style="flex:none;width:296px;border-left:1px solid rgba(27,30,36,.09);background:#FBFBFC;overflow-y:auto;padding:16px;">
       <div style="font-size:12.5px;font-weight:700;margin-bottom:3px;">Answer provenance card</div>
       <div style="font-size:11px;color:rgba(27,30,36,.5);margin-bottom:14px;">Provenance Envelope · attached to every answer</div>
       <sc-if value="{{ noCred }}" hint-placeholder-val="{{ true }}">
@@ -2444,7 +2478,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
         </sc-for>
       </div>
       <div id="mf-guide-acts" style="flex:none;display:flex;align-items:center;gap:12px;margin-left:auto;">
-        <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">Exit and explore freely</button>
+        <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">Explore on my own</button>
         <button onClick="{{ guideNext }}" disabled="{{ guideBusy }}" style="{{ guideNextStyle }}">{{ guideNextLabel }}</button>
       </div>
     </div>
@@ -2453,9 +2487,9 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   <!-- ═══════ Landing panel · nothing plays until this is dismissed ═══════ -->
   <sc-if value="{{ guideLanding }}" hint-placeholder-val="{{ true }}">
     <div id="mf-guide-scrim" style="position:fixed;top:50px;left:0;right:0;bottom:0;z-index:90;background:rgba(15,17,22,.6);display:flex;align-items:center;justify-content:center;padding:24px;animation:mfIn .2s ease both;">
-      <div style="width:660px;max-width:100%;background:#fff;border-radius:16px;box-shadow:0 24px 70px rgba(15,17,22,.45);padding:26px 30px 24px;">
+      <div id="mf-guide-card" role="dialog" aria-modal="true" aria-labelledby="mf-guide-card-h" style="width:660px;max-width:100%;background:#fff;border-radius:16px;box-shadow:0 24px 70px rgba(15,17,22,.45);padding:26px 30px 24px;">
         <div style="font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;color:#4A63D8;">GUIDED WALKTHROUGH · SIX STEPS · YOU CLICK EACH ONE</div>
-        <div style="font-size:20px;font-weight:700;line-height:1.45;margin-top:10px;">This walkthrough shows a question that cannot be answered at first — and what it takes until it can.</div>
+        <div id="mf-guide-card-h" style="font-size:20px;font-weight:700;line-height:1.45;margin-top:10px;">This walkthrough shows a question that cannot be answered at first — and what it takes until it can.</div>
         <div style="display:flex;flex-direction:column;gap:9px;margin-top:18px;">
           <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="6">
             <div style="display:flex;align-items:flex-start;gap:11px;">
@@ -2466,7 +2500,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
         </div>
         <div style="display:flex;align-items:center;gap:16px;margin-top:22px;">
           <button id="mf-guide-start" onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
-          <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">Skip — I will explore it myself</button>
+          <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">Explore on my own</button>
         </div>
         <div style="font-size:13.5px;line-height:1.7;color:#1B1E24;margin-top:16px;">Nothing plays on its own. Each step starts when you press for it and then runs itself for a few seconds — six presses, about half a minute of screen time, and it waits for you between every one. You can leave at any point (or press Esc); all three roles and free-form questions stay available.</div>
       </div>
@@ -2529,8 +2563,30 @@ class Component extends DCLogic {
     };
     // Esc leaves the walkthrough. Without it the only way past the landing card for
     // someone not using a mouse was six Tab stops through controls the scrim covered.
+    //
+    // Tab is trapped inside the card for the same reason a modal traps it anywhere
+    // else, and for one specific to this page: the scrim deliberately starts below
+    // the 50px top bar, so everything on that bar stayed in the tab order behind it.
+    // The measured order was Start → Skip → (the document) → back link → BU → DA →
+    // DE → the walkthrough toggle → Start, which is eight stops through controls a
+    // reader cannot see the state of, and the two most reachable of them — Skip and
+    // the toggle — both turn off the thing they just arrived at. Trapped, the order
+    // is the card's own two buttons and nothing else; Esc and the second button are
+    // the ways out, which is what the card says.
     this.onKey = (e) => {
       if (e.key === 'Escape' && this.state.guideMode !== 'off') { e.preventDefault(); this.guideExit(); }
+      if (e.key !== 'Tab' || this.state.guideMode !== 'landing') return;
+      const card = document.getElementById('mf-guide-card');
+      if (!card) return;
+      const stops = [...card.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+        .filter(el => !el.disabled && el.offsetParent !== null);
+      if (!stops.length) return;
+      const first = stops[0], last = stops[stops.length - 1], here = document.activeElement;
+      // Focus that has already escaped the card (a click on the scrim, a reload with
+      // the browser's focus on the document) comes back to the primary action, not
+      // to whatever happens to be next in the document.
+      if (!card.contains(here)) { e.preventDefault(); first.focus(); return; }
+      if (e.shiftKey ? here === first : here === last) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
     };
     document.addEventListener('keydown', this.onKey);
     if (this.state.guideMode === 'off') {   // ?autorun=1, or a phone
@@ -2560,7 +2616,7 @@ class Component extends DCLogic {
     if (app) { if (landing) app.setAttribute('inert', ''); else app.removeAttribute('inert'); }
     if (landing && !this.landingFocused) {
       const btn = document.getElementById('mf-guide-start');
-      if (btn) { btn.focus(); this.landingFocused = true; }
+      if (btn) { btn.focus({ focusVisible: true }); this.landingFocused = true; }
     }
     if (!landing) this.landingFocused = false;
   }
@@ -3099,7 +3155,12 @@ class Component extends DCLogic {
     const gClosing = 'Done. The same question that could not be answered now returns a certified answer — the refusal in step 1 was the first step of getting it. Explore on your own from here: switch roles, or ask anything in the input box.';
     const gStep = s.guideStep, gBusy = s.playing, gFinished = gStep >= 6 && !!s.actsDone[6];
     const guideSteps = GSTEPS.map((g, i) => {
-      const n = i + 1, cur = gStep === n, done = !!s.actsDone[n];
+      // "Current" stops meaning anything once the last step has finished playing.
+      // It used to keep meaning step 6, so the chip row read ✓ ✓ ✓ ✓ ✓ ⑥ — five of
+      // six, in blue "you are here" styling — underneath a narration that had just
+      // said "Done." The arc closes on a certified answer and the progress row was
+      // arguing with it. Finished means every chip is a tick and none is current.
+      const n = i + 1, cur = gStep === n && !gFinished, done = !!s.actsDone[n];
       return {
         num: (done && !cur) ? '✓' : String(n), landNum: String(n), label: g.label, full: g.full,
         onGo: () => this.guideGo(n),
@@ -3108,25 +3169,22 @@ class Component extends DCLogic {
       };
     });
     const guideSay = gFinished ? gClosing : GSTEPS[Math.max(0, gStep - 1)].say;
-    const guideNextLabel = gBusy ? 'Step ' + gStep + ' is playing…' : (gFinished ? 'Finish · explore on your own →' : 'Next · step ' + (gStep + 1) + ' →');
+    const guideNextLabel = gBusy ? 'Step ' + gStep + ' is playing…' : (gFinished ? 'Finish · explore on my own →' : 'Next · step ' + (gStep + 1) + ' →');
 
     return {
       // top bar
       roleBtnBU:roleBtn('BU'), roleBtnDA:roleBtn('DA'), roleBtnDE:roleBtn('DE'),
       goBU:()=>this.setState({role:'BU'}), goDA:()=>this.setState({role:'DA'}), goDE:()=>this.setState({role:'DE'}),
-      guideToggle:()=>this.guideToggle(), guideBtnLabel: s.guideMode==='off' ? '▶ Walkthrough' : 'Hide walkthrough',
-      // While the landing card is up there are two solid blue buttons on screen:
-      // "Start · step 1 →" in the middle of the card, and this one in the top bar —
-      // and this one is the brighter of the two, because the scrim deliberately
-      // starts below the 50px bar so the role switcher stays live. So the most
-      // prominent button on the opening screen was the one that turns the thing off,
-      // while the card already carries "Skip — I will explore it myself" for exactly
-      // that. One screen, one primary button: this drops to the same outlined weight
-      // as the role switcher until the walkthrough is actually running.
-      guideBtnStyle: 'flex:none;white-space:nowrap;font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;' + (s.guideMode==='landing'
-        ? 'border:1px solid rgba(232,234,238,.28);background:transparent;color:rgba(232,234,238,.8);'
-        : 'border:none;background:#4A63D8;color:#fff;'),
-      guideBtnHover: s.guideMode==='landing' ? 'color:#fff;border-color:rgba(232,234,238,.6);' : 'background:#3B51BC;',
+      // The template only renders this while the walkthrough is off, so it has one
+      // label and one weight: the way back in. It used to render in all three states,
+      // which put a solid blue "Hide walkthrough" in the top bar at the exact moment
+      // the card in the middle of the screen was asking to be started — and the top
+      // bar's is the brighter of the two, because the scrim deliberately stops below
+      // it so the role switcher stays live. One screen, one primary button.
+      guideOff: s.guideMode==='off',
+      guideToggle:()=>this.guideToggle(), guideBtnLabel: '▶ Walkthrough',
+      guideBtnStyle: 'flex:none;white-space:nowrap;font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;border:none;background:#4A63D8;color:#fff;',
+      guideBtnHover: 'background:#3B51BC;',
       infoEnter:()=>this.setState({infoOpen:true}), infoLeave:()=>this.setState({infoOpen:false}),
       infoOpen:s.infoOpen, infoTitle:`${s.role} role constraints`, infoRows,
       hasNotice: !!s.notice, noticeText: s.notice || '',
