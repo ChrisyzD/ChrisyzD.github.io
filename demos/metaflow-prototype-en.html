@@ -1738,18 +1738,50 @@
    "revenue_2024" on a second line. It broke in the recording's closing frame, in the
    poster still, and in the live demo's last step — the same three places a reader
    meets it. The width comes out of the conversation column, which had room: at 1440
-   the main area goes 882 → 798 and nothing in it reflows. Below 1200px there is no
-   spare width to take, so the column stays where it was and the name wraps (the two
-   halves are at least both visible there; on a phone the walkthrough does not run at
-   all). */
-@media (min-width: 1200px) {
-  #mf-bu-cred { width: 380px !important; }
+   the main area goes 882 → 798 and nothing in it reflows.
+
+   That width used to arrive as a step at exactly 1200px, which made the conversation
+   column 622px wide at 1180 and 558px at 1200 — drag the window 20px wider and the
+   text got 64px narrower, and it took until about 1265 to win it back. That is the one
+   behaviour the stylesheet next door spends a paragraph guaranteeing cannot happen, so
+   it should not happen here either. It is a ramp now: the column grows continuously
+   from 296px at 900 to 380px at 1024 and holds there, so the conversation area gains
+   0.32px for every pixel of window at every width and never loses one.
+
+   The ramp finishes at 1024 rather than 1200 because 1024 is a real window width and
+   the same field broke there too — 221px of the 304 it needs. Dropping the mono size
+   instead would have taken 8.3px to fit, which is measured rather than guessed and is
+   not a readable identifier, so the fix is the width. Below 900 the walkthrough does
+   not run at all and the notice at the top of the page says so. */
+#mf-bu-cred {
+  width: clamp(296px, calc(296px + (100vw - 900px) * 0.677), 380px) !important;
 }
 /* Focus has to be visible where it has been put. The card opens with focus already
    on "Start · step 1", which is only useful to a keyboard reader if the reader can
    see that; the browser's own ring is suppressed for programmatic focus unless the
    page asks for it (see focus({focusVisible:true}) below). Same ring as the site
    uses on links, at the card's own radius. */
+/* A conversation grows upward from the box you type into; it does not hang from the
+   ceiling. This column was top-aligned, so at the first step and again at the last one
+   the answer sat under the top bar and about 430px of a 900px frame — roughly 48% of
+   the picture — was empty grey between the last message and the input. That shows up
+   twice: in the recording, where a still frame is all a reader gets, and in the live
+   demo, where it is the first thing on screen.
+   margin-top:auto on the flow rather than justify-content:flex-end on the scroller:
+   with flex-end, once the thread is taller than the frame the overflow goes off the
+   TOP of the scroll box and cannot be scrolled back to. auto margins collapse to 0 in
+   that case, so the short thread sits on the input and the long one scrolls normally. */
+#mf-bu-flow { display: flex; flex-direction: column; }
+/* !important because the flow carries an inline margin:0 auto for its own centring,
+   and an inline declaration outranks this file without it. */
+#mf-bu-flow > div { margin-top: auto !important; }
+/* …except before the first question, when what is in the column is not a thread but
+   the invitation to start one. A prompt belongs where the eye lands, not pinned above
+   the input box with 500px of grey over it — which is the same complaint as the one
+   above, upside down. Browsers without :has() bottom-align the empty state too: less
+   good, not broken. */
+#mf-bu-flow:has(#mf-bu-empty) > div { margin-top: 0 !important; }
+
 #mf-guide-card button:focus-visible {
   outline: 2px solid #4A63D8; outline-offset: 3px; border-radius: 9px;
 }
@@ -1788,6 +1820,27 @@
      scrim edge reads as a rendering seam. Here it just covers everything. */
   #mf-guide-scrim { top: 0 !important; }
 }
+
+/* --- no-JavaScript fallback -------------------------------------------------
+   Everything under the template root is source text until the runtime at the top
+   of this file compiles it, so with scripting off the top bar reads
+   "{{ guideBtnLabel }}", the info panel reads "{{ infoTitle }}" and all three
+   role views render stacked open. The seven content pages on this site are
+   complete without JavaScript because everything on them is already written
+   down; this one is an operable artifact and cannot be, so it names the page
+   that holds the readable version instead of showing its own template syntax.
+   The rule that hides the template lives inside the <noscript> in the body,
+   which is the only element in HTML parsed exactly when this is true. */
+.mf-nojs {
+  margin: 0;
+  padding: 14px 16px;
+  background: #fff;
+  color: #16181d;
+  border-bottom: 1px solid #e3e5e8;
+  font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  text-align: center;
+}
+.mf-nojs a { color: #0b5cad; text-decoration: underline; text-underline-offset: 2px; }
 </style>
 </head>
 <body>
@@ -1802,6 +1855,13 @@
   of 900px or more. What is readable at this width is the annotated set of the same screens on
   the <a href="/work/metaflow/">MetaFlow page</a>. Come back on a laptop to operate it and to
   click through the six steps yourself.</div>
+<noscript>
+  <style>x-dc { display: none; }</style>
+  <div class="mf-nojs">This prototype needs JavaScript to run; with it switched off the page
+    below is template source rather than an interface. The readable version of the same four
+    acts is the annotated set of screens on the
+    <a href="/work/metaflow/">MetaFlow case page</a>.</div>
+</noscript>
 <x-dc>
 <helmet>
 <style>
@@ -1911,10 +1971,10 @@ a:hover{color:#1B1E24;text-decoration:underline;}
     </aside>
 
     <main style="flex:1;display:flex;flex-direction:column;min-width:0;background:#F5F6F8;">
-      <div ref="{{ buScroll }}" style="flex:1;overflow-y:auto;padding:20px 26px 10px;">
+      <div id="mf-bu-flow" ref="{{ buScroll }}" style="flex:1;overflow-y:auto;padding:20px 26px 10px;">
         <div style="max-width:720px;margin:0 auto;">
           <sc-if value="{{ buEmpty }}" hint-placeholder-val="{{ true }}">
-            <div style="padding:44px 8px 20px;">
+            <div id="mf-bu-empty" style="padding:44px 8px 20px;">
               <div style="font-size:21px;font-weight:700;line-height:1.4;">Ask MetaFlow a business question</div>
               <p style="font-size:13px;line-height:1.8;color:rgba(27,30,36,.6);max-width:520px;margin:10px 0 0;">Answers come only from the certified semantic capabilities on the left. A certified definition matches → you get the answer plus its provenance. The definition is ambiguous → MetaFlow asks back. It falls outside certification → an explicit MISS, which you can hand off to DA for triage.</p>
             </div>

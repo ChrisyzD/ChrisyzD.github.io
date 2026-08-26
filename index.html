@@ -15,18 +15,33 @@
      visitor saw on a wide screen was a 1280px line with a 767px block above it. The
      three contact links are the one part of this block that is not a sentence, so
      they are what moves into the margin column: who I am on the spine, how to reach
-     me beside it. On a phone this is the same four lines in the same order. -->
-<header class="site spread">
-  <div>
-    <h1>Yizhe Dai</h1>
+     me beside it — and, since it is the same question, the face goes there too.
 
+     The credential line used to repeat, in shorthand, the three places the paragraph
+     under it now names in sentences: Harvard, ByteDance, Michigan, twice within 60
+     pixels. It keeps the one thing the paragraph does not say, which is the ask.
+
+     Source order is portrait, name, sentences, contact — the order a reader with no
+     stylesheet, and a printer, should meet them in. Everything below only places them. -->
+<header class="site intro">
+  <img class="portrait" src="/assets/img/portrait.jpg" width="320" height="320"
+       fetchpriority="high"
+       alt="Yizhe Dai, facing the camera against a plain white background.">
+
+  <h1>Yizhe Dai</h1>
+
+  <div class="who">
     <p class="lead">I build the measurement layer for data and AI systems — evaluation
     harnesses, metadata contracts, and the pipelines that make an answer checkable before
     anyone trusts it.</p>
 
-    <p class="meta">M.S. Health Data Science, Harvard (2026–2028) · previously AI Solutions
-    @ Lark, ByteDance · data engineering and AI research at Michigan · <strong>seeking a Summer
-    2027 data engineering internship</strong></p>
+    <p>I'm starting a master's in health data science at Harvard this autumn. Before that: a
+    summer at ByteDance making two enterprise AI agents comparable on the same tasks, and two
+    years at Michigan on research pipelines for a cardiac rehabilitation study and a
+    rehabilitation lab. The part I end up owning is always the part that checks the work —
+    because an answer you can check is worth more than one you have to believe.</p>
+
+    <p class="meta"><strong>Seeking a Summer 2027 data engineering internship.</strong></p>
   </div>
 
   <div class="side bare">
@@ -52,11 +67,19 @@
 <!-- ============================ WORK ============================ -->
 <section id="work">
   <h2>Selected work</h2>
+  <!-- This paragraph used to say the frames were "re-cropped where a laptop-width frame
+       is unreadable at phone width", and two of them were: the box plots were cropped in
+       until the third box was sliced in half, the axis ran off the right edge and the
+       y-axis title was cut down the middle; the EMG frame was cropped past the peak of
+       the trace the alt text points at. Zooming a chart or an instrument panel for a
+       phone does not make it more readable, because every edge of one is a scale — it
+       just removes the scale and keeps the ink. Each project now carries one frame,
+       whole, at every width, and the phone gets the same object smaller. -->
   <p class="meta">Four projects, one page each: what it is, what I built, what the numbers are
     — and, at the end of every page, what I still think is unresolved about it. Every card
-    carries one frame of that project's own material, re-cropped where a laptop-width frame
-    is unreadable at phone width; two of them open with a clip of the thing actually
-    running.</p>
+    carries one frame of that project's own material, whole rather than zoomed: three of the
+    four are charts or instrument panels, and on those an edge is a scale. Two of them open
+    with a clip of the thing actually running.</p>
 
   <ul class="cards">
 
@@ -75,14 +98,17 @@
            460px evidence column — legible on a 2× laptop panel and a textured grey
            rectangle on a 1× external display, which is to say: the one frame on this
            page whose status as evidence depended on the reader's hardware, and it was
-           the first card. The re-crop is the same screen's provenance card at 0.64, and
-           it reads at any pixel ratio and any width, so it is now the frame at every
-           width rather than the phone's consolation prize. -->
-      <img class="shot" src="/assets/img/metaflow-card-provenance.png" width="720" height="440"
-           alt="The provenance card the prototype attaches to every answer, cropped from the
-           console screen: a green All provenance checks green header, then the source asset
-           semantic.semantic_revenue, metric version M001_v2 and the definition binding
-           fx_rate_basis=event_date_ecb, with the first three fields numbered.">
+           the first card. So the frame is the same screen's provenance card instead.
+           It was cut off at two of its own borders — right and bottom, mid-field, two
+           of the five numbered fields missing — on the argument that a shorter card
+           fits a wider slot. A card with no bottom is not a card; the whole one is
+           taller than the slot and the slot gave way. -->
+      <img class="shot" src="/assets/img/metaflow-card-provenance.png" width="661" height="769"
+           alt="The provenance card the prototype attaches to every answer: a green All
+           provenance checks green header, then source asset semantic.semantic_revenue,
+           metric version M001_v2, the definition binding fx_rate_basis=event_date_ecb, 12
+           rows, BU-certified, and a checksum-verified block — five of the fields numbered
+           one to five.">
     </li>
 
     <li class="card">
@@ -93,11 +119,15 @@
         <p>Measure first, then regenerate only where the failures are — a user simulator, an LLM
           judge, and 17,200 verified dialogues aimed at eleven functions.</p>
       </div>
-      <img class="shot" src="/assets/img/flywheel-card.png" width="1200" height="667"
+      <!-- Half a ring is not half an argument, it is a ring with two arcs running off the
+           top edge. The frame is the whole cycle now — six steps and the hub — cut where
+           the figure's own white ground is, not through its lines. -->
+      <img class="shot" src="/assets/img/flywheel-card.png" width="1200" height="1105"
            loading="lazy"
-           alt="The half of the flywheel diagram that carries the argument: judge, then locate
-           the eleven highest-error functions, then regenerate targeted rather than everywhere,
-           all turning around the verified dialogue set at the centre.">
+           alt="The flywheel diagram: six steps turning clockwise — simulate, roll out, judge,
+           locate the eleven highest-error functions, regenerate targeted rather than
+           everywhere, re-evaluate at 72.8 to 82.7 per cent accepted — with dashed arrows from
+           roll out and regenerate into the verified dialogue set at the centre.">
     </li>
 
     <li class="card">
@@ -108,16 +138,15 @@
         <p>Whether wearable step data can say when a patient has actually stopped improving — and
           how much that answer depends on what you decide “recovered” means.</p>
       </div>
-      <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/cardiac-card-mobile.png"
-              width="780" height="580">
-      <img class="shot" src="/assets/img/cardiac-card.png" width="1200" height="748"
+      <!-- Cut between the second and third box, where the poster's own paper is, so both
+           boxes keep their four sides and the crop keeps both axes: the day-since-enrollment
+           title down the left, the frame, and the 0/50/100/150 ticks underneath. The third
+           definition is on the case page, in the whole figure it came from. -->
+      <img class="shot" src="/assets/img/cardiac-card.png" width="1200" height="700"
            loading="lazy"
-           alt="The plateau box plots from the co-authored poster, cropped to two of the three
-           definitions of stable recovery on the same cohort: two visibly different medians and
-           spreads on the same day-since-enrollment axis, with the third definition's box just
-           visible at the top edge.">
-      </picture>
+           alt="Two of the three plateau box plots from the co-authored poster: two visibly
+           different medians and spreads on the same day-since-enrollment axis, each box whole,
+           with the axis and its 0 to 150 ticks underneath.">
     </li>
 
     <li class="card">
@@ -128,15 +157,15 @@
         <p>Muscle activity to cursor in real time, with the optimizer hand-ported out of Python so
           the decoder adapts on-device inside the game loop.</p>
       </div>
-      <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/emg-card-mobile.png"
-              width="700" height="525">
+      <!-- The phone crop of this one stopped at about 1.05 s of a 2.5 s trace, which is
+           before the peak the sentence under it names, and took half of the second target
+           with it. There is no narrower crop of a three-panel instrument frame that is
+           still the same claim. -->
       <img class="shot" src="/assets/img/emg-card.png" width="1200" height="525" loading="lazy"
            alt="One frame of the EMG clip at the instant of a reach: the reach counter at the
            top left, the Delsys panel with the smoothed envelope of that reach peaking near
            0.07 of its nought-to-one axis, and the yellow muscle-driven cursor resting against
            the lit target below.">
-      </picture>
     </li>
 
   </ul>
@@ -229,10 +258,21 @@
       <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
            alt="A four-step ring — Measure, Locate, Fix, Add a guardrail — turning around a
            dark card labelled “grows with every failure”. The guardrail step is highlighted in
-           blue as the one that gets skipped; two dashed cards name the instances it is drawn
-           from, MetaFlow and the capstone flywheel.">
-      <figcaption>The essay's figure: the fourth step is the one that gets skipped, and it is
-        the only one that makes the next run cheaper.</figcaption>
+           blue as the one that gets skipped.">
+      <!-- The column beside a 752px drawing held two lines of caption and 700px of
+           nothing. What went into it is what was already inside the drawing and did not
+           belong there: two dashed cards naming the projects the loop is generalised
+           from. A caption column is for what comments on a figure; the figure is for
+           the thing being drawn. -->
+      <figcaption>
+        <p>The essay's figure: the fourth step is the one that gets skipped, and it is
+          the only one that makes the next run cheaper.</p>
+        <p><span class="lbl">The two it is drawn from</span>
+          <strong>MetaFlow</strong> — twenty gold cases pinned across five pipeline stages,
+          in version control, re-run on every change.</p>
+        <p><strong>The capstone flywheel</strong> — an LLM judge scoring every turn, and the
+          eleven highest-error functions it named.</p>
+      </figcaption>
     </figure>
     <p class="golink"><a href="/writing/closed-loop/">Read →</a></p>
   </article>

@@ -4,6 +4,14 @@
   <desc id="fig-3-closed-loop-desc">A four-step cycle — measure, locate, fix, add a guardrail — running clockwise around a shared ruler at the centre. The guardrail step writes each fix back into the ruler as a new case, and the measure step runs that ruler again, so the same mistake cannot happen twice.</desc>
   <defs>
     <style>
+      /* A presentation attribute (fill="#fff") has lower priority than ANY class
+         selector, so the .nam/.slb fills below used to win over the per-element
+         colours further down: "The ruler" rendered #16181d on a #16181d card —
+         invisible — and the accented step, the one this figure exists to point at
+         and the one the legend colour-codes, rendered black instead of blue. The
+         four that need their own colour carry it as style="fill:…" now, which is
+         the one form that outranks a class. Verified in the browser, not assumed:
+         getComputedStyle(t).fill on each of them. */
       .s  { font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; }
       .m  { font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
       .ttl{ font-size:26px; font-weight:600; fill:#16181d; letter-spacing:-0.01em; }
@@ -39,18 +47,11 @@
   <rect x="410" y="282" width="86" height="12" rx="2" fill="#ffffff"/>
   <text class="m alb" x="416" y="291">RUN THE SUITE</text>
 
-  <!-- instance notes -->
-  <rect x="40" y="164" width="160" height="96" rx="6" fill="#ffffff" stroke="rgba(22,24,29,0.18)" stroke-width="0.8" stroke-dasharray="4,3"/>
-  <text class="m eyb" x="56" y="186">INSTANCE</text>
-  <text class="s nam" x="56" y="212" font-size="14">MetaFlow</text>
-  <text class="m slb" x="56" y="230">gold-case suite,</text>
-  <text class="m slb" x="56" y="244">in version control</text>
-
-  <rect x="600" y="540" width="160" height="96" rx="6" fill="#ffffff" stroke="rgba(22,24,29,0.18)" stroke-width="0.8" stroke-dasharray="4,3"/>
-  <text class="m eyb" x="616" y="562">INSTANCE</text>
-  <text class="s nam" x="616" y="588" font-size="14">Capstone</text>
-  <text class="m slb" x="616" y="606">data flywheel,</text>
-  <text class="m slb" x="616" y="620">judge-scored</text>
+  <!-- The two dashed INSTANCE cards that used to sit in these corners — MetaFlow at
+       top left, the capstone flywheel at bottom right — are margin-column material:
+       they name what the drawing is drawn from rather than being part of the loop it
+       draws. They are in the figure's caption column now, on both pages that carry
+       this figure. -->
 
   <!-- stations -->
   <rect x="320" y="152" width="160" height="64" rx="6" fill="#ffffff"/>
@@ -71,13 +72,13 @@
   <!-- focal : the step that gets skipped -->
   <rect x="104" y="368" width="160" height="64" rx="6" fill="#ffffff"/>
   <rect x="104" y="368" width="160" height="64" rx="6" fill="rgba(11,92,173,0.07)" stroke="#0b5cad" stroke-width="1.4"/>
-  <text class="s nam" x="184" y="400" text-anchor="middle" fill="#0b5cad">Add a guardrail</text>
-  <text class="m slb" x="184" y="418" text-anchor="middle" fill="#0b5cad">becomes a new case</text>
+  <text class="s nam" x="184" y="400" text-anchor="middle" style="fill:#0b5cad">Add a guardrail</text>
+  <text class="m slb" x="184" y="418" text-anchor="middle" style="fill:#0b5cad">becomes a new case</text>
 
   <!-- hub : accumulated state -->
   <rect x="312" y="356" width="176" height="88" rx="8" fill="#16181d"/>
-  <text class="s nam" x="400" y="396" text-anchor="middle" fill="#ffffff">The ruler</text>
-  <text class="m slb" x="400" y="416" text-anchor="middle" fill="rgba(255,255,255,0.75)">grows with every failure</text>
+  <text class="s nam" x="400" y="396" text-anchor="middle" style="fill:#ffffff">The ruler</text>
+  <text class="m slb" x="400" y="416" text-anchor="middle" style="fill:rgba(255,255,255,0.75)">grows with every failure</text>
 
   <!-- legend -->
   <line x1="40" y1="688" x2="760" y2="688" stroke="#e3e5e8" stroke-width="0.8"/>

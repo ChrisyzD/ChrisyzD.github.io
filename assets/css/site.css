@@ -94,6 +94,11 @@
      side, 1px of border on each side. Named here because the heading above it
      has to take the same number — see law (a). */
   --plate:    1250px;
+  /* The face is a fixed object, not a column: it is the one thing in the opening
+     block whose size is a decision rather than a consequence of the window. Named
+     here because the contact list that sits under it in the margin column has to
+     take the same number. */
+  --portrait: 88px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -149,9 +154,12 @@ body.essay { --prose: 600px; }
 .side ul, .side ol { margin: 0 0 8px; padding-left: 18px; }
 .side strong { color: var(--text); }
 /* Same mark as a section heading, one step down: the margin column is a place,
-   so its contents get named rather than floating. */
-.side .lbl { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
-             font-weight: 700; color: var(--text); margin-bottom: 6px; }
+   so its contents get named rather than floating. Not scoped to .side any more —
+   a figure's caption column is the same place doing the same job, and a second
+   copy of these five declarations under a second selector is how a stylesheet
+   ends up with two labels that drift apart. */
+.lbl { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+       font-weight: 700; color: var(--text); margin-bottom: 6px; }
 /* One .side is not a note about a passage — it is the header's contact block,
    which was already part of the header before it moved into the column. It
    keeps no rule and no label until there is a column to put it in, so on a
@@ -251,6 +259,48 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; max-width: va
 /* The nav belongs to the header block, not to the space between the header and
    the work. */
 header.site { margin-bottom: 24px; }
+
+/* ---------- the opening block ---------- */
+/* Four grid items in one fixed source order — portrait, name, sentences, contact —
+   placed three different ways and never reordered in the DOM. This is not .spread:
+   .spread is a passage and its margin notes, two columns of type. Here the second
+   column starts with a face, which is a fixed 160px object rather than a column of
+   anything, so it gets its own placement instead of borrowing one that is about
+   text.
+   The photo is round. Every other framed image on this site is a 2px-radius
+   rectangle with a 1px rule, because every other one is evidence and a frame is
+   what says "look inside this edge". A face is not evidence, and giving it the
+   evidence frame would have said it was. Round also means the studio's white paper
+   meets the page's white with no edge at all: what you see is the person, not a
+   photograph of the person. */
+.portrait {
+  display: block;
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+/* Below the two-column width the face is simply the first thing on the spine and
+   the name is the second. It was a face-beside-the-name row for one revision,
+   which looked better and cost two of this file's own rules: the name — the
+   largest word on the page — started 136px right of every other block, and at
+   exactly 1200px, when the face left that row for the margin column, it jumped
+   those 136px back. "The content's left edge is the gutter on both sides of every
+   step" is the promise three paragraphs at the top of this file are about. So the
+   face stacks, the name never moves, and past 1200px the face is placed in the
+   margin — which is the same move .role and .side already make at the same width.
+   A column of face beside a column of type is not the alternative: it does not fit
+   until about 1000px (720 of measure + 40 + 160 of face against a track that is
+   only 860 at 940), and buying it earlier means paying for it out of the line. */
+header.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 16px;
+}
+header.intro > .portrait { grid-column: 1; width: var(--portrait); height: var(--portrait); }
+header.intro > h1        { grid-column: 1; margin-bottom: 0; }
+header.intro > .who      { grid-column: 1; }
+header.intro > .side     { grid-column: 1; }
+header.intro .who > p:last-child { margin-bottom: 0; }
 nav.top { font-size: 15px; margin-bottom: 24px; color: var(--meta); }
 /* 44px touch target on phones, where this nav is the only way to reach Experience
    without scrolling three thousand pixels. The visual height does not change. */
@@ -303,6 +353,12 @@ h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section { ma
    and the row is real. */
 .contact { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-wrap: wrap;
            gap: 0 16px; font-size: 15px; }
+/* `.side ul` two hundred lines up sets 18px of padding so a bulleted aside has room
+   for its markers, and it outranks the padding:0 on the line above by one point of
+   specificity. This list has no markers: it is three links, and they were sitting
+   18px right of the spine — and, from 1200px up, 18px right of the face they sit
+   under — while every other block on the page started on it. */
+.side .contact { padding-left: 0; }
 .contact li { margin: 0; }
 .contact a { display: inline-flex; align-items: center; min-height: 44px; }
 
@@ -342,12 +398,18 @@ h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section { ma
    dropped the frame under the sentence. */
 .card picture { display: block; min-width: 0; }
 
+/* The cap is a height, not a width, because a frame's width is its column's and its
+   height is its own. It was tuned when all four frames were landscape crops; two of
+   them are now the whole object rather than a slice of it, and the whole object can
+   be taller than it is wide — the provenance card is 0.86, the flywheel ring 1.09.
+   A cap that forces a portrait frame back to landscape proportions is the crop
+   argument again with a different tool. */
 .card .shot {
   display: block;
   width: auto;
   height: auto;
   max-width: min(100%, 560px);
-  max-height: 320px;
+  max-height: 380px;
   border: 1px solid var(--rule);
   border-radius: 2px;
   background: #f5f6f7;
@@ -478,11 +540,15 @@ figure > img, figure > svg, figure > picture > img, figure video {
 figcaption { font-size: 13px; line-height: 1.55; color: var(--meta); margin-top: 8px; }
 figcaption .src { display: block; margin-top: 4px; }
 
-/* Drawn at 800. It used to be allowed 900, which was the one place on the site
-   that scaled a figure 12% past the size it was made at — the opposite of the
-   rule stated above it. It now takes the measure, and past 1200px it takes the
-   track by putting its caption in the margin column instead (see TIER 4). */
-.fig-diagram { max-width: min(900px, 100%); }
+/* Drawn at 800. The comment here used to say it had stopped being allowed 900 —
+   "the one place on the site that scaled a figure 12% past the size it was made
+   at" — and then the rule underneath still said 900. Measured: between 940 and
+   1199px every one of the six diagrams, on all five pages that carry one, rendered
+   at exactly 900px, which is 1.125× native. The comment was right and the number
+   was not. It takes the measure, as the sentence next to it always claimed, and
+   past 1200px it takes the track by putting its caption in the margin column
+   instead (see TIER 4). */
+.fig-diagram { max-width: var(--prose); }
 .fig-plate   { max-width: 1200px; }   /* the poster exports are 1200 wide */
 /* Each recording caps at its OWN native width, and the tiers are arranged so
    that each one reaches it: the EMG clip is native 1280 and is 1:1 from 1360px
@@ -693,6 +759,9 @@ footer.site a { color: var(--link); }
   .card { padding: 24px; }
   .pager { display: flex; flex-wrap: wrap; gap: 8px 24px; }
   .pager li { margin-bottom: 0; }
+
+  /* The name steps 30 → 38px here, and everything else on the page steps with it. */
+  :root { --portrait: 112px; }
 }
 
 /* ============================================================================
@@ -727,8 +796,13 @@ footer.site a { color: var(--link); }
   /* 260 was tuned for the four landscape crops; the cardiac frame is nearly
      square, so the cap decided its width instead of its height and left 160px
      of its own column empty — the widest of the four unequal gutters. Raising
-     the cap lets every frame fill the column it was given. */
-  .card .shot { justify-self: end; margin-left: auto; max-width: 100%; max-height: 300px; }
+     the cap lets every frame fill the column it was given. 470 is where the
+     flywheel ring (1.09) and the cardiac and EMG frames all fill their column
+     at every tier; the provenance card is 0.86 and stops 56px short of a 460px
+     column, which is the one place the cap still decides a width. That is a
+     fact about a portrait object in a landscape slot, and the alternative — a
+     535px cap — hands the first card on the page half a screen. */
+  .card .shot { justify-self: end; margin-left: auto; max-width: 100%; max-height: 470px; }
   .card .ct { max-width: none; }
 
   /* Three before/after numbers, three-across. Down a 68ch column they are a
@@ -766,7 +840,9 @@ footer.site a { color: var(--link); }
 @supports selector(:has(*)) {
   @media (min-width: 44rem) {
     section > h2 { max-width: var(--prose); }
-    section:has(.fig-diagram) > h2 { max-width: min(900px, 100%); }
+    /* A drawn diagram used to widen the rule over it to 900, because the diagram
+       itself was allowed 900. It takes the measure now, so the rule over it does
+       too — which is the default two lines up, so there is no longer a line here. */
     /* The plate stops at its own contents rather than at the track, so a rule that
        frames nothing but a plate stops there too. Before the track line, not after:
        where a section holds a plate AND something that does take the track — which
@@ -800,6 +876,28 @@ footer.site a { color: var(--link); }
   /* Three links across a 460px column wrap into an uneven two lines; down it
      they are a list, which is what they are. */
   .side .contact { flex-direction: column; gap: 4px 0; margin-top: 0; font-size: 15px; }
+
+  /* Tier 4 is where the margin column exists, so this is where the face leaves the
+     name and moves into it, with the contact list underneath — the two halves of
+     "who is this and how do I reach him", one above the other, sharing the column's
+     left edge. It takes the column's left edge rather than the track's right end: a
+     160px object shoved to the far edge with 300px of nothing between it and the
+     sentences is the arrangement this file spends most of its length arguing
+     against, and the contact block under it is what makes the column worth opening.
+     Both are placed in the same area and top-aligned, with the contact list offset
+     by the face's own height — one derived number, like --plate, rather than a grid
+     row whose height would depend on how long the paragraph happened to be. */
+  :root { --portrait: 160px; }
+  header.intro {
+    grid-template-columns: var(--prose) minmax(0, 1fr);
+    column-gap: 40px;
+    align-items: start;
+  }
+  header.intro > .portrait { grid-column: 2; grid-row: 1 / span 2; }
+  header.intro > h1        { grid-column: 1; grid-row: 1; margin-bottom: 0; }
+  header.intro > .who      { grid-column: 1; grid-row: 2; }
+  header.intro > .side     { grid-column: 2; grid-row: 1 / span 2; align-self: start;
+                             margin-top: calc(var(--portrait) + 24px); }
 
   /* A drawn diagram and its caption stop being two stacked blocks and become
      one object that spans the track: the drawing on the spine at the measure,
@@ -939,7 +1037,11 @@ footer.site a { color: var(--link); }
   .scope, .thoughts-body, .pull, .plate .src, .side { max-width: none; }
   /* Paper has one column. A margin note prints under the passage it belongs to,
      which is where it sits on a phone too. */
-  .spread, .fig-diagram, .clip figcaption, .compact.laned .item { display: block; }
+  .spread, .fig-diagram, .clip figcaption, .compact.laned .item, header.intro { display: block; }
+  /* The card frames do not print — they are evidence of motion and paper has none.
+     A face is not evidence of anything, and a printed page of somebody's work is a
+     normal place to have one, so it stays and gets out of the type's way. */
+  header.intro > .portrait { float: right; width: 96px; height: 96px; margin: 0 0 8px 16px; }
   .clip figcaption > .spec, .clip figcaption > .bound {
     border-left: 0; padding-left: 0; max-width: none; margin: 8px 0 0;
   }

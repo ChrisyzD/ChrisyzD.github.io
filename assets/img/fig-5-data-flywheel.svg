@@ -4,6 +4,14 @@
   <desc id="fig-5-data-flywheel-desc">A six-step training-data cycle — simulate, roll out, judge, locate, regenerate, re-evaluate — turning clockwise around a growing set of verified dialogues. The judge's error breakdown localises the eleven highest-error functions, and regeneration is aimed only at those.</desc>
   <defs>
     <style>
+      /* A presentation attribute (fill="#fff") has lower priority than ANY class
+         selector, so the .nam/.slb fills below used to win over the per-element
+         colours further down: "Verified dialogues" rendered #16181d on a #16181d hub —
+         invisible — and the accented step, the one this figure exists to point at
+         and the one the legend colour-codes, rendered black instead of blue. The
+         four that need their own colour carry it as style="fill:…" now, which is
+         the one form that outranks a class. Verified in the browser, not assumed:
+         getComputedStyle(t).fill on each of them. */
       .s  { font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; }
       .m  { font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
       .ttl{ font-size:26px; font-weight:600; fill:#16181d; letter-spacing:-0.01em; }
@@ -56,8 +64,8 @@
   <!-- focal : where measurement pays off -->
   <rect x="312" y="616" width="176" height="64" rx="6" fill="#ffffff"/>
   <rect x="312" y="616" width="176" height="64" rx="6" fill="rgba(11,92,173,0.07)" stroke="#0b5cad" stroke-width="1.4"/>
-  <text class="s nam" x="400" y="648" text-anchor="middle" fill="#0b5cad">Locate</text>
-  <text class="m slb" x="400" y="666" text-anchor="middle" fill="#0b5cad">11 highest-error functions</text>
+  <text class="s nam" x="400" y="648" text-anchor="middle" style="fill:#0b5cad">Locate</text>
+  <text class="m slb" x="400" y="666" text-anchor="middle" style="fill:#0b5cad">11 highest-error functions</text>
 
   <rect x="112" y="500" width="176" height="64" rx="6" fill="#ffffff"/>
   <rect x="112" y="500" width="176" height="64" rx="6" fill="#ffffff" stroke="#16181d" stroke-width="1"/>
@@ -71,8 +79,8 @@
 
   <!-- hub : accumulated state -->
   <rect x="304" y="368" width="192" height="96" rx="8" fill="#16181d"/>
-  <text class="s nam" x="400" y="408" text-anchor="middle" fill="#ffffff">Verified dialogues</text>
-  <text class="m slb" x="400" y="428" text-anchor="middle" fill="rgba(255,255,255,0.75)">the training set grows</text>
+  <text class="s nam" x="400" y="408" text-anchor="middle" style="fill:#ffffff">Verified dialogues</text>
+  <text class="m slb" x="400" y="428" text-anchor="middle" style="fill:rgba(255,255,255,0.75)">the training set grows</text>
 
   <!-- legend -->
   <line x1="40" y1="720" x2="760" y2="720" stroke="#e3e5e8" stroke-width="0.8"/>
