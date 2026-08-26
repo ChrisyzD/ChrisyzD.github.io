@@ -8,28 +8,30 @@
 <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
-<!-- The wordmark, and nothing else. This is the one page where the shared row was
-     making the page worse rather than better: the body of a 404 IS the site index,
-     already grouped and already labelled, so a flat row of the same seven
-     destinations directly above it made ten of this page's seventeen links chrome —
-     the same seven links twice, the second copy with the hierarchy taken out. The
-     comment three lines down has complained about a wall of seven equal links on
-     this page since the round that removed one; last round put another one on top
-     of it.
+<!-- The wordmark, and nothing else. This is the one page where the shared row makes
+     the page worse rather than better: the body of a 404 IS the site index, already
+     grouped and already labelled, so a second copy of the same destinations directly
+     above it would make most of this page's links chrome — the same links twice, the
+     second copy with the hierarchy taken out. That was true when the row was seven
+     items and it is still true at four.
      So this page keeps the part of the bar that is not an index — whose site this
      is, and the way home — and lets its own body be the index. No aria-current
-     either: the deep pages mark the section they are filed under, and a page that
+     either: the other pages mark the branch they are filed under, and a page that
      does not exist is not filed under anything. -->
 <nav class="top">
   <a class="wm" href="/">Yizhe Dai</a>
 </nav>
 <h1>Page not found</h1>
 <p>That page does not exist. Nothing here is behind a login — it is just the wrong address.</p>
-<!-- Seven links of identical weight is a wall, and it was the one block on this site
-     with no hierarchy in it at all. The same seven, in the three groups they were
-     already in. -->
+<!-- The site is three pages and their contents now, so this list is too, and each group
+     opens with the page that holds it. That is one link more than the seven deep pages
+     alone and it is the one that pays: whatever the mistyped address was aiming at, the
+     index above it is a place where the whole branch is listed with its frames and its
+     dates. A flat wall of equal-weight links is what this block used to be and the three
+     grey labels are what stopped it being one. -->
 <p class="meta">Work</p>
 <ul class="linklist">
+  <li><a href="/work/">Selected work — four projects, one page each</a></li>
   <li><a href="/work/metaflow/">MetaFlow — metadata-centric NL-to-SQL</a></li>
   <li><a href="/work/data-flywheel/">LLM data flywheel for in-vehicle voice assistants</a></li>
   <li><a href="/work/cardiac-rehab/">Cardiac rehabilitation wearable study</a></li>
@@ -38,14 +40,16 @@
 
 <p class="meta">Writing &amp; the prototype</p>
 <ul class="linklist">
+  <li><a href="/writing/">Writing</a></li>
   <li><a href="/writing/closed-loop/">The loop — notes on making an NL-to-SQL answer checkable</a></li>
   <li><a href="/demos/metaflow-prototype-en.html">MetaFlow interactive prototype (English,
     desktop width)</a></li>
 </ul>
 
-<p class="meta">Everything</p>
+<p class="meta">Everything else</p>
 <ul class="linklist">
-  <li><a href="/">Home — work, writing, experience</a></li>
+  <li><a href="/experience/">Experience, education and skills</a></li>
+  <li><a href="/">Home — the three pages above, and who wrote them</a></li>
 </ul>
 
 <footer class="site">

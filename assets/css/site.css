@@ -347,20 +347,32 @@ header.intro > .who      { grid-column: 1; }
 header.intro > .side     { grid-column: 1; }
 header.intro .who > p:last-child { margin-bottom: 0; }
 /* ---------- the bar ---------- */
-/* This row used to sit AFTER the opening block on the home page, which meant the
-   one element on the site that says what is on the site was the seventh thing you
-   met: on a 390x844 phone its top edge measured y=787 of an 844px screen, so a
-   visitor's first screen contained a face, a name, four paragraphs and no way to
-   go anywhere. The only available move was to scroll, and the home page is 8,028px
-   tall at that width — nine and a half screens of guessing. It is first in the
-   source on every page now, which also makes it first in the tab order.
-   It is pinned, and that is the part that costs something, so: the complaint this
-   answers is not "I cannot see the nav when I arrive" — that one is fixed by moving
-   it, full stop — it is that finding your way DOWN the page is guesswork. A bar
-   that scrolls away fixes the first screen and abandons you at the eighth, which
-   is where the guessing actually happens. So it stays, and it pays 49px of every
-   screen for it, at every width. That is the honest price and it is not small:
-   5.8% of a phone screen, permanently.
+/* THIS ROW IS NOW A LIST OF PAGES, NOT A LIST OF PLACES ON ONE PAGE.
+   Until this round the site was one long scroll with an index pinned above it:
+   seven labels, six of which were fragments of the home page. The home page was
+   7,977px at 390x844 — nine and a half screens — and the bar's job was to make
+   that survivable. It made it survivable; it did not make it short. A pinned
+   index over a nine-screen page is a table of contents for a scroll, and the
+   thing being asked for was fewer screens, not a better map of them.
+   So the five blocks that used to stack on the home page are four pages now
+   (home / work / writing / experience), the row points at them, and every item
+   in it changes the address bar. Three consequences follow and all three are
+   improvements this file could not have had before:
+     — aria-current can finally say "page", because the link now points at the
+       page you are on. It used to say "location", which was the most honest
+       thing available when the target was a fragment of a different document.
+     — The home page has a current item at last: the wordmark, which points at
+       "/" and is the one item on that page whose destination is where you are.
+       The old comment here said the home page "has no current item and is not
+       given a fake one" — under fragments that was correct, and under pages it
+       is simply no longer true.
+     — Four items instead of seven. See .more below for what that bought.
+   It is pinned, and that is the part that costs something. The complaint it
+   answers is smaller now than it was — no page on this site is nine screens
+   any more — but it is not gone: the four project pages still run 4,000–9,000px,
+   and on those, finding your way DOWN is still guesswork without it. So it
+   stays, and it still pays 49px of every screen at every width: 5.8% of a phone
+   screen, permanently. That is the honest price and it is not small.
    No JavaScript is involved and none is possible here: position:sticky is the
    whole mechanism, so the bar looks and behaves identically at scroll 0 and at
    scroll 8,000. Nothing shrinks, nothing fades in, nothing "activates" — which
@@ -423,33 +435,35 @@ nav.top::before {
    change; 4 + 44 + the rule is the phone's 49. */
 nav.top a { display: inline-flex; align-items: center; min-height: 44px; margin-right: 16px; }
 /* The last item's own 16px is 16px of nothing at the end of a line. Stated honestly,
-   because last round's comment here claimed more than it does: this only reaches the
-   last item in the SOURCE, and on a phone that item is a .more, hidden — so the last
-   item you can see still trails 16px. It is left that way rather than chased with a
-   :has() rule, because the phone row now has 134px of headroom and 16px of it is not
-   the difference between one row and two. On a desktop, where all seven are out, it
-   is the real end of the line and it does the job it says. */
+   because a comment here once claimed more than it does: this only reaches the last
+   item in the SOURCE, and on a phone that item is Experience, which is .more and
+   hidden — so the last item you can see still trails 16px. It is left that way
+   rather than chased with a :has() rule, because the phone row has 129px of
+   headroom at 360px and 16px of it is not the difference between one row and two.
+   On a desktop, where all four are out, it is the real end of the line and it does
+   the job it says. */
 nav.top a:last-child { margin-right: 0; }
-/* The whole bar is grey now, on every page, including the one link that leaves it.
-   It used to be grey on the home page (six jumps to places you are already on) and
-   blue on deep pages, and the comment here defended that: "deep pages keep theirs
-   blue, there the same element is the only way out". That stopped being true the
-   moment deep pages got the whole index — every item in this row goes home now, so
-   none of them is the fire exit and there is nothing for blue to single out. What
-   blue would do instead is put seven of the site's strongest-marked links above the
-   first sentence of every page, which is the "nine equal-weight links, none of them
-   saying which matters" problem the old comment was already complaining about, one
-   block higher and two links worse. Chrome is grey. Hover and focus are still blue,
-   and the underline never leaves, so nothing here stops looking like a link.
+/* The whole bar is grey, on every page. It used to be grey on the home page (six
+   jumps to places you were already on) and blue on deep pages, and the comment here
+   defended that: "deep pages keep theirs blue, there the same element is the only
+   way out". Under pages rather than fragments every item in this row is a real exit
+   on five of the seven pages that carry it, so blue would now be defensible on
+   grounds the old comment did not have — and it is still refused, for the reason
+   underneath: it would put four of the site's strongest-marked links above the first
+   sentence of every page, which is the "equal-weight links, none of them saying
+   which matters" problem, one block higher. Chrome is grey. Hover and focus are
+   still blue, and the underline never leaves, so nothing here stops looking like a
+   link.
    Set on the anchors and not on the bar, and that is not a style choice: two hundred
    lines up `a { color: var(--link) }` sets the colour on the element itself, which
    beats anything the parent merely hands down. A grey nav.top with blue links sitting
    inside it is what a colour on the bar buys you. */
 nav.top a { color: var(--meta); }
-/* Seven permanent underlines. The reason this file gave for refusing a tab
-   underline under the current item was that a second line 4px above the bar's own
-   is unreadable as structure — and the row was already carrying seven lines 9.5px
-   above it, on every page, at all times. One ruler for both. An underline in the
+/* Four permanent underlines (seven, when this rule was written). The reason this
+   file gave for refusing a tab underline under the current item was that a second
+   line 4px above the bar's own is unreadable as structure — and the row was already
+   carrying a line under every label 9.5px above it, on every page, at all times.
+   One ruler for both. An underline in the
    prose is a promise that this word leaves the sentence; a row of labels pinned to
    the top of the window is not a sentence, and its position is already the promise.
    So chrome loses the resting underline and keeps both of the site's other link
@@ -469,12 +483,28 @@ nav.top a:hover { text-decoration: underline; }
       use for "this is the thing, not the commentary" — and that is exactly what it
       is saying here.
    2. The current item: the text colour at the ordinary weight. It only has to
-      separate itself from five greys beside it, and colour alone does that. It used
+      separate itself from the greys beside it, and colour alone does that. It used
       to take 600 as well, which put a common noun at the same weight as the name and
-      spent the site's "this is the thing" mark on a nav label. The home page has no
-      current item and is not given a fake one: all six of its anchors are on the page
-      you are looking at, and which of them you are level with is a scroll position,
-      which is not knowable here without the JavaScript this site does not have.
+      spent the site's "this is the thing" mark on a nav label.
+      The MARK is one thing and says one thing — "this is the branch of the site you
+      are in" — and the two aria-current VALUES under it are the same statement told
+      exactly:
+        page      on the four pages whose own bar item points at the document you are
+                  reading (home's wordmark → "/", and Work / Writing / Experience on
+                  their own index pages). No item in this row could say "page" before
+                  this round, because every target was a fragment of a different
+                  document; "location" was the most honest value available and this
+                  file said so.
+        location  on the five pages filed UNDER one of those — the four project pages
+                  and the essay. Work is where this page lives and the link goes there,
+                  but it is not this page, and calling that "page" would be the sort
+                  of half-true attribute a screen reader cannot check.
+      That is why the wordmark is the one item allowed to be both weight 1 and weight 2
+      at once: on six pages it is identity and an exit, on the home page it is identity
+      and the current item. Weight 1 wins the font-weight, weight 2 wins nothing it did
+      not already have (both are --text), so the two never collide in the pixels.
+      The 404 has no current item and is not given a fake one: a page that does not
+      exist is not filed anywhere. That is also why its row is the wordmark alone.
    3. Everything else: --meta, 400.
    Still not a tab underline, for the reason above and now doubly so — the bar's own
    edge is the one line in this region and it is the boundary of a plane. */
@@ -485,32 +515,52 @@ nav.top a[aria-current] { color: var(--text); }
    written second takes it. Written first, the current item was the one link in the
    bar that did not answer the pointer. */
 nav.top a:hover { color: var(--link); }
-/* WHAT THE PHONE GETS: the wordmark, Work, Writing. Four labels are marked .more
-   and are desktop-only.
-   Last round it was three, and the row on a deep page came to 291.5px of the 320px
-   a 360px phone has — 8.9% of headroom, at the narrowest width this site claims to
-   support. 8.9% is not headroom, it is a coincidence: turning on the browser's own
-   "minimum font size: 16px" accessibility setting wrapped it at 360 (measured: 49px
-   became 93px), and so did 104% page zoom, and the wrap threshold was 347px — seven
-   pixels under the floor. The wrap is not merely tall. --navh is a constant and
-   scroll-padding-top is derived from it, so the moment the bar is 93px the anchor
-   protection is 20px short and every heading you jump to lands under the bar — the
-   exact failure the scroll-padding was written to prevent, failing silently and
+/* WHAT THE PHONE GETS: the wordmark, Work, Writing. One label is marked .more and
+   is desktop-only, and it is Experience.
+   THE ROW WENT FROM SEVEN ITEMS TO FOUR THIS ROUND, so this mechanism was re-argued
+   from scratch rather than inherited: with four items, is it still needed at all?
+   Measured on the real stylesheet at 360px — the narrowest width this site claims
+   to support — sweeping the viewport one pixel at a time and reading the number of
+   rows the bar resolves to, at four settings of the browser's own "minimum font
+   size" accessibility option:
+
+     items visible on the phone      default   16px    20px    24px
+     wordmark + Work + Writing        246      257     297     337   ← ships
+     wordmark + Work + Experience     257      269     317     364
+     all four                         322      338     398     459
+
+   (the number is the widest viewport at which the row wraps to two rows; anything
+   at or under 360 is safe, anything over it is a bar that has already wrapped on a
+   360px phone.)
+
+   So four items do not fit, and no amount of tuning makes them: tightening the
+   inter-item margin from 16/24 to 8/12 moves the all-four threshold from 398 to 370
+   at minimum-font 20 — still over the floor — because margins are a fixed 16px of
+   savings against a setting that scales the type. Shortening "Experience" to "CV"
+   does fit (354 at minimum-font 24, with the tighter margins) and is refused for a
+   different reason: every footer on this site already says "Résumé (PDF)", and two
+   words for the same document, one in the bar and one under it, is worse than one
+   word missing from the bar.
+   A wrapped bar is not merely tall. --navh is a constant and scroll-padding-top is
+   derived from it, so the moment the bar is two rows the anchor protection is short
+   by a row and anything you jump to lands under the bar — failing silently, and
    only for the people who need the font setting.
-   So Experience joins Education, Skills and Contact on the phone. That buys the row
-   back to 185.5px of 320 (42% headroom), which survives minimum-font 16px, 112%
-   zoom, and every width down to 280. The four that go are the four whose absence
-   costs least: Contact repeats the three links already in the opening block and
-   again in the footer, and Experience, Education and Skills are all further down
-   the same single-column scroll the bar is sitting on top of. What is left is what
-   a phone bar is for — whose site this is, and the two things it is about.
+   WHICH TWO, then. The row holds the wordmark plus two labels, and Work is not in
+   question. Between Writing and Experience the arithmetic is the first cut —
+   Experience's box is 75.9px against Writing's 48.9, and wordmark + Work +
+   Experience wraps at 364, which is over the floor. It is also the right cut on its own merits, but
+   only just, and the cost is real and new: Experience is the page a recruiter on a
+   phone wants, and it is the one page not in the phone row. What pays for it is the
+   home page, which now opens with three doors rather than five stacked sections —
+   Experience is one tap from the wordmark, at a fixed place on a page that is two
+   screens long instead of nine and a half.
    The wordmark is what makes room necessary and it is also what pays for it: it is
-   93px of that row. That is the trade, stated plainly — one anchor on a phone for a
-   name on every screen of every page. A screenshot of the middle of this site now
-   says who it belongs to.
-   And the sets are the same on all six content pages now, which they were not
-   before: the phone used to show Work/Experience/Writing on the home page and
-   name/Work/Experience/Writing on a deep one. */
+   90.5px of that row's 191 (66.5 of type and its own 24px of separation). That is the
+   trade, stated plainly — one label on a phone for a name on every screen of every
+   page. A screenshot of the middle of this site says who it belongs to.
+   And the set is the same on all six content pages, which is the property that made
+   the row learnable and is not given up: the phone shows the same three things
+   everywhere, and the only thing that moves is which one is --text. */
 nav.top .more { display: none; }
 
 section { margin-bottom: 64px; }
@@ -519,17 +569,23 @@ section:last-of-type { margin-bottom: 40px; }
    air above the rule under its heading. The last two selectors are the same rule
    for pages whose head is a .spread: the h1 is inside it, so it is no longer the
    section's sibling. */
-h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section { margin-top: 40px; }
+/* …and the same 40px where an index page's h1 is followed straight by its one section,
+   with no lead between them to carry the gap. /writing/ is the only page shaped that
+   way; without this its h2 sat 16px under the h1, which is the gap between a heading
+   and its own paragraph, not the gap between a page title and a section. */
+h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section,
+h1 + section { margin-top: 40px; }
 
 .item { padding-top: 24px; }
 .item + .item { margin-top: 40px; border-top: 1px solid var(--rule); }
 
-/* A ruled list rather than a stack of essays: used for the résumé-skeleton
-   blocks on the home page (experience, education). The divider between two
-   entries is a rule like any other, so it is as wide as the entries it
-   divides — it used to run the whole track under a section heading that
-   stopped at the measure, which is the one arrangement this file calls an
-   alignment failure, and it was doing it eight times on the home page. */
+/* A ruled list rather than a stack of essays: the résumé-skeleton blocks
+   (experience, education), which stacked on the home page until this round and
+   are now the two halves of /experience/. The divider between two entries is a
+   rule like any other, so it is as wide as the entries it divides — it used to
+   run the whole track under a section heading that stopped at the measure, which
+   is the one arrangement this file calls an alignment failure, and it was doing
+   it eight times on a single page. */
 .compact .item { padding-top: 16px; max-width: var(--prose); }
 .compact .item + .item { margin-top: 16px; }
 .compact h3 { font-size: 17px; }
@@ -560,9 +616,61 @@ h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section { ma
 .contact li { margin: 0; }
 .contact a { display: inline-flex; align-items: center; min-height: 44px; }
 
+/* ---------- the three doors (home) ---------- */
+/* The home page used to BE the site: work, experience, writing, education and
+   skills stacked into one 7,977px column at 390x844 — nine and a half screens, of
+   which the first screen was a face and four paragraphs. Everything below the fold
+   was reachable by exactly one move, which was to keep scrolling, and the pinned
+   bar existed to make that survivable. It is three pages now, and this block is the
+   place the home page hands you to them.
+   IT IS A RULED LIST AND NOT A ROW OF CARDS, and that is the one decision here.
+   Three boxes across the track is the shape every portfolio template ships, and it
+   would have failed the way the two-up card grid failed two rounds ago and for the
+   same reason: a grid row makes "how much is behind this door" into a visible
+   ranking, and behind these three doors are four projects, one essay and a CV. The
+   Writing column would have been a third the height of the Work column with a rule
+   over both. A list has no same-row parity to fail — it stacks at every width, in
+   one order, and the phone and the 1920 see the same object.
+   Each door is a title and a grey line naming what is behind it. The grey line is
+   the point: a row of three labels is a menu, and a menu makes you remember what
+   the words meant; the names make it recognition instead. It does NOT repeat the
+   destination's own opening sentence — the page says what it is for, the door says
+   what is in it, and saying both would be the credential line's mistake (the same
+   fact twice within sixty pixels) at page scale.
+   The whole row is the target, by the same overlay .card uses, so on a phone each
+   door is a 90px block rather than a 25px line of text. */
+.doors { list-style: none; margin: 0; padding: 0; max-width: var(--prose); }
+/* DIVIDERS ONLY — no rule at either end of the block, which is the .item and .compact
+   idiom and not the .stack one. Built the other way first (every door closed by its
+   own bottom rule, the .stack idiom, so that a hover could answer at the far end of a
+   780px row rather than only at the title) and it produced exactly the arrangement
+   this file has twice called a rounding error: the last door's rule and the footer's
+   rule, two identical hairlines 40px apart in the same colour and weight with nothing
+   at all between them, at the bottom of the shortest page on the site. A rule under
+   the last door is a line pointing at the footer.
+   So the ends belong to their neighbours — the h2's rule opens the block, the
+   footer's closes the page — and the only rules in here divide one door from the
+   next, which is what law (a) says they are as wide as. What hover loses with them is
+   the far-end response; what it keeps is cursor:pointer under the pointer itself and
+   the title and arrow going blue, which is two of the three signals a .card gives and
+   the two that do not need a border to exist. */
+.door { position: relative; padding: 16px 0; cursor: pointer; }
+.door + .door { border-top: 1px solid var(--rule); }
+/* One step above body, which is the step .lead takes — a door is the size of the
+   sentence that introduces it. Not a new number on the scale: 19 → 21 is .lead's
+   own pair. The weight is 600, the site's "this is the thing, not the commentary"
+   mark, which is what separates it from the grey line underneath. */
+.door h3 { font-size: 19px; font-weight: 600; margin: 0 0 4px; }
+/* The line under a door is the site's ordinary grey metadata and takes .meta rather
+   than a class of its own, so it steps 14 → 15 with every other grey line on the
+   site and cannot drift from them. The only thing it needs back is its bottom
+   margin: it is the last thing in the door, and the door's own padding is the gap. */
+.door .meta { margin: 0; }
+
 /* ---------- work cards (home index) ---------- */
-/* The home page is an index, not the work itself. Each card carries one
-   sentence and one frame of that project's own evidence, and links to its own
+/* /work/ is an index, not the work itself — it was the home page's #work section
+   until this round and the markup did not change when it moved. Each card carries
+   one sentence and one frame of that project's own evidence, and links to its own
    page. No shadow, no gradient, no hover lift: the only state change is the
    border and the title colour.
 
@@ -588,7 +696,12 @@ h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section { ma
   cursor: pointer;              /* the whole card is the target; say so */
 }
 .card:hover { border-color: var(--link); }
-.card:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
+/* A door is the same object with the frame taken off, so the six declarations that
+   make a card behave — the overlay, the focus ring on the box, the two hover states
+   and the arrow — are written once for both rather than copied. A second copy of
+   these under a second selector is how a stylesheet ends up with two click targets
+   that drift apart, which is the argument .lbl already makes four hundred lines up. */
+.card:focus-within, .door:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
 
 /* Three of the four frames now ship a narrow re-crop as well. The <picture> is
    the grid item, not the <img> — display:contents here would promote its
@@ -614,14 +727,14 @@ h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section { ma
 }
 
 .card h3 { margin-bottom: 4px; }
-.card h3 a { color: var(--text); text-decoration: none; }
+.card h3 a, .door h3 a { color: var(--text); text-decoration: none; }
 /* the whole card is the click target; the title is the one link that names it */
-.card h3 a::after { content: ""; position: absolute; inset: 0; }
-.card h3 a:focus-visible { outline: none; }
-.card:hover h3 a { color: var(--link); text-decoration: underline; }
+.card h3 a::after, .door h3 a::after { content: ""; position: absolute; inset: 0; }
+.card h3 a:focus-visible, .door h3 a:focus-visible { outline: none; }
+.card:hover h3 a, .door:hover h3 a { color: var(--link); text-decoration: underline; }
 /* The arrow lives in the title, not on a line of its own. */
-.card h3 .arw { color: var(--meta); font-weight: 400; }
-.card:hover h3 .arw { color: var(--link); }
+.card h3 .arw, .door h3 .arw { color: var(--meta); font-weight: 400; }
+.card:hover h3 .arw, .door:hover h3 .arw { color: var(--link); }
 .card p { font-size: 16px; margin-bottom: 0; }
 .card .role { margin-bottom: 8px; }
 /* The text column of a card is wider than the sentence in it needs to be; the
@@ -660,7 +773,7 @@ h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section { ma
   .card .go .narrow { display: inline-flex; align-items: center; min-height: 44px; }
 }
 
-/* Every "→" exit on the home page is a 44px row on a phone, not an 18px line of
+/* Every "→" exit on an index page is a 44px row on a phone, not an 18px line of
    text. iOS asks for 44; these were 18–21. The visual size of the type does not
    change — only the box around it. On desktop they go back to being inline. */
 .card .go a, .golink a { display: inline-flex; align-items: center; min-height: 44px; }
@@ -908,8 +1021,8 @@ figcaption .src { display: block; margin-top: 4px; }
    template-looking 89 pixels — full-bleed rule, one line of metadata, one "last
    updated" — and on the home page it put a 1360px line 300px below an 840px one
    in the same colour and weight, so the same mark said two different things
-   within one screen. The rule now belongs to the block it closes and stops
-   where that block's sentences stop. */
+   within one screen. (Seven pages then, ten now.) The rule belongs to the block it
+   closes and stops where that block's sentences stop. */
 footer.site { padding-top: 0; font-size: 14px; color: var(--meta); }
 footer.site > p:first-child { border-top: 1px solid var(--rule); padding-top: 24px; }
 footer.site a { color: var(--link); }
@@ -930,6 +1043,8 @@ footer.site a { color: var(--link); }
   h1 { font-size: 38px; }
   h3 { font-size: 19px; }
   .lead { font-size: 21px; line-height: 1.45; }
+  /* .door h3 takes .lead's pair, not h3's — see the doors block. */
+  .door h3 { font-size: 21px; }
   .meta, .role, .row .when { font-size: 15px; }
   figcaption { font-size: 14px; }
   .clip figcaption { font-size: 16px; }
@@ -1151,9 +1266,10 @@ footer.site a { color: var(--link); }
   /* Third instance of the same move, on the résumé-skeleton list. A .compact entry
      is a title/date row, a grey line naming the place and the stack, and one or two
      paragraphs — and the grey line is the only part of it that comments on the rest
-     rather than continuing it. On the home page the Experience list was the one long
-     block with no second column: 1,150px of single column against 480px of nothing,
-     between four two-column cards above it and two .spread blocks below. The rule
+     rather than continuing it. When this list was a section of the home page it was
+     the one long block with no second column: 1,150px of single column against 480px
+     of nothing, between four two-column cards above it and two .spread blocks below.
+     It is the top half of /experience/ now and the arrangement is unchanged. The rule
      between two entries widens with them, because it is still as wide as what it
      divides. The role line keeps its source position — it is under the title on a
      phone, on paper and with no stylesheet — and is placed, not moved. */
@@ -1261,9 +1377,11 @@ footer.site a { color: var(--link); }
   .deltas.band > div { max-width: none; text-align: left; }
   /* The bar is pinned on screen, and a pinned box is a known way to get the same
      strip stamped onto all eleven pages of a PDF, or onto the first one twice. It
-     is also six links to anchors that do not exist on paper. It does not print —
-     which it already did not, but it was one property away from being a bug and
-     the property is new. */
+     used to also be six links to anchors that do not exist on paper; it is four
+     links to real pages now, which is a better reason to keep it and still not a
+     good enough one — the rule below prints every /path after its link text, so a
+     printed home page names all three destinations anyway, inside the doors, where
+     a reader is looking. It does not print. */
   nav.top, .contact { display: none; }
   a { color: #000; text-decoration: none; }
   a[href^="http"]::after,

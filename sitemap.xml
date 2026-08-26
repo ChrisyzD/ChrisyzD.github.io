@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://chrisyzd.github.io/</loc><lastmod>2026-08-25</lastmod></url>
-  <url><loc>https://chrisyzd.github.io/work/metaflow/</loc><lastmod>2026-08-25</lastmod></url>
+  <url><loc>https://chrisyzd.github.io/</loc><lastmod>2026-08-26</lastmod></url>
+  <!-- The three index pages the home page's five stacked sections became this round.
+       They are listed above their own children, which is also the order the 404's
+       body and the top bar put them in. -->
+  <url><loc>https://chrisyzd.github.io/work/</loc><lastmod>2026-08-26</lastmod></url>
+  <url><loc>https://chrisyzd.github.io/writing/</loc><lastmod>2026-08-26</lastmod></url>
+  <url><loc>https://chrisyzd.github.io/experience/</loc><lastmod>2026-08-26</lastmod></url>
+  <url><loc>https://chrisyzd.github.io/work/metaflow/</loc><lastmod>2026-08-26</lastmod></url>
   <!-- The two prototypes are deliberately not here. Both carry
        <meta name="robots" content="noindex, nofollow">, and listing one of them in a
        sitemap while the page itself asks not to be indexed is two instructions that
        contradict each other. The prototype is for someone who clicked into it from the
        case page, not for a search result that arrives with no context. -->
-  <url><loc>https://chrisyzd.github.io/work/data-flywheel/</loc><lastmod>2026-08-25</lastmod></url>
-  <url><loc>https://chrisyzd.github.io/work/cardiac-rehab/</loc><lastmod>2026-08-25</lastmod></url>
-  <url><loc>https://chrisyzd.github.io/work/emg-biofeedback/</loc><lastmod>2026-08-25</lastmod></url>
-  <url><loc>https://chrisyzd.github.io/writing/closed-loop/</loc><lastmod>2026-08-25</lastmod></url>
+  <url><loc>https://chrisyzd.github.io/work/data-flywheel/</loc><lastmod>2026-08-26</lastmod></url>
+  <url><loc>https://chrisyzd.github.io/work/cardiac-rehab/</loc><lastmod>2026-08-26</lastmod></url>
+  <url><loc>https://chrisyzd.github.io/work/emg-biofeedback/</loc><lastmod>2026-08-26</lastmod></url>
+  <url><loc>https://chrisyzd.github.io/writing/closed-loop/</loc><lastmod>2026-08-26</lastmod></url>
 </urlset>

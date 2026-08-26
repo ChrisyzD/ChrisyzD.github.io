@@ -10,26 +10,20 @@
 </head>
 <body>
 
-<!-- The same bar as the home page. The wordmark leads it, in the text colour at 600 —
-     it is the one item here that is not navigation, and until this round it was the
-     quietest thing in a row whose loudest thing was the common noun "Work".
-     The arrow is gone with it. It was left over from when this nav was two links and
-     the name was the only way out; every label in this row goes home now, so an arrow
-     on one of them points at nothing the other five do not also do, and a wordmark
-     does not carry one. It is the name, and it is also the way home — but it says so
-     by being the name, which is what a wordmark is for.
-     aria-current="location" marks the section this page is filed under. That is the
-     only "you are here" this site can state honestly without JavaScript: it is a fact
-     about what the page IS, not about where the reader has scrolled to. "location" and
-     not "true", which is the fallback value a screen reader reads out as bare
-     "current"; and not "page", because the link does not point at this page. -->
+<!-- The same four-item bar as every other content page: the wordmark, and the three
+     pages this site is. Until this round these were six fragments of the home page
+     (/#work, /#experience, …) and the home page was nine and a half phone screens long;
+     they are pages now, and every item here changes the address bar.
+     aria-current="location" and not "page": Work is the index this page is filed under
+     and the link really does go there, but it is not this page — "page" would be a
+     half-true attribute, and it is the one value in this set a screen reader repeats
+     verbatim. The four index pages (home, work, writing, experience) do say "page",
+     because on those the link points at the document you are reading.
+     Experience is marked .more and is desktop-only; the arithmetic that forces exactly
+     one item out of the phone row is in the stylesheet, under nav.top .more. -->
 <nav class="top">
-  <a class="wm" href="/">Yizhe Dai</a><a href="/#work" aria-current="location">Work</a><a
-    class="more" href="/#experience">Experience</a><a
-    href="/#writing">Writing</a><a
-    class="more" href="/#education">Education</a><a
-    class="more" href="/#skills">Skills</a><a
-    class="more" href="/#contact">Contact</a>
+  <a class="wm" href="/">Yizhe Dai</a><a href="/work/" aria-current="location">Work</a><a
+    href="/writing/">Writing</a><a class="more" href="/experience/">Experience</a>
 </nav>
 
 <!-- The page head is a spread: who/what/when on the spine, and the boundary of my
@@ -200,7 +194,7 @@ University of Michigan · MATLAB, Python/PyTorch, Unity, C#</p>
     <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
     <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·
     <a href="/">Home</a></p>
-  <p>Last updated 25 August 2026.</p>
+  <p>Last updated 26 August 2026.</p>
 </footer>
 
 <script src="/assets/js/video.js" defer></script>

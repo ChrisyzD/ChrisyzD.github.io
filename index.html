@@ -10,41 +10,28 @@
 </head>
 <body>
 
-<!-- The bar. It used to sit under the whole opening block, which put it at y=787 of an
-     844px phone screen — the site's only index, one pixel row above the fold, on a page
-     that runs 8,028px at that width. First on every page now, and pinned, so it is also
-     the answer at scroll 4,000 and not only at scroll 0.
-     The wordmark leads it here as it does on every other page. It is not a link on this
-     one, because this is the page it would go to and the site does not fake exits — but
-     it is the same word in the same place at the same weight, so the row starts with
-     the same thing everywhere and the six shared labels start at the same x on all six
-     content pages. Without it, a screenshot of any screen of this site but the first
-     carried no indication of whose site it is.
-     Four anchors are marked .more and appear from 44rem up. On a phone the row is the
-     name plus Work plus Writing: 185.5px of the 320px a 360px phone has. It was 291.5px
-     of 320 last round, which wrapped under the browser's own 16px minimum-font setting
-     and under 104% zoom — and a wrapped bar is 93px, which silently breaks the
-     scroll-padding that keeps an anchor jump out from under it. -->
+<!-- The bar. It is a list of pages now, not a list of places on this one: until this
+     round it carried six fragments of this document (#work, #experience, #writing,
+     #education, #skills, #contact) and this document was 7,977px tall at 390x844.
+     Those five blocks are three pages, and the row points at them.
+     The wordmark carries aria-current="page" here and nowhere else: it points at "/"
+     and this is "/", which is the first time any item in this row has been able to
+     say "page" honestly. On the other five content pages it is the way home instead.
+     Experience is marked .more and appears from 44rem up. The phone row is the name
+     plus Work plus Writing — 191px of the 320px a 360px phone has. Adding Experience
+     puts it at 283px and wraps the row outright under the browser's own minimum-font
+     setting at 20px; the full table is in the stylesheet, under nav.top .more. -->
 <nav class="top">
-  <a class="wm" href="/">Yizhe Dai</a><a href="#work">Work</a><a
-    class="more" href="#experience">Experience</a><a href="#writing">Writing</a><a
-    class="more" href="#education">Education</a><a class="more" href="#skills">Skills</a><a
-    class="more" href="#contact">Contact</a>
+  <a class="wm" href="/" aria-current="page">Yizhe Dai</a><a href="/work/">Work</a><a
+    href="/writing/">Writing</a><a class="more" href="/experience/">Experience</a>
 </nav>
 
-<!-- The opening block used to be four stacked lines that all stopped at the measure,
-     with the track's own rule starting 24px underneath them — so the first thing a
-     visitor saw on a wide screen was a 1280px line with a 767px block above it. The
-     three contact links are the one part of this block that is not a sentence, so
-     they are what moves into the margin column: who I am on the spine, how to reach
-     me beside it — and, since it is the same question, the face goes there too.
-
-     The credential line used to repeat, in shorthand, the three places the paragraph
-     under it now names in sentences: Harvard, ByteDance, Michigan, twice within 60
-     pixels. It keeps the one thing the paragraph does not say, which is the ask.
-
-     Source order is portrait, name, sentences, contact — the order a reader with no
-     stylesheet, and a printer, should meet them in. Everything below only places them. -->
+<!-- The opening block is unchanged this round, deliberately: it was the one part of
+     the old home page that was doing its job. Four grid items in one fixed source
+     order — portrait, name, sentences, contact — the three contact links in the
+     margin column beside the face from 1200px up, stacked under it below that.
+     It is 716px of a 844px phone screen and 331px of a 900px laptop one, which is
+     the floor everything under it has to fit above. -->
 <header class="site intro">
   <img class="portrait" src="/assets/img/portrait.jpg" width="320" height="320"
        fetchpriority="high"
@@ -76,306 +63,58 @@
   </div>
 </header>
 
-<!-- ============================ WORK ============================ -->
-<section id="work">
-  <h2>Selected work</h2>
-  <!-- This paragraph used to say the frames were "re-cropped where a laptop-width frame
-       is unreadable at phone width", and two of them were: the box plots were cropped in
-       until the third box was sliced in half, the axis ran off the right edge and the
-       y-axis title was cut down the middle; the EMG frame was cropped past the peak of
-       the trace the alt text points at. Zooming a chart or an instrument panel for a
-       phone does not make it more readable, because every edge of one is a scale — it
-       just removes the scale and keeps the ink. Each project now carries one frame,
-       whole, at every width, and the phone gets the same object smaller. -->
-  <p class="meta">Four projects, one page each: what it is, what I built, what the numbers are
-    — and, at the end of every page, what I still think is unresolved about it. Every card
-    carries one frame of that project's own material, whole rather than zoomed: three of the
-    four are charts or instrument panels, and on those an edge is a scale. Two of them open
-    with a clip of the thing actually running.</p>
+<!-- ============================ THE THREE DOORS ============================ -->
+<!-- What used to be here: Selected work (four cards, four frames), Experience (four
+     entries), Writing (one essay and its diagram), Education (three degrees), Skills
+     (three lines and a column of where each name is used) — 7,556px of it under the
+     block above, in one column, at phone width.
+     What is here now: the three pages that material became, each named, each with a
+     grey line saying what is inside it. The grey line is what makes this an index
+     rather than a menu — "Work" is a word you have to interpret, "MetaFlow · LLM data
+     flywheel · Cardiac rehabilitation · EMG biofeedback" is four things you either
+     recognise or do not, which is the whole difference between recall and recognition.
+     Nothing here is new copy. Every name in these three lines is the name that page
+     already gives itself, and the two counts are counts of things already on the site.
+     No door repeats its destination's opening sentence: /work/ opens by saying what
+     the four project pages are FOR, and if that sentence were also here it would be
+     the credential line's old mistake — the same fact twice within sixty pixels —
+     one level of the site higher. -->
+<section>
+  <h2>What is here</h2>
+  <ul class="doors">
 
-  <ul class="cards">
-
-    <li class="card">
-      <div class="ct">
-        <h3><a href="/work/metaflow/">MetaFlow — metadata-centric NL-to-SQL<span class="arw"
-          aria-hidden="true">&#160;→</span></a></h3>
-        <p class="role">Mar 2026 – present · two-person project</p>
-        <p>A question resolves through an inspectable relational intermediate representation
-          instead of generated SQL, so a wrong answer has an address you can point at.</p>
-        <p class="go"><a class="wide" href="/demos/metaflow-prototype-en.html">Try the live
-          demo →</a><a class="narrow" href="/work/metaflow/#annotated">See the annotated
-          frames →</a></p>
-      </div>
-      <!-- A 1200px console screenshot is 0.29 of its own scale at 350px and 0.38 in the
-           460px evidence column — legible on a 2× laptop panel and a textured grey
-           rectangle on a 1× external display, which is to say: the one frame on this
-           page whose status as evidence depended on the reader's hardware, and it was
-           the first card. So the frame is the same screen's provenance card instead.
-           It was cut off at two of its own borders — right and bottom, mid-field, two
-           of the five numbered fields missing — on the argument that a shorter card
-           fits a wider slot. A card with no bottom is not a card; the whole one is
-           taller than the slot and the slot gave way. -->
-      <img class="shot" src="/assets/img/metaflow-card-provenance.png" width="661" height="769"
-           alt="The provenance card the prototype attaches to every answer: a green All
-           provenance checks green header, then source asset semantic.semantic_revenue,
-           metric version M001_v2, the definition binding fx_rate_basis=event_date_ecb, 12
-           rows, BU-certified, and a checksum-verified block — five of the fields numbered
-           one to five.">
+    <li class="door">
+      <h3><a href="/work/">Work<span class="arw" aria-hidden="true">&#160;→</span></a></h3>
+      <p class="meta">MetaFlow · LLM data flywheel for in-vehicle voice assistants ·
+        Cardiac rehabilitation wearable study · EMG biofeedback training system</p>
     </li>
 
-    <li class="card">
-      <div class="ct">
-        <h3><a href="/work/data-flywheel/">LLM data flywheel for in-vehicle voice assistants<span class="arw"
-          aria-hidden="true">&#160;→</span></a></h3>
-        <p class="role">Jun – Aug 2026 · undergraduate thesis</p>
-        <p>Measure first, then regenerate only where the failures are — a user simulator, an LLM
-          judge, and 17,200 verified dialogues aimed at eleven functions.</p>
-      </div>
-      <!-- Half a ring is not half an argument, it is a ring with two arcs running off the
-           top edge. The frame is the whole cycle now — six steps and the hub — cut where
-           the figure's own white ground is, not through its lines. -->
-      <img class="shot" src="/assets/img/flywheel-card.png" width="1200" height="1105"
-           loading="lazy"
-           alt="The flywheel diagram: six steps turning clockwise — simulate, roll out, judge,
-           locate the eleven highest-error functions, regenerate targeted rather than
-           everywhere, re-evaluate at 72.8 to 82.7 per cent accepted — with dashed arrows from
-           roll out and regenerate into the verified dialogue set at the centre.">
+    <li class="door">
+      <h3><a href="/writing/">Writing<span class="arw" aria-hidden="true">&#160;→</span></a></h3>
+      <p class="meta">The loop — notes on making an NL-to-SQL answer checkable.
+        August 2026 · ~9 min.</p>
     </li>
 
-    <li class="card">
-      <div class="ct">
-        <h3><a href="/work/cardiac-rehab/">Cardiac rehabilitation wearable study<span class="arw"
-          aria-hidden="true">&#160;→</span></a></h3>
-        <p class="role">Apr 2025 – Jan 2026 · research assistant, U-M</p>
-        <p>Whether wearable step data can say when a patient has actually stopped improving — and
-          how much that answer depends on what you decide “recovered” means.</p>
-      </div>
-      <!-- Cut between the second and third box, where the poster's own paper is, so both
-           boxes keep their four sides and the crop keeps both axes: the day-since-enrollment
-           title down the left, the frame, and the 0/50/100/150 ticks underneath. The third
-           definition is on the case page, in the whole figure it came from. -->
-      <img class="shot" src="/assets/img/cardiac-card.png" width="1200" height="700"
-           loading="lazy"
-           alt="Two of the three plateau box plots from the co-authored poster: two visibly
-           different medians and spreads on the same day-since-enrollment axis, each box whole,
-           with the axis and its 0 to 150 ticks underneath.">
-    </li>
-
-    <li class="card">
-      <div class="ct">
-        <h3><a href="/work/emg-biofeedback/">EMG biofeedback training system<span class="arw"
-          aria-hidden="true">&#160;→</span></a></h3>
-        <p class="role">Oct 2024 – Apr 2026 · NeuRRo Lab, U-M</p>
-        <p>Muscle activity to cursor in real time, with the optimizer hand-ported out of Python so
-          the decoder adapts on-device inside the game loop.</p>
-      </div>
-      <!-- The phone crop of this one stopped at about 1.05 s of a 2.5 s trace, which is
-           before the peak the sentence under it names, and took half of the second target
-           with it. There is no narrower crop of a three-panel instrument frame that is
-           still the same claim. -->
-      <img class="shot" src="/assets/img/emg-card.png" width="1200" height="525" loading="lazy"
-           alt="One frame of the EMG clip at the instant of a reach: the reach counter at the
-           top left, the Delsys panel with the smoothed envelope of that reach peaking near
-           0.07 of its nought-to-one axis, and the yellow muscle-driven cursor resting against
-           the lit target below.">
+    <li class="door">
+      <h3><a href="/experience/">Experience, education and skills<span class="arw"
+        aria-hidden="true">&#160;→</span></a></h3>
+      <p class="meta">Lark, ByteDance · Shenzhen Legion Technology · two research roles at
+        the University of Michigan · degrees from Harvard, Michigan and SJTU</p>
     </li>
 
   </ul>
 </section>
 
-<!-- ============================ EXPERIENCE ============================ -->
-<section id="experience">
-  <h2>Experience</h2>
-  <!-- Every other long block on this page has a second column: the cards put their
-       frame in it, Education its caveats and awards, Skills the place on this site
-       where each name is being used. This one did not, so it ran 1,150px — a screen
-       and a third — as a single left-hand column with 480px of nothing beside it,
-       and the page changed its mind about being one column or two three times on the
-       way down. The material for the column was already here and already set apart:
-       each entry's place and stack, which was the third grey line under a title.
-       It stays where it is in the source, so a phone (and paper, and a reader with
-       no CSS) still meets it directly under the title it belongs to; past 1200px it
-       is placed in the margin instead. -->
-  <div class="compact laned">
-
-    <article class="item" style="padding-top:0">
-      <div class="row"><h3>Lark, ByteDance — AI Solutions Intern</h3>
-        <span class="when">May – Aug 2026</span></div>
-      <p class="role">Shanghai, China · Python, Flask, TypeScript, Playwright/CDP</p>
-      <p>Designed a unified <strong>trace schema</strong> that made two enterprise AI agents
-        comparable on real user tasks — driving both Electron clients over Chrome DevTools
-        Protocol, mapping two incompatible event vocabularies onto one field set, and scoring
-        the normalized runs side by side.</p>
-      <p>Separately, on the go-to-market side: discovery and technical qualification for
-        enterprise accounts, plus the internal enablement tooling behind it — a searchable hub
-        of <strong>800+</strong> assets with one-click deck assembly (sole developer) and a
-        demo site non-engineers edit themselves.</p>
-    </article>
-
-    <article class="item">
-      <div class="row"><h3>Shenzhen Legion Technology — Data Engineering &amp; AI Intern</h3>
-        <span class="when">Apr – Oct 2025</span></div>
-      <p class="role">Remote, China (part-time) · Python, SQL, dbt, RAG</p>
-      <p>Built the <strong>evaluation framework</strong> for a RAG data-governance copilot
-        serving dbt pipelines and lineage: structured cases across its three question classes
-        (catalog, SQL, data-QA), each graded on whether retrieval returned the right
-        catalog/lineage objects and whether the answer met governance rules — so prompt and
-        retrieval changes were re-scored on the same cases, not eyeballed. Designed the
-        copilot's prompt architecture behind those classes.</p>
-    </article>
-
-    <article class="item">
-      <div class="row"><h3>University of Michigan — Cardiac Rehabilitation Wearable Study</h3>
-        <span class="when">Apr 2025 – Jan 2026</span></div>
-      <p class="role">Research Assistant (part-time) — SURE summer program, then continued on
-        the study · Ann Arbor, Michigan</p>
-      <p>Assembled the analysis dataset — <strong>400K+</strong> raw step records reconciled
-        onto one per-patient daily timeline, cleaning rules cutting 247 enrolled patients to a
-        <strong>191-patient analysis cohort</strong> — and built the temporal features,
-        phenotyping and plateau detection on top of it. <strong>~68%</strong> of that cohort had
-        suboptimal discharge timing against the standard 36-session model.</p>
-      <p class="golink"><a href="/work/cardiac-rehab/">Full case →</a></p>
-    </article>
-
-    <article class="item">
-      <div class="row"><h3>NeuRRo Lab, University of Michigan</h3>
-        <span class="when">Oct 2024 – Apr 2026</span></div>
-      <p class="role">Research Assistant (part-time) · Ann Arbor, Michigan · MATLAB,
-        Python/PyTorch, Unity, C#</p>
-      <p>Built the lab's real-time EMG biofeedback system and its MATLAB muscle-synergy analysis
-        pipeline, both used in clinical experiments.</p>
-      <p class="golink"><a href="/work/emg-biofeedback/">Full case →</a></p>
-    </article>
-
-  </div>
-</section>
-
-<!-- ============================ WRITING ============================ -->
-<!-- Writing sits between the jobs and the credentials, not directly under the cards.
-     Above the cards' last frame the page already changes density twice; below it,
-     experience → education → skills used to run 2,663px (four phone screens) with
-     nothing to look at. This section is the one block in that stretch that owns a
-     figure, so it is the one that breaks it. -->
-<section id="writing">
-  <h2>Writing</h2>
-  <article class="item" style="padding-top:0">
-    <h3><a href="/writing/closed-loop/">The loop — notes on making an NL-to-SQL answer
-      checkable</a></h3>
-    <p class="role">August 2026 · ~9 min</p>
-    <p>Most natural-language-to-SQL demos give you a number and no way to tell whether it is
-      right. This is what I changed in my own projects to make that different, and what it cost:
-      an intermediate representation you can read before anything runs, and the step people
-      skip — turning each fix into a guardrail so the same mistake cannot happen twice.</p>
-    <figure class="fig-diagram">
-      <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
-           alt="A four-step ring — Measure, Locate, Fix, Add a guardrail — turning around a
-           dark card labelled “grows with every failure”. The guardrail step is highlighted in
-           blue as the one that gets skipped.">
-      <!-- The column beside a 752px drawing held two lines of caption and 700px of
-           nothing. What went into it is what was already inside the drawing and did not
-           belong there: two dashed cards naming the projects the loop is generalised
-           from. A caption column is for what comments on a figure; the figure is for
-           the thing being drawn. -->
-      <figcaption>
-        <p>The essay's figure: the fourth step is the one that gets skipped, and it is
-          the only one that makes the next run cheaper.</p>
-        <p><span class="lbl">The two it is drawn from</span>
-          <strong>MetaFlow</strong> — twenty gold cases pinned across five pipeline stages,
-          in version control, re-run on every change.</p>
-        <p><strong>The capstone flywheel</strong> — an LLM judge scoring every turn, and the
-          eleven highest-error functions it named.</p>
-      </figcaption>
-    </figure>
-    <p class="golink"><a href="/writing/closed-loop/">Read →</a></p>
-  </article>
-</section>
-
-<!-- ============================ EDUCATION ============================ -->
-<section id="education">
-  <h2>Education</h2>
-  <!-- The three degrees are the passage; the joint-programme caveat, the awards and
-       the coursework are notes about it, and they were already set apart as a grey
-       .note block underneath. Underneath is where a note goes when there is nowhere
-       else; beside is where it goes when there is. -->
-  <div class="spread">
-  <div class="compact">
-
-    <article class="item" style="padding-top:0">
-      <div class="row"><h3>Harvard University</h3>
-        <span class="when">Aug 2026 – Expected May 2028</span></div>
-      <p class="role">M.S. Health Data Science, T.H. Chan School of Public Health · Boston,
-        Massachusetts</p>
-    </article>
-
-    <article class="item">
-      <div class="row"><h3>University of Michigan, Ann Arbor</h3>
-        <span class="when">Aug 2024 – May 2026</span></div>
-      <p class="role">B.S.E. Industrial and Operations Engineering; Minor in Computer Science ·
-        Ann Arbor, Michigan</p>
-    </article>
-
-    <article class="item">
-      <div class="row"><h3>UM–SJTU Joint Institute, Shanghai Jiao Tong University</h3>
-        <span class="when">Sep 2022 – Aug 2026</span></div>
-      <p class="role">B.S.E. Electrical and Computer Engineering · Shanghai, China</p>
-    </article>
-
-  </div>
-
-  <aside class="side">
-    <span class="lbl">On the three rows above</span>
-    <p><strong>Dual degree.</strong> Michigan and SJTU are one joint program; the dates
-      overlap by design.</p>
-    <p><strong>Awards.</strong> Dean's Honor List (2024, 2025) · Myun Lee Scholarship
-      (2025).</p>
-    <p><strong>Coursework.</strong> Database Systems, Data Structures &amp; Algorithms,
-      Engineering Data Analytics, Probability &amp; Statistics.</p>
-  </aside>
-  </div>
-</section>
-
-<!-- ============================ SKILLS ============================ -->
-<!-- Three lines of comma-separated technology names is the one block on this page that
-     could have been pasted in from anywhere, and it sat directly under four cards and
-     an experience list where every single claim is attached to something. A list of
-     names is not evidence; a list of names each of which says where on this site it is
-     being used, is. Nothing new is claimed here — the right-hand column only points at
-     what the pages already show. -->
-<section id="skills">
-  <h2>Skills</h2>
-  <div class="spread">
-    <div>
-      <p><strong>Languages</strong> — Python, SQL, TypeScript</p>
-      <p><strong>Data &amp; databases</strong> — PostgreSQL · dbt (metadata &amp; lineage
-        tooling) · gold-case SQL regression and contract tests · time-series feature
-        engineering, missing-value imputation, cleaning rules for high-volatility series</p>
-      <p><strong>Frameworks &amp; tools</strong> — FastAPI, Flask, React, Playwright/CDP,
-        Git</p>
-    </div>
-
-    <aside class="side">
-      <span class="lbl">Where each of these is on this site</span>
-      <p><strong>Gold-case regression, contract tests, PostgreSQL, FastAPI, React</strong> —
-        the 20 gold cases across 5 pipeline stages and the contracts endpoint, on the
-        <a href="/work/metaflow/">MetaFlow page</a>.</p>
-      <p><strong>dbt metadata &amp; lineage</strong> — the evaluation framework for a
-        RAG data-governance copilot serving dbt pipelines and lineage, in Experience above.</p>
-      <p><strong>Time-series features, imputation, cleaning rules</strong> — 400K+ raw step
-        records reconciled onto one per-patient daily timeline, on the
-        <a href="/work/cardiac-rehab/">cardiac study page</a>.</p>
-      <p><strong>Playwright/CDP, Flask</strong> — driving two Electron clients over Chrome
-        DevTools Protocol for the Lark trace schema, in Experience above.</p>
-    </aside>
-  </div>
-</section>
-
 <!-- ============================ FOOTER ============================ -->
+<!-- id="contact" is kept although nothing on the site points at it any more: the bar
+     used to, and a URL that was live is a URL somebody may have kept. It costs one
+     attribute to let /#contact keep landing on the three links it always named. -->
 <footer class="site" id="contact">
   <p>Yizhe Dai · Boston, MA ·
     <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
     <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
     <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a></p>
-  <p>Last updated 25 August 2026.</p>
+  <p>Last updated 26 August 2026.</p>
 </footer>
 
 </body>

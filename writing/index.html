@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writing · Yizhe Dai</title>
+<meta name="description" content="Notes on making an answer checkable: an intermediate representation you can read before anything runs, and turning each fix into a guardrail so the same mistake cannot happen twice.">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="canonical" href="https://chrisyzd.github.io/writing/">
+</head>
+<body>
+
+<nav class="top">
+  <a class="wm" href="/">Yizhe Dai</a><a href="/work/">Work</a><a
+    href="/writing/" aria-current="page">Writing</a><a class="more" href="/experience/">Experience</a>
+</nav>
+
+<!-- This page is the home page's old #writing section with an h1 over it instead of an
+     h2, and nothing else changed: same title, same dated line, same paragraph, same
+     diagram in the same figure, same Read link.
+     THERE IS NO LEAD SENTENCE HERE, and that is deliberate. One essay does not need a
+     paragraph introducing the idea of essays, and anything this page could say about
+     itself would be the essay's own second paragraph, said worse and forty pixels
+     higher up. When there is more than one entry the list will be doing that job.
+
+     ADDING THE NEXT ONE is one <article class="item"> pasted after this one, and
+     nothing else — no container, no class on the parent, no change to the stylesheet:
+
+       <article class="item">
+         <h3><a href="/writing/SLUG/">TITLE</a></h3>
+         <p class="role">MONTH YEAR · ~N min</p>
+         <p>WHAT IT IS ABOUT, and what it cost.</p>
+         <p class="golink"><a href="/writing/SLUG/">Read →</a></p>
+       </article>
+
+     `.item + .item` already supplies the 40px and the rule between two entries, and
+     that rule runs the track rather than the measure because the entry above it holds
+     a figure that runs the track. A figure is optional: an entry without one is the
+     four lines above and the divider still lands in the right place. Newest first,
+     which is the order the dated line makes checkable. -->
+<h1>Writing</h1>
+
+<!-- The <section> is here for one number: without it the entry's last line ("Read →")
+     ended at exactly the y the footer's rule starts at — zero pixels — and a link 8px
+     under a diagram read as the first item of the footer. `section:last-of-type` is
+     the site's own 40px and it is the same 40px /work/ and /experience/ get.
+     It carries an h2 for two more: without one the document went h1 → h3, leaving
+     vacant the level a screen reader looks for; and a list wants a frame, which is what
+     an h2 is on this site. "Essays" is the site's own word for this — every project page's pager
+     already says "Essay: The loop". It is plural over one entry today and that is the
+     honest shape of a list with one thing in it, not a claim about how many there are;
+     the grey line under it on the home page says one, and says how long it is. -->
+<section>
+  <h2>Essays</h2>
+
+  <article class="item">
+    <h3><a href="/writing/closed-loop/">The loop — notes on making an NL-to-SQL answer
+      checkable</a></h3>
+    <p class="role">August 2026 · ~9 min</p>
+    <p>Most natural-language-to-SQL demos give you a number and no way to tell whether it is
+      right. This is what I changed in my own projects to make that different, and what it cost:
+      an intermediate representation you can read before anything runs, and the step people
+      skip — turning each fix into a guardrail so the same mistake cannot happen twice.</p>
+    <figure class="fig-diagram">
+      <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
+           alt="A four-step ring — Measure, Locate, Fix, Add a guardrail — turning around a
+           dark card labelled “grows with every failure”. The guardrail step is highlighted in
+           blue as the one that gets skipped.">
+      <!-- The column beside a 752px drawing held two lines of caption and 700px of
+           nothing. What went into it is what was already inside the drawing and did not
+           belong there: two dashed cards naming the projects the loop is generalised
+           from. A caption column is for what comments on a figure; the figure is for
+           the thing being drawn. -->
+      <figcaption>
+        <p>The essay's figure: the fourth step is the one that gets skipped, and it is
+          the only one that makes the next run cheaper.</p>
+        <p><span class="lbl">The two it is drawn from</span>
+          <strong>MetaFlow</strong> — twenty gold cases pinned across five pipeline stages,
+          in version control, re-run on every change.</p>
+        <p><strong>The capstone flywheel</strong> — an LLM judge scoring every turn, and the
+          eleven highest-error functions it named.</p>
+      </figcaption>
+    </figure>
+    <p class="golink"><a href="/writing/closed-loop/">Read →</a></p>
+  </article>
+</section>
+
+<footer class="site">
+  <p>Yizhe Dai · Boston, MA ·
+    <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·
+    <a href="/">Home</a></p>
+  <p>Last updated 26 August 2026.</p>
+</footer>
+
+</body>
+</html>

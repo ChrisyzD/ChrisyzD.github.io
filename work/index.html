@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Work · Yizhe Dai</title>
+<meta name="description" content="Four projects, one page each: what it is, what I built, what the numbers are — and, at the end of every page, what I still think is unresolved about it.">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="canonical" href="https://chrisyzd.github.io/work/">
+</head>
+<body>
+
+<!-- The same four-item bar as every other content page, in the same order, with the
+     same one item marked .more. Work is the current item and says so with
+     aria-current="page" — which it can, now that the link points at this document
+     instead of at a fragment of another one. -->
+<nav class="top">
+  <a class="wm" href="/">Yizhe Dai</a><a href="/work/" aria-current="page">Work</a><a
+    href="/writing/">Writing</a><a class="more" href="/experience/">Experience</a>
+</nav>
+
+<!-- This block was the home page's #work section: an h2, one three-sentence grey
+     paragraph, and the four cards. It arrives here whole, with one change and no new
+     words — the paragraph is split where it already changed subject. Its first
+     sentence says what the four pages are for, which is the page's lead; its other
+     two say why every card carries the frame it carries, which is a note ABOUT the
+     evidence and therefore margin material by every rule this stylesheet has. Same
+     text, same order, one column on a phone and two from 1200px up. -->
+<div class="spread">
+  <div>
+    <h1>Work</h1>
+    <p class="lead">Four projects, one page each: what it is, what I built, what the
+      numbers are — and, at the end of every page, what I still think is unresolved
+      about it.</p>
+  </div>
+
+  <aside class="side">
+    <span class="lbl">On the four frames</span>
+    <p>Every card carries one frame of that project's own material, whole rather than
+      zoomed: three of the four are charts or instrument panels, and on those an edge
+      is a scale. Two of them open with a clip of the thing actually running.</p>
+  </aside>
+</div>
+
+<!-- Built this without an h2 first, on the argument that the h1 above is the grid's
+     heading and a second line saying the same thing is the credential line's mistake.
+     Two things were wrong with it. The document went h1 → h3 with the h2 level vacant,
+     which is a heading a screen reader looks for and does not find; and the card grid
+     lost the one mark this stylesheet gives a block of evidence — the track-wide rule
+     that `section:has(.cards) > h2` draws, which the home page's version of this grid
+     always had. So the page name is the bar's own word and the block keeps the name it
+     has always had. They are not the same word and they are not doing the same job:
+     one says where you are, the other says these four are a selection. -->
+<section>
+  <h2>Selected work</h2>
+  <ul class="cards">
+
+    <li class="card">
+      <div class="ct">
+        <h3><a href="/work/metaflow/">MetaFlow — metadata-centric NL-to-SQL<span class="arw"
+          aria-hidden="true">&#160;→</span></a></h3>
+        <p class="role">Mar 2026 – present · two-person project</p>
+        <p>A question resolves through an inspectable relational intermediate representation
+          instead of generated SQL, so a wrong answer has an address you can point at.</p>
+        <p class="go"><a class="wide" href="/demos/metaflow-prototype-en.html">Try the live
+          demo →</a><a class="narrow" href="/work/metaflow/#annotated">See the annotated
+          frames →</a></p>
+      </div>
+      <!-- A 1200px console screenshot is 0.29 of its own scale at 350px and 0.38 in the
+           460px evidence column — legible on a 2× laptop panel and a textured grey
+           rectangle on a 1× external display, which is to say: the one frame on this
+           page whose status as evidence depended on the reader's hardware, and it was
+           the first card. So the frame is the same screen's provenance card instead.
+           It was cut off at two of its own borders — right and bottom, mid-field, two
+           of the five numbered fields missing — on the argument that a shorter card
+           fits a wider slot. A card with no bottom is not a card; the whole one is
+           taller than the slot and the slot gave way. -->
+      <img class="shot" src="/assets/img/metaflow-card-provenance.png" width="661" height="769"
+           alt="The provenance card the prototype attaches to every answer: a green All
+           provenance checks green header, then source asset semantic.semantic_revenue,
+           metric version M001_v2, the definition binding fx_rate_basis=event_date_ecb, 12
+           rows, BU-certified, and a checksum-verified block — five of the fields numbered
+           one to five.">
+    </li>
+
+    <li class="card">
+      <div class="ct">
+        <h3><a href="/work/data-flywheel/">LLM data flywheel for in-vehicle voice assistants<span class="arw"
+          aria-hidden="true">&#160;→</span></a></h3>
+        <p class="role">Jun – Aug 2026 · undergraduate thesis</p>
+        <p>Measure first, then regenerate only where the failures are — a user simulator, an LLM
+          judge, and 17,200 verified dialogues aimed at eleven functions.</p>
+      </div>
+      <!-- Half a ring is not half an argument, it is a ring with two arcs running off the
+           top edge. The frame is the whole cycle now — six steps and the hub — cut where
+           the figure's own white ground is, not through its lines. -->
+      <img class="shot" src="/assets/img/flywheel-card.png" width="1200" height="1105"
+           loading="lazy"
+           alt="The flywheel diagram: six steps turning clockwise — simulate, roll out, judge,
+           locate the eleven highest-error functions, regenerate targeted rather than
+           everywhere, re-evaluate at 72.8 to 82.7 per cent accepted — with dashed arrows from
+           roll out and regenerate into the verified dialogue set at the centre.">
+    </li>
+
+    <li class="card">
+      <div class="ct">
+        <h3><a href="/work/cardiac-rehab/">Cardiac rehabilitation wearable study<span class="arw"
+          aria-hidden="true">&#160;→</span></a></h3>
+        <p class="role">Apr 2025 – Jan 2026 · research assistant, U-M</p>
+        <p>Whether wearable step data can say when a patient has actually stopped improving — and
+          how much that answer depends on what you decide “recovered” means.</p>
+      </div>
+      <!-- Cut between the second and third box, where the poster's own paper is, so both
+           boxes keep their four sides and the crop keeps both axes: the day-since-enrollment
+           title down the left, the frame, and the 0/50/100/150 ticks underneath. The third
+           definition is on the case page, in the whole figure it came from. -->
+      <img class="shot" src="/assets/img/cardiac-card.png" width="1200" height="700"
+           loading="lazy"
+           alt="Two of the three plateau box plots from the co-authored poster: two visibly
+           different medians and spreads on the same day-since-enrollment axis, each box whole,
+           with the axis and its 0 to 150 ticks underneath.">
+    </li>
+
+    <li class="card">
+      <div class="ct">
+        <h3><a href="/work/emg-biofeedback/">EMG biofeedback training system<span class="arw"
+          aria-hidden="true">&#160;→</span></a></h3>
+        <p class="role">Oct 2024 – Apr 2026 · NeuRRo Lab, U-M</p>
+        <p>Muscle activity to cursor in real time, with the optimizer hand-ported out of Python so
+          the decoder adapts on-device inside the game loop.</p>
+      </div>
+      <!-- The phone crop of this one stopped at about 1.05 s of a 2.5 s trace, which is
+           before the peak the sentence under it names, and took half of the second target
+           with it. There is no narrower crop of a three-panel instrument frame that is
+           still the same claim. -->
+      <img class="shot" src="/assets/img/emg-card.png" width="1200" height="525" loading="lazy"
+           alt="One frame of the EMG clip at the instant of a reach: the reach counter at the
+           top left, the Delsys panel with the smoothed envelope of that reach peaking near
+           0.07 of its nought-to-one axis, and the yellow muscle-driven cursor resting against
+           the lit target below.">
+    </li>
+
+  </ul>
+</section>
+
+<footer class="site">
+  <p>Yizhe Dai · Boston, MA ·
+    <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·
+    <a href="/">Home</a></p>
+  <p>Last updated 26 August 2026.</p>
+</footer>
+
+</body>
+</html>

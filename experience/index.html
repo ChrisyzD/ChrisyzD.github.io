@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experience, education and skills · Yizhe Dai</title>
+<meta name="description" content="Four roles — Lark at ByteDance, Shenzhen Legion Technology, and two research roles at the University of Michigan — three degrees, and a skills list that says where each name on it is used on this site.">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="canonical" href="https://chrisyzd.github.io/experience/">
+</head>
+<body>
+
+<!-- Experience is the one item in this row marked .more, so on a phone this page is
+     the only one whose own name is not in its own bar — the arithmetic is in the
+     stylesheet under nav.top .more, and the cost is recorded there rather than hidden.
+     The h1 under it says where you are, which is what an h1 is for. -->
+<nav class="top">
+  <a class="wm" href="/">Yizhe Dai</a><a href="/work/">Work</a><a
+    href="/writing/">Writing</a><a class="more" href="/experience/" aria-current="page">Experience</a>
+</nav>
+
+<!-- Three blocks that used to be three separate sections of the home page, in the order
+     they were already in. They are one page because they are one question — what has he
+     done, what was he trained in, what can he use — and because a recruiter scanning on a
+     phone should meet them in one scroll rather than three.
+     The order is not the résumé PDF's (which runs education, skills, experience, projects,
+     in a LaTeX template's order). It is this site's, unchanged: the site is not the résumé,
+     it links to it, and re-ranking three blocks is a content decision this round did not
+     make. Every entry, every date, every number and every margin note below is the home
+     page's, moved and not rewritten. -->
+<h1>Experience, education and skills</h1>
+<p class="meta">Four roles, three degrees, and a skills list that says where each name on it
+  is used on this site.</p>
+
+<!-- ============================ EXPERIENCE ============================ -->
+<section id="experience">
+  <h2>Experience</h2>
+  <!-- Every other long block on this page has a second column: Education its caveats and
+       awards, Skills the place on this site where each name is being used. This one did
+       not, so it ran as a single left-hand column with 480px of nothing beside it. The
+       material for the column was already here and already set apart: each entry's place
+       and stack, which was the third grey line under a title. It stays where it is in the
+       source, so a phone (and paper, and a reader with no CSS) still meets it directly
+       under the title it belongs to; past 1200px it is placed in the margin instead. -->
+  <div class="compact laned">
+
+    <article class="item" style="padding-top:0">
+      <div class="row"><h3>Lark, ByteDance — AI Solutions Intern</h3>
+        <span class="when">May – Aug 2026</span></div>
+      <p class="role">Shanghai, China · Python, Flask, TypeScript, Playwright/CDP</p>
+      <p>Designed a unified <strong>trace schema</strong> that made two enterprise AI agents
+        comparable on real user tasks — driving both Electron clients over Chrome DevTools
+        Protocol, mapping two incompatible event vocabularies onto one field set, and scoring
+        the normalized runs side by side.</p>
+      <p>Separately, on the go-to-market side: discovery and technical qualification for
+        enterprise accounts, plus the internal enablement tooling behind it — a searchable hub
+        of <strong>800+</strong> assets with one-click deck assembly (sole developer) and a
+        demo site non-engineers edit themselves.</p>
+    </article>
+
+    <article class="item">
+      <div class="row"><h3>Shenzhen Legion Technology — Data Engineering &amp; AI Intern</h3>
+        <span class="when">Apr – Oct 2025</span></div>
+      <p class="role">Remote, China (part-time) · Python, SQL, dbt, RAG</p>
+      <p>Built the <strong>evaluation framework</strong> for a RAG data-governance copilot
+        serving dbt pipelines and lineage: structured cases across its three question classes
+        (catalog, SQL, data-QA), each graded on whether retrieval returned the right
+        catalog/lineage objects and whether the answer met governance rules — so prompt and
+        retrieval changes were re-scored on the same cases, not eyeballed. Designed the
+        copilot's prompt architecture behind those classes.</p>
+    </article>
+
+    <article class="item">
+      <div class="row"><h3>University of Michigan — Cardiac Rehabilitation Wearable Study</h3>
+        <span class="when">Apr 2025 – Jan 2026</span></div>
+      <p class="role">Research Assistant (part-time) — SURE summer program, then continued on
+        the study · Ann Arbor, Michigan</p>
+      <p>Assembled the analysis dataset — <strong>400K+</strong> raw step records reconciled
+        onto one per-patient daily timeline, cleaning rules cutting 247 enrolled patients to a
+        <strong>191-patient analysis cohort</strong> — and built the temporal features,
+        phenotyping and plateau detection on top of it. <strong>~68%</strong> of that cohort had
+        suboptimal discharge timing against the standard 36-session model.</p>
+      <p class="golink"><a href="/work/cardiac-rehab/">Full case →</a></p>
+    </article>
+
+    <article class="item">
+      <div class="row"><h3>NeuRRo Lab, University of Michigan</h3>
+        <span class="when">Oct 2024 – Apr 2026</span></div>
+      <p class="role">Research Assistant (part-time) · Ann Arbor, Michigan · MATLAB,
+        Python/PyTorch, Unity, C#</p>
+      <p>Built the lab's real-time EMG biofeedback system and its MATLAB muscle-synergy analysis
+        pipeline, both used in clinical experiments.</p>
+      <p class="golink"><a href="/work/emg-biofeedback/">Full case →</a></p>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================ EDUCATION ============================ -->
+<section id="education">
+  <h2>Education</h2>
+  <!-- The three degrees are the passage; the joint-programme caveat, the awards and
+       the coursework are notes about it, and they were already set apart as a grey
+       .note block underneath. Underneath is where a note goes when there is nowhere
+       else; beside is where it goes when there is. -->
+  <div class="spread">
+  <div class="compact">
+
+    <article class="item" style="padding-top:0">
+      <div class="row"><h3>Harvard University</h3>
+        <span class="when">Aug 2026 – Expected May 2028</span></div>
+      <p class="role">M.S. Health Data Science, T.H. Chan School of Public Health · Boston,
+        Massachusetts</p>
+    </article>
+
+    <article class="item">
+      <div class="row"><h3>University of Michigan, Ann Arbor</h3>
+        <span class="when">Aug 2024 – May 2026</span></div>
+      <p class="role">B.S.E. Industrial and Operations Engineering; Minor in Computer Science ·
+        Ann Arbor, Michigan</p>
+    </article>
+
+    <article class="item">
+      <div class="row"><h3>UM–SJTU Joint Institute, Shanghai Jiao Tong University</h3>
+        <span class="when">Sep 2022 – Aug 2026</span></div>
+      <p class="role">B.S.E. Electrical and Computer Engineering · Shanghai, China</p>
+    </article>
+
+  </div>
+
+  <aside class="side">
+    <span class="lbl">On the three rows above</span>
+    <p><strong>Dual degree.</strong> Michigan and SJTU are one joint program; the dates
+      overlap by design.</p>
+    <p><strong>Awards.</strong> Dean's Honor List (2024, 2025) · Myun Lee Scholarship
+      (2025).</p>
+    <p><strong>Coursework.</strong> Database Systems, Data Structures &amp; Algorithms,
+      Engineering Data Analytics, Probability &amp; Statistics.</p>
+  </aside>
+  </div>
+</section>
+
+<!-- ============================ SKILLS ============================ -->
+<!-- Three lines of comma-separated technology names is the one block on this page that
+     could have been pasted in from anywhere, and it sits directly under an experience
+     list where every single claim is attached to something. A list of names is not
+     evidence; a list of names each of which says where on this site it is being used,
+     is. Nothing new is claimed here — the right-hand column only points at what the
+     pages already show. -->
+<section id="skills">
+  <h2>Skills</h2>
+  <div class="spread">
+    <div>
+      <p><strong>Languages</strong> — Python, SQL, TypeScript</p>
+      <p><strong>Data &amp; databases</strong> — PostgreSQL · dbt (metadata &amp; lineage
+        tooling) · gold-case SQL regression and contract tests · time-series feature
+        engineering, missing-value imputation, cleaning rules for high-volatility series</p>
+      <p><strong>Frameworks &amp; tools</strong> — FastAPI, Flask, React, Playwright/CDP,
+        Git</p>
+    </div>
+
+    <aside class="side">
+      <span class="lbl">Where each of these is on this site</span>
+      <p><strong>Gold-case regression, contract tests, PostgreSQL, FastAPI, React</strong> —
+        the 20 gold cases across 5 pipeline stages and the contracts endpoint, on the
+        <a href="/work/metaflow/">MetaFlow page</a>.</p>
+      <p><strong>dbt metadata &amp; lineage</strong> — the evaluation framework for a
+        RAG data-governance copilot serving dbt pipelines and lineage, in Experience above.</p>
+      <p><strong>Time-series features, imputation, cleaning rules</strong> — 400K+ raw step
+        records reconciled onto one per-patient daily timeline, on the
+        <a href="/work/cardiac-rehab/">cardiac study page</a>.</p>
+      <p><strong>Playwright/CDP, Flask</strong> — driving two Electron clients over Chrome
+        DevTools Protocol for the Lark trace schema, in Experience above.</p>
+    </aside>
+  </div>
+</section>
+
+<footer class="site">
+  <p>Yizhe Dai · Boston, MA ·
+    <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·
+    <a href="/">Home</a></p>
+  <p>Last updated 26 August 2026.</p>
+</footer>
+
+</body>
+</html>
