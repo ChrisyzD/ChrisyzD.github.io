@@ -208,7 +208,15 @@ body.essay { --prose: 600px; }
 .side.bare { border-left: 0; padding-left: 0; }
 @media (max-width: 74.99rem) {
   .side.bare { margin-top: 0; font-size: inherit; color: inherit; }
-  .side.bare .lbl { display: none; }
+  /* The label used to be hidden here, on the argument that below the two-column
+     width this block "is still just the last of the four opening lines" of the
+     old header. There are no four opening lines any more: it is a block in a
+     composition, sitting between a sentence about next summer and a heading, and
+     three bare blue links with nothing naming them was the one place on this page
+     where a reader had to guess what they were looking at. It costs 19px of a
+     844px phone screen and the door under it is still whole above the fold. Now
+     both of the page's small blocks carry the same mark — CONTACT and BACKGROUND
+     — which is the point of having a mark. */
   /* Below the two-column width an aside is not a column, it is a block in the
      flow — and a block in the flow needs a bottom edge. It had only a top one,
      so wherever the next thing was a bare <p> (which sets no top margin either)
@@ -303,16 +311,69 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; max-width: va
 
 /* ---------- layout ---------- */
 
-header.site { margin-bottom: 24px; }
+/* ---------- the home page, as one composition ---------- */
+/* WHY THIS IS ONE GRID AND NOT A HEADER PLUS A LIST.
+   Until this round the home page was the opening block of the old 8,000px scroll
+   — face, name, four paragraphs — with three ruled rows bolted under it, and the
+   last round's report defended keeping the block "unchanged, deliberately". The
+   block was not wrong; it was answering a question this page no longer asks. It
+   was designed to be the first screen of a long document, whose job is to
+   introduce the thing you are about to scroll through. Nothing is under this page
+   any more. It is a landing page, and its whole job is to say who this is and
+   hand the reader to one of three places — which is a different object with a
+   different centre of gravity, and it does not get to inherit the other one's
+   layout.
+   So <header> and <section> are gone from that document and everything between
+   the bar and the footer is one grid of eight items in one fixed source order:
+   face, name, lead, intent, contact, the doors' heading, the doors, background.
+   ONE container, because the two arrangements below have to move a block PAST
+   its neighbours, and grid can only place items it owns. That is the whole
+   technical reason there is no header element here; the design reason is that
+   there is no longer anything for a header to be the head OF.
 
-/* ---------- the opening block ---------- */
-/* Four grid items in one fixed source order — portrait, name, sentences, contact —
-   placed three different ways and never reordered in the DOM. This is not .spread:
-   .spread is a passage and its margin notes, two columns of type. Here the second
-   column starts with a face, which is a fixed 160px object rather than a column of
-   anything, so it gets its own placement instead of borrowing one that is about
-   text.
-   The photo is round. Every other framed image on this site is a 2px-radius
+   THE TWO ARRANGEMENTS
+   below 1200px  one column, exactly the source order. The background paragraph
+                 is LAST, and that is the single change that lets a phone show a
+                 door on the first screen: it is 281px of the 844 a 390px phone
+                 has, it used to sit between the name and the doors, and it is
+                 the one paragraph nobody needs before deciding where to go.
+   1200px and up two columns — the same two the rest of the site opens at this
+                 width. Sentences on the spine at the measure; the face and the
+                 contact list in the margin column; and the background pulled
+                 back up into the left column, where there is room for it above
+                 the doors and where the page still fits one 900px screen.
+   The door row spans BOTH columns at every width, so its left edge is the spine
+   and its right edge is the right edge of the face's column. Before this round
+   nothing on this page shared an edge with the portrait, and the margin column
+   simply stopped: measured at 1440x900, it held a face and three links and then
+   485px of nothing, from the last contact link down to the footer's own rule.
+   That row is what gives the composition a bottom. */
+.home {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 16px;
+  /* 24, not the 40 a section used to take, and the reason is that the thing above
+     the footer is now a band with a bottom edge of its own rather than a paragraph
+     that just stops. 24 + the footer's own 24 of padding is 48 of clear air under
+     the doors, which is more than the 40 the old list got and looks like less. */
+  margin-bottom: 24px;
+}
+.home > .portrait { width: var(--portrait); height: var(--portrait); }
+.home > h1        { margin-bottom: 0; }
+.home > .lead     { margin-bottom: 0; }
+.home > .intent   { margin-bottom: 0; }
+.home > .bio p    { margin-bottom: 0; }
+/* THE PAGE HAS THREE GAPS AND THEY ARE THE PAGE'S RHYTHM. 16 between the lines of
+   one statement (name → what I do → what I want); 24 between two blocks of the
+   same movement (that statement → how to reach it, and → the background); 40
+   before the doors, which is the one place the page changes what it is doing.
+   Written as the grid's 16 plus 8 or 24 rather than as three new numbers, so the
+   4/8/16/24/40/64 scale at the top of this file still holds. */
+.home > .side    { margin: 8px 0 0; }
+.home > .bio     { margin-top: 8px; }
+.home > .gates-h { margin: 24px 0 0; }
+
+/* The photo is round. Every other framed image on this site is a 2px-radius
    rectangle with a 1px rule, because every other one is evidence and a frame is
    what says "look inside this edge". A face is not evidence, and giving it the
    evidence frame would have said it was. Round also means the studio's white paper
@@ -324,28 +385,22 @@ header.site { margin-bottom: 24px; }
   background: var(--bg);
 }
 
-/* Below the two-column width the face is simply the first thing on the spine and
-   the name is the second. It was a face-beside-the-name row for one revision,
-   which looked better and cost two of this file's own rules: the name — the
-   largest word on the page — started 136px right of every other block, and at
-   exactly 1200px, when the face left that row for the margin column, it jumped
-   those 136px back. "The content's left edge is the gutter on both sides of every
-   step" is the promise three paragraphs at the top of this file are about. So the
-   face stacks, the name never moves, and past 1200px the face is placed in the
-   margin — which is the same move .role and .side already make at the same width.
-   A column of face beside a column of type is not the alternative: it does not fit
-   until about 1000px (720 of measure + 40 + 160 of face against a track that is
-   only 860 at 940), and buying it earlier means paying for it out of the line. */
-header.intro {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  row-gap: 16px;
-}
-header.intro > .portrait { grid-column: 1; width: var(--portrait); height: var(--portrait); }
-header.intro > h1        { grid-column: 1; margin-bottom: 0; }
-header.intro > .who      { grid-column: 1; }
-header.intro > .side     { grid-column: 1; }
-header.intro .who > p:last-child { margin-bottom: 0; }
+/* THE INTENT LINE. It used to be the last <p class="meta"> of the four-paragraph
+   block: 15px, --meta grey, the mark this site gives a figure caption and a date.
+   It is the one sentence on the page that tells a visitor what they can do about
+   any of it, and it was set as metadata — the plainest contrast failure on the
+   page, and the reason it is called out here rather than folded into the grid
+   block above. Body size, text colour, and the <strong> inside it carries the
+   site's own 600. No border: .tryit's 3px blue edge means "you can operate this",
+   and a sentence about next summer is not a control. */
+.intent { font-size: inherit; color: var(--text); }
+
+/* The background block. .lbl is the site's "this block is a place" mark and it is
+   doing the same job here it does over the contact list: below 1200px this is the
+   last thing on the page and the label is what keeps it from reading as a stray
+   paragraph left over after the doors; at 1200px and up it is the foot of the left
+   column and the label is what pairs it with CONTACT across the gutter. */
+.bio { max-width: var(--prose); }
 /* ---------- the bar ---------- */
 /* THIS ROW IS NOW A LIST OF PAGES, NOT A LIST OF PLACES ON ONE PAGE.
    Until this round the site was one long scroll with an index pinned above it:
@@ -618,44 +673,71 @@ h1 + section { margin-top: 40px; }
 
 /* ---------- the three doors (home) ---------- */
 /* The home page used to BE the site: work, experience, writing, education and
-   skills stacked into one 7,977px column at 390x844 — nine and a half screens, of
-   which the first screen was a face and four paragraphs. Everything below the fold
-   was reachable by exactly one move, which was to keep scrolling, and the pinned
-   bar existed to make that survivable. It is three pages now, and this block is the
-   place the home page hands you to them.
-   IT IS A RULED LIST AND NOT A ROW OF CARDS, and that is the one decision here.
-   Three boxes across the track is the shape every portfolio template ships, and it
-   would have failed the way the two-up card grid failed two rounds ago and for the
-   same reason: a grid row makes "how much is behind this door" into a visible
-   ranking, and behind these three doors are four projects, one essay and a CV. The
-   Writing column would have been a third the height of the Work column with a rule
-   over both. A list has no same-row parity to fail — it stacks at every width, in
-   one order, and the phone and the 1920 see the same object.
+   skills stacked into one 7,977px column at 390x844 — nine and a half screens. It
+   is three pages now, and this block is the place the home page hands you to them.
+
+   THEY ARE PLATES NOW AND NOT A RULED LIST, and that reverses what this file said
+   one round ago, so the old argument is answered rather than deleted. It ran: a
+   row of boxes makes "how much is behind this door" into a visible ranking, the
+   Writing box would be a third the height of the Work box, and a list has no
+   same-row parity to fail. Every clause of that is about CONTENT HEIGHT, and it
+   is answered here rather than by giving up the row: the plates stretch to one
+   height because that is what a grid row does, so the band has one bottom edge
+   whatever is in it; the three grey lines were cut to 71, 79 and 100 characters,
+   so from 1440 up all three are two lines and no plate has anything under its
+   last line but its own padding; and below 1200 the row is not a row at all — the
+   doors stack full width, where the question cannot arise. The worst remaining
+   slack is two lines, in the 1200–1360 band. What the old argument never
+   addressed is the thing that was actually wrong with the list, and it is the
+   reason for this rewrite: three grey rows inside the 780px measure carried about
+   the same visual weight as the footer, on the one page whose entire job is to be
+   walked through. Measured at 1440x900: the block ran from y=491 to y=822, three
+   rows 115, 91 and 116 tall, in a 840px column against a 1360px page — so the one
+   thing on the page a visitor is meant to use stopped 520px short of the page's
+   own right edge, and every rule and every plane around it did not.
+
+   WHERE THE WEIGHT COMES FROM, and every part of it is a token this file already
+   owns: --ground, which it defines as "the one tint on the site: what a plate
+   sits on"; the 1px --rule border and 2px radius that every .card carries; and
+   .tryit's 3px --link left edge, which is this site's mark for "a thing you
+   operate". Three of those spanning the full 1280px track, under a rule that also
+   spans it, is not something a reader has to go looking for. No images: three of
+   these doors would need one each for the row to be honest, /work/ and /writing/
+   have material and /experience/ has none, and a row where two boxes carry a
+   frame and one does not is the exact parity failure the card grid was rebuilt to
+   get rid of two rounds ago.
+
    Each door is a title and a grey line naming what is behind it. The grey line is
    the point: a row of three labels is a menu, and a menu makes you remember what
    the words meant; the names make it recognition instead. It does NOT repeat the
    destination's own opening sentence — the page says what it is for, the door says
    what is in it, and saying both would be the credential line's mistake (the same
    fact twice within sixty pixels) at page scale.
-   The whole row is the target, by the same overlay .card uses, so on a phone each
-   door is a 90px block rather than a 25px line of text. */
-.doors { list-style: none; margin: 0; padding: 0; max-width: var(--prose); }
-/* DIVIDERS ONLY — no rule at either end of the block, which is the .item and .compact
-   idiom and not the .stack one. Built the other way first (every door closed by its
-   own bottom rule, the .stack idiom, so that a hover could answer at the far end of a
-   780px row rather than only at the title) and it produced exactly the arrangement
-   this file has twice called a rounding error: the last door's rule and the footer's
-   rule, two identical hairlines 40px apart in the same colour and weight with nothing
-   at all between them, at the bottom of the shortest page on the site. A rule under
-   the last door is a line pointing at the footer.
-   So the ends belong to their neighbours — the h2's rule opens the block, the
-   footer's closes the page — and the only rules in here divide one door from the
-   next, which is what law (a) says they are as wide as. What hover loses with them is
-   the far-end response; what it keeps is cursor:pointer under the pointer itself and
-   the title and arrow going blue, which is two of the three signals a .card gives and
-   the two that do not need a border to exist. */
-.door { position: relative; padding: 16px 0; cursor: pointer; }
-.door + .door { border-top: 1px solid var(--rule); }
+   The whole plate is the target, by the same overlay .card uses. */
+.doors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: none;       /* it is the band that spans the track, not a paragraph */
+  display: grid;
+  gap: 16px;
+}
+/* The plate's own left edge sits on the spine like every other block; its contents
+   are inset, like every other plate's, and the left inset is written 3px short so
+   that padding + the blue border comes to the same number as the other three sides.
+   16 on a phone rather than the .card's 20, for the reason .plate already drops to
+   16/12 there: a 350px line cannot spend 40 of itself on the inside of a box. It
+   takes the cards' own 24 from 44rem up, where there is width to spend. */
+.door {
+  position: relative;
+  background: var(--ground);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--link);
+  border-radius: 2px;
+  padding: 16px 16px 16px 14px;
+  cursor: pointer;
+}
+.door:hover { border-color: var(--link); }
 /* One step above body, which is the step .lead takes — a door is the size of the
    sentence that introduces it. Not a new number on the scale: 19 → 21 is .lead's
    own pair. The weight is 600, the site's "this is the thing, not the commentary"
@@ -665,7 +747,13 @@ h1 + section { margin-top: 40px; }
    than a class of its own, so it steps 14 → 15 with every other grey line on the
    site and cannot drift from them. The only thing it needs back is its bottom
    margin: it is the last thing in the door, and the door's own padding is the gap. */
-.door .meta { margin: 0; }
+/* …and it is the only grey line on the site that was still running at the body's
+   1.7. Every other secondary grey block sets its own tighter leading — figcaption
+   1.55, .side and .clip figcaption 1.6 — because a caption is a block you take in
+   rather than a passage you read along. Inside a plate at 400px that difference is
+   the whole texture of the band: at 1.7 three lines of 15px grey read as a
+   paragraph somebody left in a box. */
+.door .meta { margin: 0; line-height: 1.55; }
 
 /* ---------- work cards (home index) ---------- */
 /* /work/ is an index, not the work itself — it was the home page's #work section
@@ -1025,6 +1113,14 @@ figcaption .src { display: block; margin-top: 4px; }
    closes and stops where that block's sentences stop. */
 footer.site { padding-top: 0; font-size: 14px; color: var(--meta); }
 footer.site > p:first-child { border-top: 1px solid var(--rule); padding-top: 24px; }
+/* THE ONLY LINE IN THIS ROUND THAT IS NOT ABOUT THE HOME PAGE, and it is here
+   because measuring the home page to the pixel is what found it. The footer has no
+   bottom padding and no bottom border, so the last paragraph's 16px bottom margin
+   had nothing to collapse against inside the footer and propagated out into the
+   body — 16px of nothing between "Last updated" and the body's own 64px of bottom
+   padding, on all ten pages, since the footer was written. Every page gets 16px
+   shorter and nothing moves. */
+footer.site > p:last-child { margin-bottom: 0; }
 footer.site a { color: var(--link); }
 
 .note { font-size: 14px; color: var(--meta); }
@@ -1078,6 +1174,10 @@ footer.site a { color: var(--link); }
   .card .go a:hover { border-color: var(--link); text-decoration: underline; }
   .cards { gap: 24px; }
   .card { padding: 24px; }
+  /* Same step the cards take, and the same 1px arithmetic: 22 + the 3px left
+     border is the 25px a .card's contents sit at here. */
+  .doors { gap: 24px; }
+  .door { padding: 24px 24px 24px 22px; }
   .pager { display: flex; flex-wrap: wrap; gap: 8px 24px; }
   .pager li { margin-bottom: 0; }
 
@@ -1207,18 +1307,68 @@ footer.site a { color: var(--link); }
      against, and the contact block under it is what makes the column worth opening.
      Both are placed in the same area and top-aligned, with the contact list offset
      by the face's own height — one derived number, like --plate, rather than a grid
-     row whose height would depend on how long the paragraph happened to be. */
+     row whose height would depend on how long the paragraph happened to be.
+     THE BACKGROUND MOVES HERE TOO, from last in the source to the foot of the left
+     column. That is the one place on this site where a block displays somewhere
+     other than where it reads, and the trade is stated in the page's own comment:
+     it buys the phone a door on the first screen (the paragraph is 281px of a
+     844px screen and it was sitting between the name and the doors) and it costs
+     this width nothing, because at 780px the left column has room for it above the
+     doors and the page still fits 900. It holds no focusable element, so the tab
+     order does not move with it.
+     THE DOOR ROW SPANS BOTH COLUMNS, which is what makes this a composition rather
+     than a masthead with a list under it: its left edge is the spine, its right
+     edge is the right edge of the face's column, and it is the only thing on the
+     page that touches both. */
   :root { --portrait: 160px; }
-  header.intro {
+  .home {
     grid-template-columns: var(--prose) minmax(0, 1fr);
     column-gap: 40px;
     align-items: start;
   }
-  header.intro > .portrait { grid-column: 2; grid-row: 1 / span 2; }
-  header.intro > h1        { grid-column: 1; grid-row: 1; margin-bottom: 0; }
-  header.intro > .who      { grid-column: 1; grid-row: 2; }
-  header.intro > .side     { grid-column: 2; grid-row: 1 / span 2; align-self: start;
-                             margin-top: calc(var(--portrait) + 24px); }
+  /* One step up the h1 scale — 30 → 38 → 48, the same 1.27 the first step takes.
+     This page is the only one whose h1 is a person rather than a section, and the
+     only one that has to hold a whole composition together from its top-left
+     corner; every other page's title is a label over the thing under it and stays
+     at 38. */
+  .home > h1        { grid-column: 1; grid-row: 1; font-size: 48px; }
+  .home > .lead     { grid-column: 1; grid-row: 2; }
+  .home > .intent   { grid-column: 1; grid-row: 3; }
+  .home > .bio      { grid-column: 1; grid-row: 4; }
+  .home > .portrait { grid-column: 2; grid-row: 1 / span 4; }
+  .home > .side     { grid-column: 2; grid-row: 1 / span 4; align-self: start;
+                      margin-top: calc(var(--portrait) + 24px); }
+  .home > .gates-h  { grid-column: 1 / -1; grid-row: 5; }
+  .home > .doors    { grid-column: 1 / -1; grid-row: 6; }
+
+  /* THE DOORS GO THREE ACROSS AT THE SAME WIDTH THE PAGE GETS ITS SECOND COLUMN,
+     and that is one decision rather than two: this is the tier where this page
+     stops being a stack and becomes a composition, so it is the tier where the
+     band that ties the composition together stops being a stack too. The gap is
+     the 40 this tier already uses between the two columns above it, so the band's
+     internal rhythm is the page's own rather than a fourth number.
+     Tried it a tier earlier, at 940, and measured why it does not belong there:
+     the track is 860 at that width, three columns and two 40px gaps leave 260px a
+     plate and 207px of line inside it, "Experience, education and skills" needs
+     three lines of title to fit, and the row stretched to 278px with 105 and 128px
+     of empty plate under the two shorter doors. That is the ruled list's own
+     objection — a row makes the shortest door look like the emptiest one —
+     arriving exactly where the columns get too narrow to hold the copy. Below this
+     width the doors stack and each one is as wide as the page, which holds its two
+     lines with no hole at all.
+     What keeps the three from ranking each other HERE is that a grid row stretches
+     them to one height, so the band has one bottom edge whatever is in it, and
+     that the three lines under the titles were cut to the same length (see the
+     page's own markup). The worst remaining slack is two lines, in Writing, in the
+     1200–1360 band; from 1360 up it is one.
+     Built once with a reserved two-line title band as well — the .deltas.band dt
+     trick — and measured it costing 28px of empty band inside ALL THREE plates at
+     1440, where no title wraps at all, to buy the alignment of three grey lines
+     over part of the range. It is out. A title that is two lines at 1200 and one at
+     1440 is a paragraph reflowing, which is what every other line on this site
+     does through every breakpoint. */
+  .doors { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+
 
   /* A drawn diagram and its caption stop being two stacked blocks and become
      one object that spans the track: the drawing on the spine at the measure,
@@ -1356,14 +1506,25 @@ footer.site a { color: var(--link); }
 @media print {
   body { max-width: none; font-size: 11pt; color: #000; padding: 0; }
   p, ul, ol, dl, h1, h2, h3, figcaption, .note, .row, .stack, .tryit,
-  .scope, .thoughts-body, .pull, .plate .src, .side { max-width: none; }
+  .scope, .thoughts-body, .pull, .plate .src, .side, .bio { max-width: none; }
   /* Paper has one column. A margin note prints under the passage it belongs to,
      which is where it sits on a phone too. */
-  .spread, .fig-diagram, .clip figcaption, .compact.laned .item, header.intro { display: block; }
+  .spread, .fig-diagram, .clip figcaption, .compact.laned .item, .home { display: block; }
   /* The card frames do not print — they are evidence of motion and paper has none.
      A face is not evidence of anything, and a printed page of somebody's work is a
      normal place to have one, so it stays and gets out of the type's way. */
-  header.intro > .portrait { float: right; width: 96px; height: 96px; margin: 0 0 8px 16px; }
+  .home > .portrait { float: right; width: 96px; height: 96px; margin: 0 0 8px 16px; }
+  /* The contact list is display:none on paper because the footer prints the same
+     three addresses with their hrefs after them. Its LABEL was not, and printed a
+     bare "CONTACT" over nothing on every printed copy of the home page — one of
+     the two things this round found by running the print pass against a page whose
+     markup had changed under it. The block goes as one thing now. */
+  .home > .side.bare { display: none; }
+  /* A door on paper is its title and its line. The tint, the rule and the blue
+     edge are all screen affordances for something you can click, and the href
+     printer three rules down is what makes the destination readable instead. */
+  .doors { display: block; }
+  .door { background: none; border: 0; padding: 0; margin-bottom: 12px; }
   .clip figcaption > .spec, .clip figcaption > .bound {
     border-left: 0; padding-left: 0; max-width: none; margin: 8px 0 0;
   }
@@ -1386,6 +1547,20 @@ footer.site a { color: var(--link); }
   a { color: #000; text-decoration: none; }
   a[href^="http"]::after,
   a[href^="/"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
+  /* …and the two rules above have never reached a door or a card, which is the
+     second thing this round found by printing a page instead of asserting about
+     it. The comment under nav.top says a printed home page "names all three
+     destinations anyway, inside the doors, where a reader is looking". It did not.
+     What makes a whole plate clickable is an ::after on the title link, and
+     `.door h3 a::after` outranks `a[href^="/"]::after` by a class, so the overlay's
+     empty content won and every door on the home page and every card on /work/
+     printed its title with no address under it at all. On paper there is no
+     overlay to draw, so the pseudo-element goes back to being what the two rules
+     above make it. */
+  .card h3 a::after, .door h3 a::after {
+    position: static; inset: auto; content: " (" attr(href) ")";
+    font-size: 9pt; color: #444;
+  }
   figure, .card, .plate { break-inside: avoid; }
   figure, .fig-diagram, .fig-plate, .fig-clip, .cards, .pair, .plate { max-width: none; }
   .plate { background: none; border: 0; padding: 0; }

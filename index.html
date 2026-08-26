@@ -10,13 +10,9 @@
 </head>
 <body>
 
-<!-- The bar. It is a list of pages now, not a list of places on this one: until this
-     round it carried six fragments of this document (#work, #experience, #writing,
-     #education, #skills, #contact) and this document was 7,977px tall at 390x844.
-     Those five blocks are three pages, and the row points at them.
+<!-- The bar. It is a list of pages, not a list of places on this one.
      The wordmark carries aria-current="page" here and nowhere else: it points at "/"
-     and this is "/", which is the first time any item in this row has been able to
-     say "page" honestly. On the other five content pages it is the way home instead.
+     and this is "/". On the other five content pages it is the way home instead.
      Experience is marked .more and appears from 44rem up. The phone row is the name
      plus Work plus Writing — 191px of the 320px a 360px phone has. Adding Experience
      puts it at 283px and wraps the row outright under the browser's own minimum-font
@@ -26,32 +22,66 @@
     href="/writing/">Writing</a><a class="more" href="/experience/">Experience</a>
 </nav>
 
-<!-- The opening block is unchanged this round, deliberately: it was the one part of
-     the old home page that was doing its job. Four grid items in one fixed source
-     order — portrait, name, sentences, contact — the three contact links in the
-     margin column beside the face from 1200px up, stacked under it below that.
-     It is 716px of a 844px phone screen and 331px of a 900px laptop one, which is
-     the floor everything under it has to fit above. -->
-<header class="site intro">
+<!-- ============================== THE HOME PAGE ==============================
+     ONE GRID, NOT TWO BLOCKS. Last round this page was an opening block that had
+     been designed for the top of an 8,000px scroll, with a list of three grey
+     lines bolted underneath it, and the round's own report defended keeping the
+     opening block "unchanged, deliberately". That was wrong and it is reversed
+     here. The old block was the FIRST SCREEN OF A LONG DOCUMENT — its job was to
+     introduce a page you were about to keep scrolling through. This page is not
+     that any more. It is a landing page: nothing lives here, and its whole job is
+     to say who this is and hand you to one of three places. A first screen and a
+     landing page are different objects and they do not have the same layout.
+
+     So there is no <header> and no <section> here now. Everything between the bar
+     and the footer is ONE grid — eight items in one fixed source order — and the
+     two arrangements it takes are the two the rest of the site already takes:
+
+       below 1200px   one column, in source order: face, name, what I do, what I
+                      want, how to reach me, the three doors, the background. The
+                      background is LAST, which is the whole reason the phone can
+                      now show a door on the first screen — it is 281px of the
+                      844 a phone has and it was sitting between the name and the
+                      doors. It is the one paragraph here that nobody needs before
+                      they have decided where to go.
+       1200px and up  two columns, the same two this site opens everywhere else:
+                      sentences on the spine at the measure, the face and the
+                      contact list in the margin column — and the background
+                      pulled back up into the left column, because at this width
+                      the left column has room for it above the doors and the page
+                      fits one screen with it there.
+
+     WHAT BINDS THE TWO HALVES is the door row: it spans BOTH columns, so its
+     left edge is the spine and its right edge is the right edge of the face's
+     column. Before this round nothing on this page shared an edge with the
+     portrait, and the margin column simply stopped 650px above the footer. Now
+     the composition has a bottom.
+
+     Reading order is not the visual order at 1200px and up — the background reads
+     fifth and displays third. Nothing in it is focusable, so the tab order is
+     untouched, and the source order it does read in (name → what I do → what I
+     want → how to reach me → where to go → background) is the order this page
+     would be given out loud. That is stated rather than hidden because it is the
+     one place the grid moves a block past its neighbours. -->
+<div class="home">
+
   <img class="portrait" src="/assets/img/portrait.jpg" width="320" height="320"
        fetchpriority="high"
        alt="Yizhe Dai, facing the camera against a plain white background.">
 
   <h1>Yizhe Dai</h1>
 
-  <div class="who">
-    <p class="lead">I build the measurement layer for data and AI systems — evaluation
-    harnesses, metadata contracts, and the pipelines that make an answer checkable before
-    anyone trusts it.</p>
+  <p class="lead">I build the measurement layer for data and AI systems — evaluation
+  harnesses, metadata contracts, and the pipelines that make an answer checkable before
+  anyone trusts it.</p>
 
-    <p>I'm a master's student in health data science at Harvard. Before that: a
-    summer at ByteDance making two enterprise AI agents comparable on the same tasks, and two
-    years at Michigan on research pipelines for a cardiac rehabilitation study and a
-    neurorehabilitation lab. The part I end up owning is always the part that checks the work —
-    because an answer you can check is worth more than one you have to believe.</p>
-
-    <p class="meta"><strong>Seeking a Summer 2027 data engineering internship.</strong></p>
-  </div>
+  <!-- This line used to be the last <p class="meta"> of a four-paragraph block: grey,
+       15px, the same mark the site gives a figure's caption and a date. It is the one
+       sentence on this page that says what the visitor can do about any of it, and it
+       was set as metadata. It takes the text colour and the body size now, and it sits
+       level with the contact list rather than 500px away from it — the thing you want
+       and the way to ask for it, next to each other. -->
+  <p class="intent"><strong>Seeking a Summer 2027 data engineering internship.</strong></p>
 
   <div class="side bare">
     <span class="lbl">Contact</span>
@@ -61,32 +91,40 @@
       <li><a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a></li>
     </ul>
   </div>
-</header>
 
-<!-- ============================ THE THREE DOORS ============================ -->
-<!-- What used to be here: Selected work (four cards, four frames), Experience (four
-     entries), Writing (one essay and its diagram), Education (three degrees), Skills
-     (three lines and a column of where each name is used) — 7,556px of it under the
-     block above, in one column, at phone width.
-     What is here now: the three pages that material became, each named, each with a
-     grey line saying what is inside it. The grey line is what makes this an index
-     rather than a menu — "Work" is a word you have to interpret, "MetaFlow · LLM data
-     flywheel · Cardiac rehabilitation · EMG biofeedback" is four things you either
-     recognise or do not, which is the whole difference between recall and recognition.
-     Nothing here is new copy. Every name in these three lines is the name that page
-     already gives itself, and the two counts are counts of things already on the site.
-     No door repeats its destination's opening sentence: /work/ opens by saying what
-     the four project pages are FOR, and if that sentence were also here it would be
-     the credential line's old mistake — the same fact twice within sixty pixels —
-     one level of the site higher. -->
-<section>
-  <h2>What is here</h2>
+  <!-- ============================ THE THREE DOORS ============================ -->
+  <!-- Last round these were three rows of a ruled list: a 21px title, a grey line,
+       a hairline between them, inside the 780px measure. The stylesheet argued at
+       length that a list was right and a row of boxes was wrong, on the grounds
+       that a row makes "how much is behind this door" into a visible ranking. The
+       argument was about content height, and it is answered rather than ignored
+       below (see .doors in the stylesheet: reserved title band, stretched plates,
+       one rule for all three). What it did not answer is the thing that was
+       actually wrong — those three rows carried the same visual weight as the
+       footer, on a page whose only job is to be walked through. They are plates
+       now: the site's own --ground tint, its 1px rule, and the 3px blue left edge
+       it already uses for "this is a thing you operate".
+       THE THREE GREY LINES ARE SHORTER THAN THEY WERE, and that is the other half
+       of making the row work. They used to run 133, 79 and 136 characters, which
+       inside a 453px plate is three lines, two and three: the shortest door
+       carried an empty line of plate under it and the band's own bottom edge was
+       set by whichever destination happened to have the longest list of names.
+       They are 71, 79 and 100 now — two lines each from 1440 up, no plate with
+       anything under its last line but its own padding, and a band 23px shorter
+       than the copy that did not fit it. Nothing is invented and no name is lost:
+       what came off are the qualifiers the destination repeats in full one click
+       later — "for in-vehicle voice assistants", "wearable study", "training
+       system", "at the University of", "degrees from". Every remaining token is
+       the name that page gives itself, and no door repeats its destination's
+       opening sentence. -->
+  <h2 class="gates-h">What is here</h2>
+
   <ul class="doors">
 
     <li class="door">
       <h3><a href="/work/">Work<span class="arw" aria-hidden="true">&#160;→</span></a></h3>
-      <p class="meta">MetaFlow · LLM data flywheel for in-vehicle voice assistants ·
-        Cardiac rehabilitation wearable study · EMG biofeedback training system</p>
+      <p class="meta">MetaFlow · LLM data flywheel · Cardiac rehabilitation ·
+        EMG biofeedback</p>
     </li>
 
     <li class="door">
@@ -98,12 +136,28 @@
     <li class="door">
       <h3><a href="/experience/">Experience, education and skills<span class="arw"
         aria-hidden="true">&#160;→</span></a></h3>
-      <p class="meta">Lark, ByteDance · Shenzhen Legion Technology · two research roles at
-        the University of Michigan · degrees from Harvard, Michigan and SJTU</p>
+      <p class="meta">Lark, ByteDance · Shenzhen Legion Technology · two Michigan
+        research roles · Harvard, Michigan, SJTU</p>
     </li>
 
   </ul>
-</section>
+
+  <!-- Named rather than left floating, for the same reason the contact list is: it
+       is a block in a composition and the site's grammar for "this block is a
+       place" is the .lbl mark. Below 1200px it is the last thing on the page and
+       the label is what keeps it from reading as a stray paragraph after the
+       doors; at 1200px and up it is the foot of the left column and the label is
+       what pairs it with CONTACT across the gutter. -->
+  <div class="bio">
+    <span class="lbl">Background</span>
+    <p>I'm a master's student in health data science at Harvard. Before that: a
+    summer at ByteDance making two enterprise AI agents comparable on the same tasks, and two
+    years at Michigan on research pipelines for a cardiac rehabilitation study and a
+    neurorehabilitation lab. The part I end up owning is always the part that checks the work —
+    because an answer you can check is worth more than one you have to believe.</p>
+  </div>
+
+</div>
 
 <!-- ============================ FOOTER ============================ -->
 <!-- id="contact" is kept although nothing on the site points at it any more: the bar
