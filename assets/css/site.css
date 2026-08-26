@@ -84,6 +84,18 @@
   --text: #16181d;            /* not pure black: #000 is too hard on white */
   --meta: #5b6068;            /* 5.9:1 on white — passes AA */
   --rule: #e3e5e8;
+  /* The pinned bar's bottom edge, and the only thing that uses it. It was --rule,
+     which made the boundary of the whole top plane the same 1px line as the one
+     under every section heading — so every h2 that scrolled under the bar produced
+     two identical hairlines three to six pixels apart with the heading itself
+     hidden between them, which reads as a rounding error rather than as the top of
+     the page. An edge between two planes is not a rule between two paragraphs and
+     cannot be the same value. This is 16 units of L* darker than --rule (1.58:1
+     against it, 1.99:1 against white) — the smallest step in that direction that
+     still reads as a different line at a 3px gap, checked against five candidates
+     at exactly that gap. Darker than this and a permanent full-track line starts
+     behaving like a border on the window. */
+  --edge: #b4b8be;
   --link: #0b5cad;            /* identical to the resume's linkblue (HTML 0B5CAD) */
   --ground: #fafbfc;          /* the one tint on the site: what a plate sits on */
   --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -363,24 +375,57 @@ nav.top {
   background: var(--bg);
   /* Law (a) run all the way up: a rule is as wide as what is under it, and what
      is under this one is the page. So it is the track — the widest thing any
-     rule on the site is allowed to be, and the only one that has earned it. */
-  border-bottom: 1px solid var(--rule);
+     rule on the site is allowed to be, and the only one that has earned it.
+     Its VALUE is not --rule, and that is the whole of --edge: see the token. */
+  border-bottom: 1px solid var(--edge);
   font-size: 15px;
   /* Pinned to 24px so the bar's height is arithmetic rather than whatever the
      machine's system sans resolved 15px/1.7 to. --navh is a constant that two
      other rules depend on; a constant derived from an unnamed font is not one. */
   line-height: 24px;
-  padding-bottom: 4px;
+  /* The 4px used to sit under the row. Above it instead, for the same 49: a focus
+     ring is drawn 2px outside a 2px outline, and the first link in the bar has its
+     box at y=0, so the ring's top edge was four pixels off the top of the window —
+     the first thing a keyboard reaches on every page was the one focus ring on the
+     site that the window clipped. Moving the padding puts the ring's top edge at
+     y=0 exactly. Nothing downstream notices: 4 + 44 + the rule is still the
+     phone's 49. */
+  padding: 4px 0 0;
   margin-bottom: 24px;
+}
+/* The bar has to HIDE what passes under it, and its box is the track, which stops
+   one gutter short of the page's edge on both sides. Anything that hangs left of
+   the spine — a margin note's 2px rail, which hangs by exactly --hang — therefore
+   ran out from under the bar and up to the top of the window, a grey thread beside
+   a bar that was supposed to be the top of the page. (The QA table last round said
+   this was zero. It was not; the script only ever looked at one scroll depth on a
+   900px-tall window, and on a 900px window most of these rails cannot be scrolled
+   under the bar at all.) So the background — and only the background — runs the
+   full width of the page box. The rule stays the track, because law (a) is about
+   what is under the line, and what is under the line is still the track's contents.
+   It stops at the page box rather than at the window so it can never create
+   scrollable overflow of its own. */
+nav.top::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--gutter) * -1);
+  right: calc(var(--gutter) * -1);
+  background: var(--bg);
 }
 /* 44px touch target on phones — the site's own rule for a link that owns a line,
    and this bar is nothing but links that own a line. The visual height does not
-   change; 44 + 4 + the rule is the phone's 49. */
+   change; 4 + 44 + the rule is the phone's 49. */
 nav.top a { display: inline-flex; align-items: center; min-height: 44px; margin-right: 16px; }
-/* The last item's own 16px is 16px of nothing at the end of a line, and on the
-   narrowest phone the row is 290px of a 320px track — close enough that a trailing
-   margin is a real candidate for pushing the last label onto a second row, which
-   in a pinned bar is the 44px this file just spent a paragraph refusing to pay. */
+/* The last item's own 16px is 16px of nothing at the end of a line. Stated honestly,
+   because last round's comment here claimed more than it does: this only reaches the
+   last item in the SOURCE, and on a phone that item is a .more, hidden — so the last
+   item you can see still trails 16px. It is left that way rather than chased with a
+   :has() rule, because the phone row now has 134px of headroom and 16px of it is not
+   the difference between one row and two. On a desktop, where all seven are out, it
+   is the real end of the line and it does the job it says. */
 nav.top a:last-child { margin-right: 0; }
 /* The whole bar is grey now, on every page, including the one link that leaves it.
    It used to be grey on the home page (six jumps to places you are already on) and
@@ -398,32 +443,71 @@ nav.top a:last-child { margin-right: 0; }
    beats anything the parent merely hands down. A grey nav.top with blue links sitting
    inside it is what a colour on the bar buys you. */
 nav.top a { color: var(--meta); }
-/* The one item that says where you already are. Not a tab underline — the bar
-   already owns the only horizontal rule in this region, and a second, thicker,
-   3px-long one 4px above it is the "three rules within six pixels" reading this
-   file has ruled out twice. Colour and weight instead: it is the one item in the
-   row set in the text colour, which is exactly how .side strong and .lbl already
-   mark "this is the thing, not the commentary". The home page has no current
-   item and is not given a fake one: all six of its anchors are on the page you
-   are looking at, and which of them you are level with is a scroll position,
-   which is not knowable here without the JavaScript this site does not have. */
-nav.top a[aria-current] { color: var(--text); font-weight: 600; }
-/* Last, so it also wins on the current item: [aria-current] and :hover are the same
-   one-class-one-element weight, and whichever is written second takes it. Written
-   first, the current item was the one link in the bar that did not answer the
-   pointer. */
+/* Seven permanent underlines. The reason this file gave for refusing a tab
+   underline under the current item was that a second line 4px above the bar's own
+   is unreadable as structure — and the row was already carrying seven lines 9.5px
+   above it, on every page, at all times. One ruler for both. An underline in the
+   prose is a promise that this word leaves the sentence; a row of labels pinned to
+   the top of the window is not a sentence, and its position is already the promise.
+   So chrome loses the resting underline and keeps both of the site's other link
+   marks — it goes blue and underlined on hover, and it keeps the 2px focus ring —
+   which is what tells a pointer or a keyboard that these are links. Nothing else on
+   the site is touched: every underline in the prose stays. */
+nav.top a { text-decoration: none; }
+nav.top a:hover { text-decoration: underline; }
+/* THE THREE WEIGHTS IN THIS ROW, strongest first.
+   1. The wordmark. It is not a navigation item and does not join the grey chain:
+      this is a portfolio, the row is the only thing on screen 100% of the time, and
+      until this round the loudest thing in it was the word "Work" and the quietest
+      was the name of the person whose site it is — while the home page's bar had no
+      name in it at all, so a screenshot of any screen but the first identified
+      nobody. Identity is a different job from navigation and gets its own tier:
+      the text colour and 600, which is the same mark .side strong and .lbl already
+      use for "this is the thing, not the commentary" — and that is exactly what it
+      is saying here.
+   2. The current item: the text colour at the ordinary weight. It only has to
+      separate itself from five greys beside it, and colour alone does that. It used
+      to take 600 as well, which put a common noun at the same weight as the name and
+      spent the site's "this is the thing" mark on a nav label. The home page has no
+      current item and is not given a fake one: all six of its anchors are on the page
+      you are looking at, and which of them you are level with is a scroll position,
+      which is not knowable here without the JavaScript this site does not have.
+   3. Everything else: --meta, 400.
+   Still not a tab underline, for the reason above and now doubly so — the bar's own
+   edge is the one line in this region and it is the boundary of a plane. */
+nav.top .wm { color: var(--text); font-weight: 600; margin-right: 24px; }
+nav.top a[aria-current] { color: var(--text); }
+/* Last, so it also wins on the current item and on the wordmark: [aria-current],
+   .wm and :hover are all the same one-class-one-element weight, and whichever is
+   written second takes it. Written first, the current item was the one link in the
+   bar that did not answer the pointer. */
 nav.top a:hover { color: var(--link); }
-/* Six anchors measure 398px, and 350px is what a 390px phone has (320px at 360px,
-   which is the narrowest width this site is checked at). The three marked .more
-   are the three whose absence costs least: Contact repeats the three links already
-   in the opening block and again in the footer, and Education and Skills are the
-   end of the page, which is where scrolling was going to take you anyway. On a
-   deep page the row is the name plus the same three, measured 290px against that
-   same 320px.
-   The reason to re-derive this rather than inherit it: the arithmetic got WORSE,
-   not better. A wrapped row used to cost 44px of the first screen, once. Pinned,
-   it would cost 44px of every screen — 93px of a phone's 844, 11%, for three
-   labels you can reach by scrolling. */
+/* WHAT THE PHONE GETS: the wordmark, Work, Writing. Four labels are marked .more
+   and are desktop-only.
+   Last round it was three, and the row on a deep page came to 291.5px of the 320px
+   a 360px phone has — 8.9% of headroom, at the narrowest width this site claims to
+   support. 8.9% is not headroom, it is a coincidence: turning on the browser's own
+   "minimum font size: 16px" accessibility setting wrapped it at 360 (measured: 49px
+   became 93px), and so did 104% page zoom, and the wrap threshold was 347px — seven
+   pixels under the floor. The wrap is not merely tall. --navh is a constant and
+   scroll-padding-top is derived from it, so the moment the bar is 93px the anchor
+   protection is 20px short and every heading you jump to lands under the bar — the
+   exact failure the scroll-padding was written to prevent, failing silently and
+   only for the people who need the font setting.
+   So Experience joins Education, Skills and Contact on the phone. That buys the row
+   back to 185.5px of 320 (42% headroom), which survives minimum-font 16px, 112%
+   zoom, and every width down to 280. The four that go are the four whose absence
+   costs least: Contact repeats the three links already in the opening block and
+   again in the footer, and Experience, Education and Skills are all further down
+   the same single-column scroll the bar is sitting on top of. What is left is what
+   a phone bar is for — whose site this is, and the two things it is about.
+   The wordmark is what makes room necessary and it is also what pays for it: it is
+   93px of that row. That is the trade, stated plainly — one anchor on a phone for a
+   name on every screen of every page. A screenshot of the middle of this site now
+   says who it belongs to.
+   And the sets are the same on all six content pages now, which they were not
+   before: the phone used to show Work/Experience/Writing on the home page and
+   name/Work/Experience/Writing on a deep one. */
 nav.top .more { display: none; }
 
 section { margin-bottom: 64px; }

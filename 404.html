@@ -8,16 +8,20 @@
 <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
-<!-- The same bar as every other page. No aria-current on this one: the deep pages
-     mark the section they are filed under, and a page that does not exist is not
-     filed under anything. Marking one anyway would be the bar's only lie. -->
+<!-- The wordmark, and nothing else. This is the one page where the shared row was
+     making the page worse rather than better: the body of a 404 IS the site index,
+     already grouped and already labelled, so a flat row of the same seven
+     destinations directly above it made ten of this page's seventeen links chrome —
+     the same seven links twice, the second copy with the hierarchy taken out. The
+     comment three lines down has complained about a wall of seven equal links on
+     this page since the round that removed one; last round put another one on top
+     of it.
+     So this page keeps the part of the bar that is not an index — whose site this
+     is, and the way home — and lets its own body be the index. No aria-current
+     either: the deep pages mark the section they are filed under, and a page that
+     does not exist is not filed under anything. -->
 <nav class="top">
-  <a href="/">← Yizhe Dai</a><a href="/#work">Work</a><a
-    href="/#experience">Experience</a><a
-    href="/#writing">Writing</a><a
-    class="more" href="/#education">Education</a><a
-    class="more" href="/#skills">Skills</a><a
-    class="more" href="/#contact">Contact</a>
+  <a class="wm" href="/">Yizhe Dai</a>
 </nav>
 <h1>Page not found</h1>
 <p>That page does not exist. Nothing here is behind a login — it is just the wrong address.</p>

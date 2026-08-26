@@ -10,16 +10,22 @@
 </head>
 <body>
 
-<!-- The same bar as the home page, plus the one item the home page has no use for:
-     its own name. Every other link in this row also goes home — to a named place on
-     it — so the name is no longer the fire exit it was when this nav was two links,
-     which is why the row is grey chrome now instead of seven blue destinations.
-     aria-current marks the section this page is filed under. That is the only "you
-     are here" this site can state honestly without JavaScript: it is a fact about
-     what the page IS, not about where the reader has scrolled to. -->
+<!-- The same bar as the home page. The wordmark leads it, in the text colour at 600 —
+     it is the one item here that is not navigation, and until this round it was the
+     quietest thing in a row whose loudest thing was the common noun "Work".
+     The arrow is gone with it. It was left over from when this nav was two links and
+     the name was the only way out; every label in this row goes home now, so an arrow
+     on one of them points at nothing the other five do not also do, and a wordmark
+     does not carry one. It is the name, and it is also the way home — but it says so
+     by being the name, which is what a wordmark is for.
+     aria-current="location" marks the section this page is filed under. That is the
+     only "you are here" this site can state honestly without JavaScript: it is a fact
+     about what the page IS, not about where the reader has scrolled to. "location" and
+     not "true", which is the fallback value a screen reader reads out as bare
+     "current"; and not "page", because the link does not point at this page. -->
 <nav class="top">
-  <a href="/">← Yizhe Dai</a><a href="/#work" aria-current="true">Work</a><a
-    href="/#experience">Experience</a><a
+  <a class="wm" href="/">Yizhe Dai</a><a href="/#work" aria-current="location">Work</a><a
+    class="more" href="/#experience">Experience</a><a
     href="/#writing">Writing</a><a
     class="more" href="/#education">Education</a><a
     class="more" href="/#skills">Skills</a><a

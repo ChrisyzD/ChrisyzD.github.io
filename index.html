@@ -14,13 +14,20 @@
      844px phone screen — the site's only index, one pixel row above the fold, on a page
      that runs 8,028px at that width. First on every page now, and pinned, so it is also
      the answer at scroll 4,000 and not only at scroll 0.
-     Six anchors do not fit one row on a phone (398px against 350, and 320 at 360px), and
-     a wrapped row in a pinned bar costs its 44px on every screen rather than once. The
-     three marked .more are the three that cost least to lose: Contact is already in the
-     block below and again in the footer, and Education and Skills are where scrolling
-     ends up anyway. They are shown from 44rem up, where all six fit one line. -->
+     The wordmark leads it here as it does on every other page. It is not a link on this
+     one, because this is the page it would go to and the site does not fake exits — but
+     it is the same word in the same place at the same weight, so the row starts with
+     the same thing everywhere and the six shared labels start at the same x on all six
+     content pages. Without it, a screenshot of any screen of this site but the first
+     carried no indication of whose site it is.
+     Four anchors are marked .more and appear from 44rem up. On a phone the row is the
+     name plus Work plus Writing: 185.5px of the 320px a 360px phone has. It was 291.5px
+     of 320 last round, which wrapped under the browser's own 16px minimum-font setting
+     and under 104% zoom — and a wrapped bar is 93px, which silently breaks the
+     scroll-padding that keeps an anchor jump out from under it. -->
 <nav class="top">
-  <a href="#work">Work</a><a href="#experience">Experience</a><a href="#writing">Writing</a><a
+  <span class="wm">Yizhe Dai</span><a href="#work">Work</a><a
+    class="more" href="#experience">Experience</a><a href="#writing">Writing</a><a
     class="more" href="#education">Education</a><a class="more" href="#skills">Skills</a><a
     class="more" href="#contact">Contact</a>
 </nav>
