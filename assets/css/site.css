@@ -45,8 +45,9 @@
        rows split to two ends, margin notes start hanging.
    (3) 58.75rem / 940px — EVIDENCE GETS ITS OWN COLUMN. Track cap opens to
        1120. Index cards put their frame in a right-hand column beside the
-       text; the three before/after numbers go three-across; the measure steps
-       to 720. Section rules start telling you what is under them.
+       text; the three before/after numbers go three-across, and so do the home
+       page's three doors; the measure steps to 720. Section rules start telling
+       you what is under them.
    (4) 75rem / 1200px — THE PAGE GETS A MARGIN. Track cap opens to 1280, the
        measure to 780, and what is left — 300 to 460px — becomes a real
        column: figure captions move into it, and so do the boundary notes, the
@@ -334,9 +335,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; max-width: va
    THE TWO ARRANGEMENTS
    below 1200px  one column, exactly the source order. The background paragraph
                  is LAST, and that is the single change that lets a phone show a
-                 door on the first screen: it is 281px of the 844 a 390px phone
-                 has, it used to sit between the name and the doors, and it is
-                 the one paragraph nobody needs before deciding where to go.
+                 door on the first screen: it used to sit between the name and
+                 the doors, and it is the one paragraph nobody needs before
+                 deciding where to go. It was 281px of the 844 a 390px phone has
+                 when it was moved; two sentences of it have since come off as
+                 duplicating the doors (see the page's own comment) and it is
+                 164px now.
    1200px and up two columns — the same two the rest of the site opens at this
                  width. Sentences on the spine at the measure; the face and the
                  contact list in the margin column; and the background pulled
@@ -347,7 +351,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; max-width: va
    nothing on this page shared an edge with the portrait, and the margin column
    simply stopped: measured at 1440x900, it held a face and three links and then
    485px of nothing, from the last contact link down to the footer's own rule.
-   That row is what gives the composition a bottom. */
+   That row is what gives the composition a bottom — and now it is a bottom for
+   BOTH columns rather than one: with the background cut to two lines the left
+   column ends at y=378 and the right at y=377 at 1440, so the band is picking up
+   two columns that finish together instead of one that overruns the other by
+   92px. Trying to get there by moving the background across the gutter instead
+   was measured and rejected; the arithmetic is in the page's comment. */
 .home {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -685,10 +694,10 @@ h1 + section { margin-top: 40px; }
    height because that is what a grid row does, so the band has one bottom edge
    whatever is in it; the three grey lines were cut to 71, 79 and 100 characters,
    so from 1440 up all three are two lines and no plate has anything under its
-   last line but its own padding; and below 1200 the row is not a row at all — the
+   last line but its own padding; and below 940 the row is not a row at all — the
    doors stack full width, where the question cannot arise. The worst remaining
-   slack is two lines, in the 1200–1360 band. What the old argument never
-   addressed is the thing that was actually wrong with the list, and it is the
+   slack is two lines, in the 940–1000 and 1200–1280 bands. What the old argument
+   never addressed is the thing that was actually wrong with the list, and it is the
    reason for this rewrite: three grey rows inside the 780px measure carried about
    the same visual weight as the footer, on the one page whose entire job is to be
    walked through. Measured at 1440x900: the block ran from y=491 to y=822, three
@@ -1122,6 +1131,23 @@ footer.site > p:first-child { border-top: 1px solid var(--rule); padding-top: 24
    shorter and nothing moves. */
 footer.site > p:last-child { margin-bottom: 0; }
 footer.site a { color: var(--link); }
+/* THE ROW ALSO CARRIES EXPERIENCE NOW, AND THAT IS AN ACCESSIBILITY FIX, NOT A
+   SECOND NAVIGATION BAR. nav.top .more hides Experience below 704px — the table
+   under that selector is why, and the constraint is real — but nothing downstream
+   caught it: on a 390px phone, the number of links to /experience/ visible on
+   /work/, /writing/, /work/metaflow/ and /writing/closed-loop/ was ZERO. A top-level
+   page of the four was reachable only by going home, scrolling past the first
+   screen, and pressing the third door: two presses and a scroll, on the page a
+   recruiter opens a CV from. The bar cannot hold it at that width; the footer can,
+   because it is a wrapping row of 14px type with no fit constraint at all — measured
+   at 360 and 390 on every page it was added to, the footer's height does not change
+   by one pixel.
+   WHICH PAGES GET IT is the rule this row already followed and never wrote down:
+   the footer names the exits the page's own body does not. That is why the home
+   page's footer has no "Home" and does not get "Experience" either (its third door
+   is that link, at plate size), why the 404 gets neither (its body IS the index,
+   both links included), and why /experience/ itself gets neither. Seven pages
+   gained one link; three were already complete. */
 
 .note { font-size: 14px; color: var(--meta); }
 .note p { margin-bottom: 8px; }
@@ -1250,6 +1276,32 @@ footer.site a { color: var(--link); }
   .deltas.band dd { margin-top: 8px; font-size: 26px; letter-spacing: -0.01em; }
   .deltas.band dd .was, .deltas.band dd .to { font-size: 19px; }
 
+  /* THE DOORS GO THREE ACROSS HERE, NOT AT 1200, AND THE ROUND THAT PUT THEM AT
+     1200 GOT THIS WRONG ON ITS OWN ARITHMETIC. Its note (still below, corrected)
+     rejected 940 on these numbers: 260px a plate, 207px of line inside it, three
+     lines of title on Experience, the row stretched to 278px with 105 and 128px of
+     empty plate under the two shorter doors. Every one of those came out of a
+     gap of 40 — the number tier 4 uses because tier 4's own column gutter is 40.
+     This tier's gap is 24, set two tiers up with the cards, and it was never
+     substituted in. At 24 the same width measures 271px a plate, 221px of line,
+     TWO lines of title, and 52/52/0 of slack — the same two lines of slack the
+     1200–1360 band already carries and the round already accepted there.
+     WHAT THE MISTAKE COST is the worst-looking width on the site. Stacked, a door
+     at 1100 is a 1020x106 plate holding a 21px title and ONE line of grey — the
+     three lines fill 51%, 60% and 73% of the width they are given, so every plate
+     is a third to a half empty to the right of its own only sentence, three of
+     them down the page, 377px of band carrying three lines of type. That is a
+     list-group with a tint on it, and the range it covers is not a corner case —
+     it is iPad landscape (1024) and half of a 1920 screen (960).
+     So this is where the band becomes a band, and it costs one declaration: the
+     columns. The gap is not touched, so no new number enters the scale; the title
+     stays at .lead's 21px; tier 4 still steps the gap to 40 with its own gutter.
+     Measured across 940/960/1000/1024/1100/1180 with everything else held: three
+     plates 271–357px wide, two to four lines of grey in each, one bottom edge,
+     and the band 377 → 208 at 940 and 377 → 184 from 1024 up, which takes 169 to
+     192px off the page on its own. */
+  .doors { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
 }
 
 /* (a) A SECTION RULE IS AS WIDE AS WHAT IS UNDER IT.
@@ -1341,26 +1393,23 @@ footer.site a { color: var(--link); }
   .home > .gates-h  { grid-column: 1 / -1; grid-row: 5; }
   .home > .doors    { grid-column: 1 / -1; grid-row: 6; }
 
-  /* THE DOORS GO THREE ACROSS AT THE SAME WIDTH THE PAGE GETS ITS SECOND COLUMN,
-     and that is one decision rather than two: this is the tier where this page
-     stops being a stack and becomes a composition, so it is the tier where the
-     band that ties the composition together stops being a stack too. The gap is
-     the 40 this tier already uses between the two columns above it, so the band's
-     internal rhythm is the page's own rather than a fourth number.
-     Tried it a tier earlier, at 940, and measured why it does not belong there:
-     the track is 860 at that width, three columns and two 40px gaps leave 260px a
-     plate and 207px of line inside it, "Experience, education and skills" needs
-     three lines of title to fit, and the row stretched to 278px with 105 and 128px
-     of empty plate under the two shorter doors. That is the ruled list's own
-     objection — a row makes the shortest door look like the emptiest one —
-     arriving exactly where the columns get too narrow to hold the copy. Below this
-     width the doors stack and each one is as wide as the page, which holds its two
-     lines with no hole at all.
-     What keeps the three from ranking each other HERE is that a grid row stretches
+  /* THE DOORS ARE ALREADY THREE ACROSS BY THE TIME THIS TIER ARRIVES — they go
+     that way at 940, with the tier that gives evidence its own column, and the
+     note there records why the first attempt at this put the step here instead.
+     (Short version: 940 was rejected on numbers measured with tier 4's gap of 40
+     rather than tier 3's own 24, and the difference is a title that wraps twice
+     instead of three times. The rejection was arithmetic, not judgement.)
+     What this tier changes is the GAP, and it changes it for the reason it changes
+     everything else: 40 is the gutter between the two columns above the band, so
+     the band's internal rhythm becomes the page's own. It is the same substitution
+     that was missing a tier down, made deliberately this time.
+     What keeps the three from ranking each other is that a grid row stretches
      them to one height, so the band has one bottom edge whatever is in it, and
      that the three lines under the titles were cut to the same length (see the
-     page's own markup). The worst remaining slack is two lines, in Writing, in the
-     1200–1360 band; from 1360 up it is one.
+     page's own markup). The worst remaining slack is two lines, in Work and in
+     Writing both, in the 1200–1360 band; from 1360 up it is one. (The earlier note
+     here said "in Writing" alone and that was one plate short of the measurement
+     the round's own report gave.)
      Built once with a reserved two-line title band as well — the .deltas.band dt
      trick — and measured it costing 28px of empty band inside ALL THREE plates at
      1440, where no title wraps at all, to buy the alignment of three grey lines
