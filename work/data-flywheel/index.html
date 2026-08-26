@@ -35,8 +35,23 @@ LLM agents, retrieval</p>
   </aside>
 </div>
 
-<p><strong>17,200</strong> verified (reward = 1) dialogues came out of the pipeline. Fine-tuning
-the assistant on that corpus moved three end-to-end numbers:</p>
+<!-- What a "no-tool false positive" is was a parenthesis under the band, in the same
+     column as the sentence that introduces it — which is exactly the material this
+     site's margin column exists for: the definition of a number, beside the number.
+     What is left on the spine is the sentence that carries the argument forward. -->
+<div class="spread">
+  <div>
+    <p><strong>17,200</strong> verified (reward = 1) dialogues came out of the pipeline.
+    Fine-tuning the assistant on that corpus moved three end-to-end numbers:</p>
+  </div>
+
+  <aside class="side">
+    <span class="lbl">Reading the third row</span>
+    <p>A <strong>no-tool false positive</strong> is the assistant answering out of its own head
+    when it should have called a tool. It is the one row of the three where down is the good
+    direction.</p>
+  </aside>
+</div>
 
 <dl class="stack deltas band">
   <div>
@@ -53,10 +68,8 @@ the assistant on that corpus moved three end-to-end numbers:</p>
   </div>
 </dl>
 
-<p class="note">A no-tool false positive is the assistant answering out of its own head when it
-should have called a tool; that row is the only one where down is the good direction. The rest of
-this page is how those three numbers were produced — and why the judge behind them is the thing
-I am least comfortable with.</p>
+<p class="note">The rest of this page is how those three numbers were produced — and why the
+judge behind them is the thing I am least comfortable with.</p>
 
 <section>
   <h2>Why measuring comes first</h2>
@@ -118,6 +131,10 @@ I am least comfortable with.</p>
 
 <section class="thoughts">
   <h2>Further thoughts</h2>
+  <!-- The longest single stretch of one-column prose on this page, and the one a
+       reader is most likely to skim. The margin says what the four paragraphs are
+       for, in the order they arrive; it claims nothing they do not. -->
+  <div class="spread">
   <div class="thoughts-body">
     <p>“I owned the data pillar” is a convenient phrase and it hides a seam. The four numbers
     above belong to the whole system; the pillar is one input into them. When I describe this
@@ -142,6 +159,23 @@ I am least comfortable with.</p>
     usable conversations from a governance layer doing all the filtering downstream of a noisy
     one. It is why this figure stays a count of what exists rather than a rate of anything, and
     it is the first number I would put on the wall next time.</p>
+  </div>
+
+  <aside class="side">
+    <span class="lbl">The two checks I would run first</span>
+    <ol>
+      <li><strong>Is the judge grading its own work?</strong> The corpus was filtered on
+        <code>reward = 1</code> and the improvement was scored by a judge of the same kind.
+        What would settle it: a held-out slice scored by hand, or by a judge from a different
+        model family. I cannot point you at one.</li>
+      <li><strong>What is the denominator?</strong> 17,200 is a numerator. The
+        generated-and-discarded count beside it is the yield, and the yield is what separates a
+        simulator that produces usable conversations from a governance layer filtering a noisy
+        one.</li>
+    </ol>
+    <p>Both of these are in the four paragraphs to the left, at length. Neither of them has an
+    answer on this page.</p>
+  </aside>
   </div>
 </section>
 

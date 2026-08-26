@@ -71,21 +71,18 @@
           demo →</a><a class="narrow" href="/work/metaflow/#annotated">See the annotated
           frames →</a></p>
       </div>
-      <!-- A 1200px console screenshot shown at 350px is 0.29 of its own scale and
-           its type is three pixels tall — a grey rectangle where the card promised a
-           frame of the project's own material. The narrow source is the same material
-           re-cropped to one readable block, the method already used for the two
-           annotated frames on the MetaFlow page. -->
-      <picture>
-      <source media="(max-width: 899px)" srcset="/assets/img/metaflow-card-mobile.png"
-              width="720" height="440">
-      <img class="shot" src="/assets/img/metaflow-card.png" width="1200" height="600"
-           alt="The prototype answering and refusing on the same screen: a governance refusal
-           explaining that the payment-amount metric is not finance-certified, a certified
-           answer with its monthly table below it, and on the right the provenance card —
-           source asset, metric version, definition, row count, certification and a verified
-           checksum.">
-      </picture>
+      <!-- A 1200px console screenshot is 0.29 of its own scale at 350px and 0.38 in the
+           460px evidence column — legible on a 2× laptop panel and a textured grey
+           rectangle on a 1× external display, which is to say: the one frame on this
+           page whose status as evidence depended on the reader's hardware, and it was
+           the first card. The re-crop is the same screen's provenance card at 0.64, and
+           it reads at any pixel ratio and any width, so it is now the frame at every
+           width rather than the phone's consolation prize. -->
+      <img class="shot" src="/assets/img/metaflow-card-provenance.png" width="720" height="440"
+           alt="The provenance card the prototype attaches to every answer, cropped from the
+           console screen: a green All provenance checks green header, then the source asset
+           semantic.semantic_revenue, metric version M001_v2 and the definition binding
+           fx_rate_basis=event_date_ecb, with the first three fields numbered.">
     </li>
 
     <li class="card">
@@ -234,6 +231,11 @@
 <!-- ============================ EDUCATION ============================ -->
 <section id="education">
   <h2>Education</h2>
+  <!-- The three degrees are the passage; the joint-programme caveat, the awards and
+       the coursework are notes about it, and they were already set apart as a grey
+       .note block underneath. Underneath is where a note goes when there is nowhere
+       else; beside is where it goes when there is. -->
+  <div class="spread">
   <div class="compact">
 
     <article class="item" style="padding-top:0">
@@ -258,23 +260,51 @@
 
   </div>
 
-  <div class="note" style="margin-top:24px">
-    <p><strong>Dual degree:</strong> Michigan and SJTU are one joint program; the dates
+  <aside class="side">
+    <span class="lbl">On the three rows above</span>
+    <p><strong>Dual degree.</strong> Michigan and SJTU are one joint program; the dates
       overlap by design.</p>
-    <p>Dean's Honor List (2024, 2025) · Myun Lee Scholarship (2025). Coursework: Database
-      Systems, Data Structures &amp; Algorithms, Engineering Data Analytics, Probability &amp;
-      Statistics.</p>
+    <p><strong>Awards.</strong> Dean's Honor List (2024, 2025) · Myun Lee Scholarship
+      (2025).</p>
+    <p><strong>Coursework.</strong> Database Systems, Data Structures &amp; Algorithms,
+      Engineering Data Analytics, Probability &amp; Statistics.</p>
+  </aside>
   </div>
 </section>
 
 <!-- ============================ SKILLS ============================ -->
+<!-- Three lines of comma-separated technology names is the one block on this page that
+     could have been pasted in from anywhere, and it sat directly under four cards and
+     an experience list where every single claim is attached to something. A list of
+     names is not evidence; a list of names each of which says where on this site it is
+     being used, is. Nothing new is claimed here — the right-hand column only points at
+     what the pages already show. -->
 <section id="skills">
   <h2>Skills</h2>
-  <p><strong>Languages</strong> — Python, SQL, TypeScript</p>
-  <p><strong>Data &amp; databases</strong> — PostgreSQL · dbt (metadata &amp; lineage
-    tooling) · gold-case SQL regression and contract tests · time-series feature engineering,
-    missing-value imputation, cleaning rules for high-volatility series</p>
-  <p><strong>Frameworks &amp; tools</strong> — FastAPI, Flask, React, Playwright/CDP, Git</p>
+  <div class="spread">
+    <div>
+      <p><strong>Languages</strong> — Python, SQL, TypeScript</p>
+      <p><strong>Data &amp; databases</strong> — PostgreSQL · dbt (metadata &amp; lineage
+        tooling) · gold-case SQL regression and contract tests · time-series feature
+        engineering, missing-value imputation, cleaning rules for high-volatility series</p>
+      <p><strong>Frameworks &amp; tools</strong> — FastAPI, Flask, React, Playwright/CDP,
+        Git</p>
+    </div>
+
+    <aside class="side">
+      <span class="lbl">Where each of these is on this site</span>
+      <p><strong>Gold-case regression, contract tests, PostgreSQL, FastAPI, React</strong> —
+        the 20 gold cases across 5 pipeline stages and the contracts endpoint, on the
+        <a href="/work/metaflow/">MetaFlow page</a>.</p>
+      <p><strong>dbt metadata &amp; lineage</strong> — the evaluation framework for a
+        RAG data-governance copilot serving dbt pipelines and lineage, in Experience above.</p>
+      <p><strong>Time-series features, imputation, cleaning rules</strong> — 400K+ raw step
+        records reconciled onto one per-patient daily timeline, on the
+        <a href="/work/cardiac-rehab/">cardiac study page</a>.</p>
+      <p><strong>Playwright/CDP, Flask</strong> — driving two Electron clients over Chrome
+        DevTools Protocol for the Lark trace schema, in Experience above.</p>
+    </aside>
+  </div>
 </section>
 
 <!-- ============================ FOOTER ============================ -->

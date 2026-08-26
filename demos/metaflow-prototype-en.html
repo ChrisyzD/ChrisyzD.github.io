@@ -1718,6 +1718,17 @@
    (design artifact, not the running system), so this does not attempt to make the
    prototype itself responsive — it just makes the situation legible on a small screen. */
 #mf-proto-notice { display: none; }
+/* The 50px top bar is four fixed-width groups and a spacer. Below 1200px they stop
+   fitting, and the thing that got pushed off the right edge was the walkthrough
+   toggle — the way back into the guided run, and at ≤1041px it was rendering as
+   "Hide walkthro…" or not at all. The two mono strings in the middle are the least
+   load-bearing thing on that bar (the same two facts are stated on the landing card
+   and on the case page), so they are what goes when the row runs out of room. */
+@media (max-width: 1199px) {
+  .mf-hd-meta { display: none; }
+  /* and the row itself tightens by 6px per seam, which buys back another 30. */
+  #mf-topbar { gap: 12px !important; padding-inline: 12px !important; }
+}
 @media (max-width: 899px) {
   #mf-proto-notice {
     display: block;
@@ -1755,10 +1766,17 @@
 </style>
 </head>
 <body>
+<!-- This banner used to promise "click through a four-step walkthrough, at your own
+     pace" on the one device where the walkthrough does not start at all (below 900px
+     it is switched off on purpose, three lines further down, because its landing card
+     centres at x=370–1030 of a 1400px document and lands outside the window). Two
+     things wrong with one sentence: the number, and the promise. Every other page on
+     this site says what a thing cannot do; so does this one now. -->
 <div id="mf-proto-notice">This prototype is a fixed-width desktop artifact, so on a narrow
-  screen it scrolls sideways. It still runs — click through a four-step walkthrough, at your
-  own pace — but the readable version of these same screens is the annotated set on the
-  <a href="/work/metaflow/">MetaFlow page</a>. Come back on a laptop to operate it.</div>
+  screen it scrolls sideways and the guided walkthrough does not run — that one needs a window
+  of 900px or more. What is readable at this width is the annotated set of the same screens on
+  the <a href="/work/metaflow/">MetaFlow page</a>. Come back on a laptop to operate it and to
+  click through the six steps yourself.</div>
 <x-dc>
 <helmet>
 <style>
@@ -1785,13 +1803,13 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 <div style="display:flex;flex-direction:column;height:100vh;overflow:hidden;">
 
   <!-- ═══════ Global top bar · v1.0.1 ═══════ -->
-  <header style="flex:none;height:50px;display:flex;align-items:center;gap:18px;padding:0 16px;background:#191C22;color:#E8EAEE;">
-    <a id="mf-back" href="/work/metaflow/" style="flex:none;font-size:13px;font-weight:600;padding-right:18px;border-right:1px solid rgba(232,234,238,.15);">← Yizhe Dai · MetaFlow case page</a>
+  <header id="mf-topbar" style="flex:none;height:50px;display:flex;align-items:center;gap:18px;padding:0 16px;background:#191C22;color:#E8EAEE;">
+    <a id="mf-back" href="/work/metaflow/" style="flex:none;font-size:13px;font-weight:600;padding-right:18px;border-right:1px solid rgba(232,234,238,.15);">←&#160;<span class="mf-hd-meta">Yizhe Dai&#160;·&#160;</span>MetaFlow case page</a>
     <div style="display:flex;align-items:center;gap:9px;">
       <div style="width:22px;height:22px;border-radius:6px;background:#4A63D8;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;">M</div>
       <span style="font-weight:700;font-size:14.5px;letter-spacing:.3px;">MetaFlow</span>
-      <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(232,234,238,.4);">jaffle_shop demo · synthetic</span>
-      <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(232,234,238,.4);" title="This prototype's &quot;today&quot; is fixed at this date so demo scenarios stay reproducible.">scenario date: 2026-07-08</span>
+      <span class="mf-hd-meta" style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(232,234,238,.4);">jaffle_shop demo · synthetic</span>
+      <span class="mf-hd-meta" style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(232,234,238,.4);" title="This prototype's &quot;today&quot; is fixed at this date so demo scenarios stay reproducible.">scenario date: 2026-07-08</span>
     </div>
     <div style="display:flex;gap:2px;background:rgba(255,255,255,.07);border-radius:8px;padding:3px;">
       <button onClick="{{ goBU }}" style="{{ roleBtnBU }}">BU · Business User</button>
@@ -1799,7 +1817,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       <button onClick="{{ goDE }}" style="{{ roleBtnDE }}">DE · Data Engineer</button>
     </div>
     <div style="flex:1;"></div>
-    <button onClick="{{ guideToggle }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border:none;border-radius:7px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideBtnLabel }}</button>
+    <button onClick="{{ guideToggle }}" style="{{ guideBtnStyle }}" style-hover="{{ guideBtnHover }}">{{ guideBtnLabel }}</button>
     <div style="position:relative;" onMouseEnter="{{ infoEnter }}" onMouseLeave="{{ infoLeave }}">
       <div style="width:26px;height:26px;border-radius:50%;border:1px solid rgba(232,234,238,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-style:italic;font-family:Georgia,serif;cursor:default;color:rgba(232,234,238,.7);">i</div>
       <sc-if value="{{ infoOpen }}" hint-placeholder-val="{{ false }}">
@@ -2396,9 +2414,28 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   </div>
 
   <!-- ═══════ Walkthrough bar · the visitor advances it, one press per step ═══════ -->
+  <!-- One row of four unshrinkable things, in a container that does not scroll
+       sideways: the six chips are ~726px on their own, so between 900 and 1199px of
+       window the two buttons were pushed past the right edge and "Next · step 2 →"
+       sat at x=1058–1182 with no way to reach it. A visitor at 1024×768 could start
+       the walkthrough and then not continue it. The row wraps now — chips take a
+       line of their own when they have to, the narration and the buttons take the
+       next one, and the buttons are pinned to the right end of whichever line they
+       land on rather than to a position 1,182px from the left. Nothing moves at
+       1200px and up, where it always fitted. -->
   <sc-if value="{{ guideBar }}" hint-placeholder-val="{{ false }}">
-    <div style="flex:none;display:flex;align-items:center;gap:16px;padding:10px 16px;background:#191C22;color:#E8EAEE;border-top:1px solid rgba(255,255,255,.09);animation:mfIn .2s ease both;">
-      <div style="flex:none;display:flex;align-items:center;gap:5px;">
+    <div id="mf-guide-bar" style="flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:10px 16px;background:#191C22;color:#E8EAEE;border-top:1px solid rgba(255,255,255,.09);animation:mfIn .2s ease both;">
+      <!-- The narration runs one to seven lines depending on the step and the width,
+           and this bar is the last child of a 100vh column, so it grows UPWARD: its
+           bottom edge is the bottom of the window. That is why the narration is the
+           first row and the controls are the last one. Every row below the narration
+           keeps its own distance from the bar's fixed bottom edge, so the chips and
+           the Next button do not move between presses — they used to travel 20px
+           vertically across six clicks, under the pointer of someone being asked to
+           click six times. No reserved height, no measured constant to keep in sync
+           with the copy: the geometry does it. -->
+      <div id="mf-guide-say" style="flex:1 1 100%;min-width:0;font-size:12.5px;line-height:1.55;color:rgba(232,234,238,.82);">{{ guideSay }}</div>
+      <div id="mf-guide-chips" style="flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:5px;">
         <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="6">
           <button onClick="{{ g.onGo }}" title="{{ g.full }}" style="{{ g.chipStyle }}">
             <span style="{{ g.numStyle }}">{{ g.num }}</span>
@@ -2406,9 +2443,10 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           </button>
         </sc-for>
       </div>
-      <div style="flex:1;min-width:120px;font-size:12.5px;line-height:1.55;color:rgba(232,234,238,.82);">{{ guideSay }}</div>
-      <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">Exit and explore freely</button>
-      <button onClick="{{ guideNext }}" disabled="{{ guideBusy }}" style="{{ guideNextStyle }}">{{ guideNextLabel }}</button>
+      <div id="mf-guide-acts" style="flex:none;display:flex;align-items:center;gap:12px;margin-left:auto;">
+        <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">Exit and explore freely</button>
+        <button onClick="{{ guideNext }}" disabled="{{ guideBusy }}" style="{{ guideNextStyle }}">{{ guideNextLabel }}</button>
+      </div>
     </div>
   </sc-if>
 
@@ -2430,7 +2468,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           <button id="mf-guide-start" onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
           <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">Skip — I will explore it myself</button>
         </div>
-        <div style="font-size:13.5px;line-height:1.7;color:#1B1E24;margin-top:16px;">Nothing plays on its own. Every step waits for you, and you can leave the walkthrough at any point (or press Esc) — all three roles and free-form questions stay available.</div>
+        <div style="font-size:13.5px;line-height:1.7;color:#1B1E24;margin-top:16px;">Nothing plays on its own. Each step starts when you press for it and then runs itself for a few seconds — six presses, about half a minute of screen time, and it waits for you between every one. You can leave at any point (or press Esc); all three roles and free-form questions stay available.</div>
       </div>
     </div>
   </sc-if>
@@ -2478,11 +2516,11 @@ class Component extends DCLogic {
     this.landingFocused = false;
   }
   componentDidMount(){
-    // This used to start playing all four acts the moment the page loaded. The one
+    // This used to start playing the whole reel the moment the page loaded. The one
     // thing worth seeing here — a question that fails, and then the same question
     // succeeding — went past faster than anyone could read it, and a visitor who
     // arrived mid-reel had no idea what they had walked into. So the demo no longer
-    // plays itself: it opens on a panel that states the arc and the four steps, and
+    // plays itself: it opens on a panel that states the arc and the six steps, and
     // the visitor presses through it one step at a time. The continuous reel is kept
     // verbatim below and now only runs under ?autorun=1, for screen recording.
     this.autoRun = false;
@@ -3077,6 +3115,18 @@ class Component extends DCLogic {
       roleBtnBU:roleBtn('BU'), roleBtnDA:roleBtn('DA'), roleBtnDE:roleBtn('DE'),
       goBU:()=>this.setState({role:'BU'}), goDA:()=>this.setState({role:'DA'}), goDE:()=>this.setState({role:'DE'}),
       guideToggle:()=>this.guideToggle(), guideBtnLabel: s.guideMode==='off' ? '▶ Walkthrough' : 'Hide walkthrough',
+      // While the landing card is up there are two solid blue buttons on screen:
+      // "Start · step 1 →" in the middle of the card, and this one in the top bar —
+      // and this one is the brighter of the two, because the scrim deliberately
+      // starts below the 50px bar so the role switcher stays live. So the most
+      // prominent button on the opening screen was the one that turns the thing off,
+      // while the card already carries "Skip — I will explore it myself" for exactly
+      // that. One screen, one primary button: this drops to the same outlined weight
+      // as the role switcher until the walkthrough is actually running.
+      guideBtnStyle: 'flex:none;white-space:nowrap;font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;' + (s.guideMode==='landing'
+        ? 'border:1px solid rgba(232,234,238,.28);background:transparent;color:rgba(232,234,238,.8);'
+        : 'border:none;background:#4A63D8;color:#fff;'),
+      guideBtnHover: s.guideMode==='landing' ? 'color:#fff;border-color:rgba(232,234,238,.6);' : 'background:#3B51BC;',
       infoEnter:()=>this.setState({infoOpen:true}), infoLeave:()=>this.setState({infoOpen:false}),
       infoOpen:s.infoOpen, infoTitle:`${s.role} role constraints`, infoRows,
       hasNotice: !!s.notice, noticeText: s.notice || '',
@@ -3096,7 +3146,19 @@ class Component extends DCLogic {
       buSend:()=>{ if(s.buInput.trim()) this.buAsk(s.buInput.trim()); },
       noCred: !cred, hasCred: !!cred,
       credTitle: cred?cred.title:'', credHeadBg: credHead?credHead[0]:'', credHeadFg: credHead?credHead[1]:'', credDot: credHead?credHead[2]:'',
-      credRows: cred ? cred.rows.map(([k,v,c])=>({k,v,c})) : [],
+      // The provenance card is 296px wide and its values are asset paths in mono at
+      // 11.5px. `overflow-wrap:anywhere` kept them inside the card by breaking them
+      // wherever the line ran out, which turned the longest one into
+      // "semantic.semantic_gold_customer_r / evenue_2024" — in the live demo, in the
+      // recording, and in the recording's poster frame, which is what a phone and a
+      // reduced-motion reader see first. A card whose entire job is "this number can
+      // be checked against this asset" must not cut the asset's name in half. A
+      // zero-width space after every "." and "_" gives the line breaker the joints
+      // the identifier already has, so it breaks at semantic. / gold_ / customer_ /
+      // revenue_2024 and never inside a word. Nothing visible is added: U+200B has
+      // no width and copying the text back out yields the original string minus the
+      // zero-width characters.
+      credRows: cred ? cred.rows.map(([k,v,c])=>({ k, v: String(v).replace(/([._])/g, '$1\u200B'), c })) : [],
       credChecksum: !!(cred&&cred.checksum), credChecksumVal: cred?(cred.checksum||''):'',
       // DA
       daTickets, daEmpty: s.daMsgs.length===0, daMsgs, daScroll:this.daScroll,

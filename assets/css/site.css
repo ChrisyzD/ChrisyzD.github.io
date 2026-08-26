@@ -155,6 +155,17 @@ body.essay { --prose: 600px; }
 @media (max-width: 74.99rem) {
   .side.bare { margin-top: 0; font-size: inherit; color: inherit; }
   .side.bare .lbl { display: none; }
+  /* Below the two-column width an aside is not a column, it is a block in the
+     flow — and a block in the flow needs a bottom edge. It had only a top one,
+     so wherever the next thing was a bare <p> (which sets no top margin either)
+     the two touched at exactly 0px: on the flywheel page a note saying "one
+     pillar of this was mine" ran straight into the page's largest number with
+     nothing between them, and read as one paragraph. Where an aside is a grid
+     item — 1200px and up — the column gap does this job and the margin is
+     back to 0. The header's contact block is exempt: it is not a note about a
+     passage, and on a phone it is still just the last of the four opening
+     lines. */
+  .side:not(.bare) { margin-bottom: 24px; }
 }
 
 /* An anchor jump used to land a section heading flush against the top edge of
@@ -223,7 +234,12 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-ra
 ul, ol { margin: 0 0 16px; padding-left: 20px; }
 li { margin-bottom: 4px; }
 
-hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; }
+/* An <hr> is a section rule with no heading attached, so law (a) applies to it
+   too: it is as wide as what it separates. It used to take the track, which put
+   a 1360px line over a 650px title block at the top of the essay and over a
+   prose pager at the foot of every project page — 600px of line pointing at
+   nothing, twice per page, by the file's own definition. */
+hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; max-width: var(--prose); }
 
 /* ---------- layout ---------- */
 
@@ -417,8 +433,15 @@ h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section { ma
 }
 .tryit .note { display: block; margin-top: 4px; }
 /* The most important call to action on the site was an 18px line of text on a
-   phone while the site's own rule said 44px. On desktop it goes back to inline. */
-.tryit a, .note a { display: inline-flex; align-items: center; min-height: 44px; }
+   phone while the site's own rule said 44px. On desktop it goes back to inline.
+   The 44px belongs to a link that OWNS a line — a door you aim at. Applied to
+   `.tryit a, .note a` it also landed on the links inside the sentence under the
+   door, and an inline-flex box 44px tall inside a running paragraph sets its own
+   line height: the last sentence of this block broke after "There", left that
+   word hanging alone, and ran one line of the paragraph at 44px against 27px for
+   the lines above it. A link in the middle of a sentence is a word, not a
+   target; it stays inline and the sentence stays one paragraph. */
+.tryit > a { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* The 404 list is the only place a bare <ul> of links is the whole page.
    Padding adds the same amount to every item however many lines it wraps to.
@@ -482,6 +505,19 @@ figcaption .src { display: block; margin-top: 4px; }
    0.32 scale. They stack, and each one gets the whole track. */
 .pair { display: grid; gap: 40px; margin: 40px 0; }
 .pair figure { margin: 0; }
+
+/* The clip and the two frames cut out of it are one block of evidence, and which
+   of them goes first depends on which one is readable. On a laptop the recording
+   leads and the frames annotate it. On a phone the recording is 350px wide —
+   27% of the interface it was made from, by its own caption's admission — and
+   putting it first hands the page's first evidence slot to the one object this
+   device cannot resolve, ahead of the two frames that were re-cropped precisely
+   for this width. Same DOM, same source order for a reader without CSS; only the
+   order in which a phone meets them changes. */
+@media (max-width: 899px) {
+  .evidence { display: flex; flex-direction: column; }
+  .evidence > .clip { order: 2; margin-top: 8px; }
+}
 
 /* ---------- the poster plate ---------- */
 /* The two cardiac figures are excerpts from one published, co-authored poster:
@@ -576,7 +612,15 @@ figcaption .src { display: block; margin-top: 4px; }
 
 /* ---------- footer ---------- */
 
-footer.site { border-top: 1px solid var(--rule); padding-top: 24px; font-size: 14px; color: var(--meta); }
+/* The one place law (a) was never enforced, on all seven pages: a 1360px rule
+   with a single 500px line of grey type under it. It was also the site's most
+   template-looking 89 pixels — full-bleed rule, one line of metadata, one "last
+   updated" — and on the home page it put a 1360px line 300px below an 840px one
+   in the same colour and weight, so the same mark said two different things
+   within one screen. The rule now belongs to the block it closes and stops
+   where that block's sentences stop. */
+footer.site { padding-top: 0; font-size: 14px; color: var(--meta); }
+footer.site > p:first-child { border-top: 1px solid var(--rule); padding-top: 24px; }
 footer.site a { color: var(--link); }
 
 .note { font-size: 14px; color: var(--meta); }
@@ -608,7 +652,7 @@ footer.site a { color: var(--link); }
   .contact a { min-height: 0; }
   nav.top a, .pager a, footer.site a { display: inline; min-height: 0; }
   nav.top .more { display: inline; }
-  .golink a, .tryit a, .note a, .linklist a { display: inline; min-height: 0; }
+  .golink a, .tryit > a, .linklist a { display: inline; min-height: 0; }
   /* The one exit that is not the card's own destination keeps a box around it. 18px
      of line meant two pixels of vertical slip landed you on a different page. The
      type does not change size; only the target does — and the box is now visible,
@@ -641,7 +685,15 @@ footer.site a { color: var(--link); }
   /* Index cards: the sentence on the spine, the evidence in its own column at
      the right-hand end of the track. Every card's frame ends on the same edge,
      whatever shape the frame is. */
-  .card { grid-template-columns: minmax(0, 1fr) var(--card-img); gap: 40px; }
+  /* The text column used to be 1fr, which on a 1440 screen made a card's one
+     sentence 810px / 105 characters long — 45% longer than the 72-character
+     paragraphs on the same page. The thing meant to be scanned had a longer line
+     than the thing meant to be read. It gets its own ceiling, the frame still
+     ends on the track, and the slack between them is one number in all four
+     cards rather than four different ones (which is what capping .ct at 640 used
+     to produce). */
+  .card { grid-template-columns: minmax(0, 680px) var(--card-img); gap: 40px;
+          justify-content: space-between; }
   /* justify-self ends the frame on the track for a bare <img>; margin-left:auto
      does the same job when the grid item is a <picture> wrapping one. */
   .card > picture { justify-self: end; max-width: 100%; }
@@ -666,7 +718,13 @@ footer.site a { color: var(--link); }
      one line lower. */
   .deltas.band > div { display: block; flex: 0 1 340px; min-width: 0; padding: 16px 0 20px; }
   .deltas.band > div:last-child { text-align: right; }
-  .deltas.band dt { font-size: 14px; color: var(--meta); }
+  /* Three numbers set side by side so they can be compared have to sit on one
+     baseline, and these sat on two: the cardiac labels run 1, 2 and 2 lines, and
+     with <dd> following <dt> in the flow that put 400K+ 25px above 191 and ~68%.
+     The reader's eye is being asked to compare the numbers, so it is the numbers
+     that get aligned; the label block reserves two lines whether it needs them
+     or not. */
+  .deltas.band dt { font-size: 14px; color: var(--meta); min-height: 3.4em; }
   .deltas.band dd { margin-top: 8px; font-size: 26px; letter-spacing: -0.01em; }
   .deltas.band dd .was, .deltas.band dd .to { font-size: 19px; }
 
@@ -727,6 +785,32 @@ footer.site a { color: var(--link); }
     border-left: 2px solid var(--rule); padding-left: 18px;
   }
 
+  /* The other half of "figure captions move into it". A clip's caption is three
+     beats and only one of them is an argument: the spec line is a fact about the
+     recording, the boundary is a caveat about it, and the paragraphs in between
+     are the reading of it. The reading stays on the spine at the measure with
+     every other sentence; the two that comment on the recording go where the
+     other comments go. Before this, the largest single field of unused white on
+     the site was the 520px beside the MetaFlow clip's own 415px-tall
+     explanation. Below 1200px there is no second column and the caption is the
+     three stacked blocks it always was, in the order it always had. */
+  .clip figcaption {
+    max-width: var(--track);
+    display: grid;
+    grid-template-columns: var(--prose) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 40px;
+  }
+  .clip figcaption > .say   { grid-column: 1; grid-row: 1 / span 2; }
+  .clip figcaption > .spec  { grid-column: 2; grid-row: 1; }
+  .clip figcaption > .bound { grid-column: 2; grid-row: 2; align-self: start; }
+  /* One rule down the whole margin column, not one per block: two rules 16px
+     apart is the rounding-error reading this file already ruled out once. */
+  .clip figcaption > .spec, .clip figcaption > .bound {
+    max-width: 560px; border-left: 2px solid var(--rule); padding-left: 18px; margin: 0;
+  }
+  .clip figcaption > .spec  { padding-bottom: 12px; }
+
   @supports selector(:has(*)) {
     section:has(.fig-diagram) > h2 { max-width: var(--track); }
   }
@@ -745,6 +829,21 @@ footer.site a { color: var(--link); }
 @media (min-width: 85rem) {
   :root { --track: min(1440px, 100%); --prose: 840px; --card-img: 460px; }
   body.essay { --prose: 780px; }
+}
+
+/* A page with nothing wide on it does not get a wide page. The 404 is one 500px
+   column of links against 900px of nothing — the purest instance of the shape
+   this file spent a round getting rid of, and the one page where there is no
+   evidence, no figure and no margin note to put in the space. Reserving a margin
+   column is a promise about what is going to be in it; where the promise cannot
+   be kept, the track is the measure and the page simply centres. Written as a
+   :has() test on what the page actually contains rather than as a class, so it
+   stays true if the page's contents change. */
+@supports selector(:has(*)) {
+  @media (min-width: 75rem) {
+    body:not(:has(.cards, .clip, .plate, .pair, .spread, .deltas.band,
+                  .fig-diagram, .fig-plate, .side)) { --track: var(--prose); }
+  }
 }
 
 /* ---------- the phone's own adjustments ---------- */
@@ -776,7 +875,10 @@ footer.site a { color: var(--link); }
   .scope, .thoughts-body, .pull, .plate .src, .side { max-width: none; }
   /* Paper has one column. A margin note prints under the passage it belongs to,
      which is where it sits on a phone too. */
-  .spread, .fig-diagram { display: block; }
+  .spread, .fig-diagram, .clip figcaption { display: block; }
+  .clip figcaption > .spec, .clip figcaption > .bound {
+    border-left: 0; padding-left: 0; max-width: none; margin: 8px 0 0;
+  }
   .side { margin-top: 12px; border-left: 0; padding-left: 0; }
   .side .lbl { color: #444; }
   .fig-diagram > figcaption { border-left: 0; padding-left: 0; margin-top: 8px; }

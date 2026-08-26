@@ -1718,6 +1718,15 @@
    (design artifact, not the running system), so this does not attempt to make the
    prototype itself responsive — it just makes the situation legible on a small screen. */
 #mf-proto-notice { display: none; }
+/* 50px 顶栏是四组定宽 + 一个 spacer。1200px 以下它们放不下，被顶出右边缘的正好是
+   引导演示的开关——回到引导的唯一入口，而 ≤1041px 时它渲染成「收起引导」的半截或者
+   干脆不见。中间那两行 mono 是这条顶栏上最不承重的东西（同样两个事实在落地卡和案例页
+   上都说过），所以行内放不下的时候，走的是它们。 */
+@media (max-width: 1199px) {
+  .mf-hd-meta { display: none; }
+  /* 行本身每条缝再收 6px，又省下 30。 */
+  #mf-topbar { gap: 12px !important; padding-inline: 12px !important; }
+}
 @media (max-width: 899px) {
   #mf-proto-notice {
     display: block;
@@ -1755,9 +1764,13 @@
 </style>
 </head>
 <body>
-<div id="mf-proto-notice">这个原型是固定宽度的桌面产物，所以在窄屏上会横向滚动。它照样能跑——
-  四步引导演示由你逐步点击推进，节奏你自己掌握——但同样这几屏更好读的版本，是
-  <a href="/work/metaflow/">MetaFlow 案例页</a>上那组带批注的截图。用笔记本再来操作它。</div>
+<!-- 这条横幅原来承诺「四步引导演示由你逐步点击推进」——而在这台设备上引导演示根本
+     不会启动（900px 以下是故意关掉的，见下面 guideMode 的注释：落地卡会居中到 1400px
+     文档的 x=370–1030，落在窗口外面）。一句话错了两处：数字，和承诺本身。这个站每一处
+     都在说清楚一件东西做不到什么，这里也一样。 -->
+<!-- 一行写完，不折行：HTML 里的换行在中文之间会渲染成一个空格，
+     「横向滚动， 引导演示」这种缝就是这么来的。 -->
+<div id="mf-proto-notice">这个原型是固定宽度的桌面产物，所以在窄屏上会横向滚动，引导演示也不会启动——那个需要 900px 以上的窗口。这个宽度下能读的，是<a href="/work/metaflow/">MetaFlow 案例页</a>上那组带批注的截图。用笔记本再来操作它，六步引导由你自己一步步点。</div>
 <x-dc>
 <helmet>
 <style>
@@ -1785,12 +1798,12 @@ a:hover{color:#1B1E24;text-decoration:underline;}
 
   <!-- ═══════ 全局顶栏 · v1.0.1 ═══════ -->
   <header style="flex:none;height:50px;display:flex;align-items:center;gap:18px;padding:0 16px;background:#191C22;color:#E8EAEE;">
-    <a id="mf-back" href="/work/metaflow/" style="flex:none;font-size:13px;font-weight:600;padding-right:18px;border-right:1px solid rgba(232,234,238,.15);">← Yizhe Dai · 返回 MetaFlow 项目页</a>
+    <a id="mf-back" href="/work/metaflow/" style="flex:none;font-size:13px;font-weight:600;padding-right:18px;border-right:1px solid rgba(232,234,238,.15);">←&#160;<span class="mf-hd-meta">Yizhe Dai&#160;·&#160;</span>返回 MetaFlow 项目页</a>
     <div style="display:flex;align-items:center;gap:9px;">
       <div style="width:22px;height:22px;border-radius:6px;background:#4A63D8;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;">M</div>
       <span style="font-weight:700;font-size:14.5px;letter-spacing:.3px;">MetaFlow</span>
-      <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(232,234,238,.4);">jaffle_shop demo · synthetic</span>
-      <span style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(232,234,238,.4);" title="This prototype's &quot;today&quot; is fixed at this date so demo scenarios stay reproducible.">scenario date: 2026-07-08</span>
+      <span class="mf-hd-meta" style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(232,234,238,.4);">jaffle_shop demo · synthetic</span>
+      <span class="mf-hd-meta" style="font-family:'SF Mono',Consolas,monospace;font-size:10px;color:rgba(232,234,238,.4);" title="This prototype's &quot;today&quot; is fixed at this date so demo scenarios stay reproducible.">scenario date: 2026-07-08</span>
     </div>
     <div style="display:flex;gap:2px;background:rgba(255,255,255,.07);border-radius:8px;padding:3px;">
       <button onClick="{{ goBU }}" style="{{ roleBtnBU }}">BU 业务用户</button>
@@ -1798,7 +1811,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
       <button onClick="{{ goDE }}" style="{{ roleBtnDE }}">DE 数据工程师</button>
     </div>
     <div style="flex:1;"></div>
-    <button onClick="{{ guideToggle }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border:none;border-radius:7px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideBtnLabel }}</button>
+    <button onClick="{{ guideToggle }}" style="{{ guideBtnStyle }}" style-hover="{{ guideBtnHover }}">{{ guideBtnLabel }}</button>
     <div style="position:relative;" onMouseEnter="{{ infoEnter }}" onMouseLeave="{{ infoLeave }}">
       <div style="width:26px;height:26px;border-radius:50%;border:1px solid rgba(232,234,238,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-style:italic;font-family:Georgia,serif;cursor:default;color:rgba(232,234,238,.7);">i</div>
       <sc-if value="{{ infoOpen }}" hint-placeholder-val="{{ false }}">
@@ -2395,9 +2408,20 @@ a:hover{color:#1B1E24;text-decoration:underline;}
   </div>
 
   <!-- ═══════ 引导条 · 每一步由访客自己点着走 ═══════ -->
+  <!-- 一行四个不可压缩的块，装在一个不横向滚动的容器里：六个筹码本身就占 ~726px，
+       于是在 900–1199px 的窗口里两颗按钮被顶到右边缘之外，「下一步」停在 x≈936–1083，
+       够不着。访客能开始引导，却没法继续。现在这一行会折：筹码需要时独占一行，旁白和
+       按钮走第二行，按钮组用 margin-left:auto 贴在所在那一行的右端，而不是钉在离左边
+       1083px 的地方。1200px 以上什么都不变——那里本来就放得下。 -->
   <sc-if value="{{ guideBar }}" hint-placeholder-val="{{ false }}">
-    <div style="flex:none;display:flex;align-items:center;gap:16px;padding:10px 16px;background:#191C22;color:#E8EAEE;border-top:1px solid rgba(255,255,255,.09);animation:mfIn .2s ease both;">
-      <div style="flex:none;display:flex;align-items:center;gap:5px;">
+    <div id="mf-guide-bar" style="flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:10px 16px;background:#191C22;color:#E8EAEE;border-top:1px solid rgba(255,255,255,.09);animation:mfIn .2s ease both;">
+      <!-- 旁白随步骤和宽度从一行到七行不等，而这条引导条是 100vh 竖向容器的最后一个
+           孩子，它是向上长的：底边就是窗口底边。所以旁白放第一行，控件放最后一行。
+           旁白下面的每一行，离那条固定底边的距离都不变，于是筹码和「下一步」在六次点击
+           之间不再移动——原来它们会上下跑 20px，就在一个被要求连点六次的人的指针底下。
+           不需要预留高度，也不需要一个跟文案同步的常数：几何自己把这件事做了。 -->
+      <div id="mf-guide-say" style="flex:1 1 100%;min-width:0;font-size:12.5px;line-height:1.6;color:rgba(232,234,238,.82);">{{ guideSay }}</div>
+      <div id="mf-guide-chips" style="flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:5px;">
         <sc-for list="{{ guideSteps }}" as="g" hint-placeholder-count="6">
           <button onClick="{{ g.onGo }}" title="{{ g.full }}" style="{{ g.chipStyle }}">
             <span style="{{ g.numStyle }}">{{ g.num }}</span>
@@ -2405,9 +2429,10 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           </button>
         </sc-for>
       </div>
-      <div style="flex:1;min-width:120px;font-size:12.5px;line-height:1.6;color:rgba(232,234,238,.82);">{{ guideSay }}</div>
-      <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">退出引导，自由探索</button>
-      <button onClick="{{ guideNext }}" disabled="{{ guideBusy }}" style="{{ guideNextStyle }}">{{ guideNextLabel }}</button>
+      <div id="mf-guide-acts" style="flex:none;display:flex;align-items:center;gap:12px;margin-left:auto;">
+        <button onClick="{{ guideExit }}" style="flex:none;font-family:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border:1px solid rgba(232,234,238,.22);border-radius:8px;background:transparent;color:rgba(232,234,238,.68);cursor:pointer;white-space:nowrap;" style-hover="color:#fff;border-color:rgba(232,234,238,.5);">退出引导，自由探索</button>
+        <button onClick="{{ guideNext }}" disabled="{{ guideBusy }}" style="{{ guideNextStyle }}">{{ guideNextLabel }}</button>
+      </div>
     </div>
   </sc-if>
 
@@ -2429,7 +2454,7 @@ a:hover{color:#1B1E24;text-decoration:underline;}
           <button id="mf-guide-start" onClick="{{ guideStart }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:11px 20px;border:none;border-radius:9px;background:#4A63D8;color:#fff;cursor:pointer;" style-hover="background:#3B51BC;">{{ guideStartLabel }}</button>
           <button onClick="{{ guideExit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border:none;background:transparent;color:rgba(27,30,36,.55);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#1B1E24;">跳过，我自己点</button>
         </div>
-        <div style="font-size:13.5px;line-height:1.75;color:#1B1E24;margin-top:16px;">没有任何东西会自动播。每一步都等你点，也可以随时退出引导（或按 Esc）——三个角色和自由提问一直都在。</div>
+        <div style="font-size:13.5px;line-height:1.75;color:#1B1E24;margin-top:16px;">没有任何东西会自动播。每一步都由你按下之后才开始，按下之后那一段自己走几秒——六次点击，大约半分钟的画面，每一步之间它都等你。随时可以退出引导（或按 Esc）——三个角色和自由提问一直都在。</div>
       </div>
     </div>
   </sc-if>
@@ -2478,7 +2503,7 @@ class Component extends DCLogic {
   componentDidMount(){
     // 这里原来是一载入就把四幕连着播完。可这个原型唯一值得看的东西 —— 一个问题先失败、
     // 然后同一个问题成功 —— 播得比任何人读得完还快；中途进来的人根本不知道自己撞见了什么。
-    // 所以演示不再自己播：落地是一块说清叙事弧和四步结构的面板，之后每一步由访客自己点。
+    // 所以演示不再自己播：落地是一块说清叙事弧和六步结构的面板，之后每一步由访客自己点。
     // 老的连播逻辑原样留在下面，只在 ?autorun=1 下跑，供录屏用。
     this.autoRun = false;
     this.stopAuto = (e) => {
@@ -3071,6 +3096,15 @@ class Component extends DCLogic {
       roleBtnBU:roleBtn('BU'), roleBtnDA:roleBtn('DA'), roleBtnDE:roleBtn('DE'),
       goBU:()=>this.setState({role:'BU'}), goDA:()=>this.setState({role:'DA'}), goDE:()=>this.setState({role:'DE'}),
       guideToggle:()=>this.guideToggle(), guideBtnLabel: s.guideMode==='off' ? '▶ 引导演示' : '收起引导',
+      // 落地卡亮着的时候屏幕上有两颗一样实心的蓝按钮：卡片中央的「开始 · 第 1 步 →」，
+      // 和顶栏这一颗——而顶栏这颗更亮，因为遮罩是故意从 50px 顶栏以下才开始的（角色切换
+      // 器要保持可见）。结果整个开屏最抢眼的按钮，是把这件事关掉的那颗；而卡片里本来就
+      // 有「跳过，我自己看」在做同一件事。一屏只留一颗主按钮：引导真的跑起来之前，这颗
+      // 降到和角色切换器一样的描边重量。
+      guideBtnStyle: 'flex:none;white-space:nowrap;font-family:inherit;font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;' + (s.guideMode==='landing'
+        ? 'border:1px solid rgba(232,234,238,.28);background:transparent;color:rgba(232,234,238,.8);'
+        : 'border:none;background:#4A63D8;color:#fff;'),
+      guideBtnHover: s.guideMode==='landing' ? 'color:#fff;border-color:rgba(232,234,238,.6);' : 'background:#3B51BC;',
       infoEnter:()=>this.setState({infoOpen:true}), infoLeave:()=>this.setState({infoOpen:false}),
       infoOpen:s.infoOpen, infoTitle:`${s.role} 角色约束`, infoRows,
       hasNotice: !!s.notice, noticeText: s.notice || '',
@@ -3090,7 +3124,15 @@ class Component extends DCLogic {
       buSend:()=>{ if(s.buInput.trim()) this.buAsk(s.buInput.trim()); },
       noCred: !cred, hasCred: !!cred,
       credTitle: cred?cred.title:'', credHeadBg: credHead?credHead[0]:'', credHeadFg: credHead?credHead[1]:'', credDot: credHead?credHead[2]:'',
-      credRows: cred ? cred.rows.map(([k,v,c])=>({k,v,c})) : [],
+      // 溯源卡宽 296px，值是 11.5px mono 的资产路径。`overflow-wrap:anywhere` 靠「行满了
+      // 就地断」把它们塞进卡里，于是最长的那条变成了
+      // 「semantic.semantic_gold_customer_r / evenue_2024」——live demo 里、录屏里、以及
+      // 录屏的海报帧里都是，而海报帧正是手机访客和 reduced-motion 访客第一眼看到的东西。
+      // 一张全部意义就是「这个数能对着这个资产核对」的卡片，不能把资产名切成两半。在每个
+      // "." 和 "_" 后面插一个零宽空格，等于把标识符本来就有的关节交给断行器：断在
+      // semantic. / gold_ / customer_ / revenue_2024，永远不断在词里面。视觉上不增加任何
+      // 东西：U+200B 没有宽度，复制出去也只是原字符串少了几个零宽字符。
+      credRows: cred ? cred.rows.map(([k,v,c])=>({ k, v: String(v).replace(/([._])/g, '$1\u200B'), c })) : [],
       credChecksum: !!(cred&&cred.checksum), credChecksumVal: cred?(cred.checksum||''):'',
       // DA
       daTickets, daEmpty: s.daMsgs.length===0, daMsgs, daScroll:this.daScroll,

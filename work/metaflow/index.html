@@ -46,6 +46,12 @@ version of those same screens. There is also the
   </aside>
 </div>
 
+<!-- The recording and the two frames cut out of it are one block, and which of them
+     a reader meets first depends on the width they are reading at: the clip leads on
+     a laptop, the re-cropped frames lead on a phone. That is a CSS order swap inside
+     this wrapper, not two copies of the evidence. -->
+<div class="evidence">
+
 <figure class="clip fig-clip native-1440">
   <video src="/assets/video/metaflow-demo.mp4"
          poster="/assets/img/metaflow-demo-poster.png"
@@ -61,29 +67,31 @@ version of those same screens. There is also the
     <p class="spec">~26 s · six steps · silent · loops · recorded at 1440×900, so it is 1:1 from
       1520px of window and resampled below that<span class="only-mobile"> · a still on a
       phone; tap to play</span></p>
-    <p>Twenty-six seconds, nobody driving: the same question is asked at the start and at the
-      end. The first time it comes back as an explicit <strong>MISS</strong> — the certification
-      it needs does not exist — and in between, the refusal becomes a ticket, an analyst answers
-      it off the uncertified path with the caveat attached and files a backfill request, and an
-      engineer closes the gap through a lineage impact analysis, a dry run and an owner
-      approval.</p>
-    <p><span class="look">Watch the first act and the last.</span> Both land in the right-hand
-      column, and reading only those two is the short version of the whole argument: <em>No
-      certified capability matched</em> at the start, and at the end <em>All provenance checks
-      green</em>, with the source asset, the metric version, the definition and a re-computed
-      checksum attached to a number that had no certified answer twenty-six seconds earlier.
-      The two acts in between are the repair — an analyst answering off the uncertified path,
-      an engineer closing the gap — and they are the ones the two annotated frames below cover,
-      because that middle stretch is dense enough that the recording's own panels overlap and
-      the annotations say what a moving screen cannot.</p>
+    <div class="say">
+      <p>Twenty-six seconds, nobody driving: the same question is asked at the start and at the
+        end. The first time it comes back as an explicit <strong>MISS</strong> — the
+        certification it needs does not exist — and in between, the refusal becomes a ticket, an
+        analyst answers it off the uncertified path with the caveat attached and files a backfill
+        request, and an engineer closes the gap through a lineage impact analysis, a dry run and
+        an owner approval.</p>
+      <p><span class="look">Watch the first step and the last.</span> Both land in the right-hand
+        column, and reading only those two is the short version of the whole argument: <em>No
+        certified capability matched</em> at the start, and at the end <em>All provenance checks
+        green</em>, with the source asset, the metric version, the definition and a re-computed
+        checksum attached to a number that had no certified answer twenty-six seconds earlier.
+        The four steps in between are the repair — an analyst answering off the uncertified path,
+        an engineer closing the gap — and they are the ones the two annotated frames below cover,
+        because that middle stretch is dense enough that the recording's own panels overlap and
+        the annotations say what a moving screen cannot.</p>
+    </div>
     <p class="bound">Nothing here is clicked by a human — this recording was made with the
       walkthrough's autorun switched on; in the live prototype above, you click through the same
       six steps at your own pace. It is a design prototype rather than the running system, and the data
       is the synthetic <code>jaffle_shop</code> demo set.<span class="only-mobile"> This is a
-      1280px interface and it does not survive being shrunk to a phone: what you have above is
-      the frame it ends on. The two annotated screenshots directly below are the first and the
-      last of those acts, re-cropped for this width — those are the ones to read. The full clip
-      is worth a laptop.</span></p>
+      1280px interface and it does not survive being shrunk to a phone, so on this screen it
+      comes after the two annotated screenshots above: those are the first and the last of the
+      six steps, re-cropped for this width, and they are the ones to read. The full clip is
+      worth a laptop.</span></p>
   </figcaption>
 </figure>
 
@@ -97,7 +105,7 @@ version of those same screens. There is also the
          and handing off to the analyst triage queue as ticket T-0087. Four numbered annotations
          mark the refusal, the handoff button, the ticket toast and the blocked-by field.">
     </picture>
-    <figcaption><strong>Act one, stopped.</strong> The refusal is the feature. A question outside
+    <figcaption><strong>Step 1, stopped.</strong> The refusal is the feature. A question outside
       the certified surface returns an explicit MISS that names the blocker — 8,611 orders with
       no historical tier coverage — and turns into a ticket in the analyst queue instead of a
       plausible-looking guess.</figcaption>
@@ -112,13 +120,15 @@ version of those same screens. There is also the
          numbered and glossed: source asset, metric version, definition binding, certification
          status with row count, and a re-verified checksum.">
     </picture>
-    <figcaption><strong>Act four, stopped.</strong> The card the clip ends on, here on a
+    <figcaption><strong>Step 6, stopped.</strong> The card the clip ends on, here on a
       different question and with its five fields named. It ships with every answer: the
       certified table the number came from, the metric version, and the definition the answer
       was bound to — so “where did this number come from” has an answer that is not a
       conversation.</figcaption>
   </figure>
 </div>
+
+</div><!-- /.evidence -->
 
 <section>
   <h2>Why an IR instead of SQL</h2>
@@ -161,11 +171,12 @@ version of those same screens. There is also the
   <div class="spread">
     <div>
       <p><strong>The studio.</strong> Interface, annotations and data are all English. The
-      system is organized around four ideas, and the four steps of the walkthrough in the
+      system is organized around four ideas, and the six steps of the walkthrough in the
       prototype are those four ideas in order: answers are bounded by a certified capability
       list, anything out of scope is refused explicitly rather than guessed, the fix behind a
       refusal goes through lineage analysis, a dry run and an explicit owner approval before it
-      ships, and every answer that survives all of that carries its provenance with it.</p>
+      ships — that third idea is three steps, because those are three separate decisions — and
+      every answer that survives all of that carries its provenance with it.</p>
 
       <p>The first and the last of those are the two frames at the top of this page: the
       explicit refusal, and the provenance card that ships with the answer once the gap behind
@@ -176,16 +187,20 @@ version of those same screens. There is also the
     </div>
 
     <aside class="side">
-      <span class="lbl">The four ideas, as four steps</span>
+      <span class="lbl">Four ideas, six steps</span>
       <ol>
-        <li><strong>Bounded.</strong> A question outside the certified capability list returns
-          an explicit MISS naming the blocker.</li>
-        <li><strong>Triaged.</strong> The refusal becomes a ticket; an analyst answers off the
-          uncertified path with the caveat attached and files a backfill request.</li>
-        <li><strong>Governed.</strong> Lineage impact analysis, a transactional dry run,
-          validation assertions, a rollback plan — then an owner decision.</li>
-        <li><strong>Provenanced.</strong> The same question comes back certified, with its
-          source asset, metric version, definition and a re-computed checksum.</li>
+        <li><strong>Bounded</strong> <em>(step 1).</em> A question outside the certified
+          capability list returns an explicit MISS naming the blocker.</li>
+        <li><strong>Triaged</strong> <em>(step 2).</em> The refusal becomes a ticket; an analyst
+          answers off the uncertified path with the caveat attached and files a backfill
+          request.</li>
+        <li><strong>Governed</strong> <em>(steps 3–5).</em> Lineage impact analysis, then a
+          transactional dry run with its validation assertions and rollback plan, then an owner
+          decision — three separate steps because they are three separate decisions, and the
+          walkthrough makes you take them one at a time.</li>
+        <li><strong>Provenanced</strong> <em>(step 6).</em> The same question comes back
+          certified, with its source asset, metric version, definition and a re-computed
+          checksum.</li>
       </ol>
       <p><strong>The data</strong> is the <code>jaffle_shop</code> demo dataset: synthetic rows
       generated against dbt's public <code>jaffle_shop</code> schema — 50,000 orders spanning
