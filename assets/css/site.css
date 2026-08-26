@@ -56,6 +56,16 @@
        1440, the native width of the MetaFlow recording, so it renders 1:1;
        the measure steps to 840 and the margin to 400–560.
 
+   THE BAR AT THE TOP OBEYS ALL OF IT
+   ---------------------------------------------------------------------------
+   Every page opens with the same row of section names, pinned to the top of the
+   window. It is not an exception to the system above: it starts on the spine,
+   it runs the track, and the rule under it is as wide as the page it is the
+   frame for — which, by law (a), is the widest rule on the page, because it is
+   the only one whose contents are the whole document. Its height is 49px at
+   every width, by two different routes (see nav.top); the layout below it does
+   not need to know which route, only the number, which is --navh.
+
    WHY THE SPINE NEVER JUMPS
    ---------------------------------------------------------------------------
    Every track is written `min(Npx, 100%)`, and every breakpoint is placed at
@@ -99,15 +109,34 @@
      here because the contact list that sits under it in the margin column has to
      take the same number. */
   --portrait: 88px;
+  /* The height of the pinned bar, which two other things have to know: the
+     scroll-padding that keeps an anchor jump from landing underneath it, and
+     anything that ever wants to sit level with it. It is one number rather than
+     two because the bar is built to be 49px on a phone (a 44px touch row, 4px,
+     the rule) and 49px on a laptop (16px, a 24px line, 8px, the rule) — the
+     same height reached by different arithmetic, so nothing downstream has to
+     branch. */
+  --navh: 49px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; }
 
+/* No padding at the top any more: the bar is the first thing in every page and
+   it brings its own air. Putting 64px above it would have meant the bar sits
+   64px down the page at rest and flush with the window's edge the moment you
+   scroll — the one state change on this site that nothing would have explained,
+   and it would have spent 64px of the first screen to introduce it. */
 body {
-  margin-inline: auto;
-  padding: 40px var(--gutter) 64px;
+  /* margin-inline:auto is what centres the page above 1520px, and it left the
+     browser's own default 8px margin on the top and bottom untouched — which
+     nothing noticed for five rounds, because 8px under a 64px padding is 8px.
+     A pinned bar notices: it would have rested 8px down the page and jumped to
+     the window's edge on the first pixel of scroll. Both ends go to zero; the
+     bottom 8px was never doing anything either, under 64px of padding. */
+  margin: 0 auto;
+  padding: 0 var(--gutter) 64px;
   max-width: calc(var(--track) + var(--gutter) * 2);
   background: var(--bg);
   color: var(--text);
@@ -182,8 +211,14 @@ body.essay { --prose: 600px; }
 }
 
 /* An anchor jump used to land a section heading flush against the top edge of
-   the window, rule and all. */
-section, [id] { scroll-margin-top: 40px; }
+   the window, rule and all; with a bar pinned to that edge it would now land
+   underneath the bar instead, which is worse — the heading you asked for would
+   be the one thing on screen you could not see. Stated as scroll-padding on the
+   scroll container rather than as scroll-margin on 40-odd elements: it is one
+   declaration instead of a list nobody will remember to extend, and it also
+   covers the two scrolls that are not anchor jumps — find-in-page, and the
+   browser pulling a focused link into view while you tab through the bar. */
+html { scroll-padding-top: calc(var(--navh) + 24px); }
 
 /* ---------- type ---------- */
 
@@ -256,8 +291,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; max-width: va
 
 /* ---------- layout ---------- */
 
-/* The nav belongs to the header block, not to the space between the header and
-   the work. */
 header.site { margin-bottom: 24px; }
 
 /* ---------- the opening block ---------- */
@@ -301,18 +334,96 @@ header.intro > h1        { grid-column: 1; margin-bottom: 0; }
 header.intro > .who      { grid-column: 1; }
 header.intro > .side     { grid-column: 1; }
 header.intro .who > p:last-child { margin-bottom: 0; }
-nav.top { font-size: 15px; margin-bottom: 24px; color: var(--meta); }
-/* 44px touch target on phones, where this nav is the only way to reach Experience
-   without scrolling three thousand pixels. The visual height does not change. */
+/* ---------- the bar ---------- */
+/* This row used to sit AFTER the opening block on the home page, which meant the
+   one element on the site that says what is on the site was the seventh thing you
+   met: on a 390x844 phone its top edge measured y=787 of an 844px screen, so a
+   visitor's first screen contained a face, a name, four paragraphs and no way to
+   go anywhere. The only available move was to scroll, and the home page is 8,028px
+   tall at that width — nine and a half screens of guessing. It is first in the
+   source on every page now, which also makes it first in the tab order.
+   It is pinned, and that is the part that costs something, so: the complaint this
+   answers is not "I cannot see the nav when I arrive" — that one is fixed by moving
+   it, full stop — it is that finding your way DOWN the page is guesswork. A bar
+   that scrolls away fixes the first screen and abandons you at the eighth, which
+   is where the guessing actually happens. So it stays, and it pays 49px of every
+   screen for it, at every width. That is the honest price and it is not small:
+   5.8% of a phone screen, permanently.
+   No JavaScript is involved and none is possible here: position:sticky is the
+   whole mechanism, so the bar looks and behaves identically at scroll 0 and at
+   scroll 8,000. Nothing shrinks, nothing fades in, nothing "activates" — which
+   is also why it needs no explanation.
+   The background is the page's own white rather than nothing, because the thing
+   underneath it has to be hidden rather than blended with; z-index clears the
+   .card overlay (position:relative, z-index auto) that covers every index card. */
+nav.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  /* Law (a) run all the way up: a rule is as wide as what is under it, and what
+     is under this one is the page. So it is the track — the widest thing any
+     rule on the site is allowed to be, and the only one that has earned it. */
+  border-bottom: 1px solid var(--rule);
+  font-size: 15px;
+  /* Pinned to 24px so the bar's height is arithmetic rather than whatever the
+     machine's system sans resolved 15px/1.7 to. --navh is a constant that two
+     other rules depend on; a constant derived from an unnamed font is not one. */
+  line-height: 24px;
+  padding-bottom: 4px;
+  margin-bottom: 24px;
+}
+/* 44px touch target on phones — the site's own rule for a link that owns a line,
+   and this bar is nothing but links that own a line. The visual height does not
+   change; 44 + 4 + the rule is the phone's 49. */
 nav.top a { display: inline-flex; align-items: center; min-height: 44px; margin-right: 16px; }
-/* On the home page this row is six same-page anchors sitting 24px under three contact
-   links in the identical blue underline — nine equal-weight links, none of them saying
-   which matters. A jump to a place you are already on is navigation, not a destination.
-   Deep pages keep theirs blue: there the same element is the only way out. */
-nav.top a[href^="#"] { color: var(--meta); }
-nav.top a[href^="#"]:hover { color: var(--link); }
-/* Six anchors measure 398px against a phone's 350px, so the row wrapped and cost
-   44px of the first screen. Three anchors measure 193px. */
+/* The last item's own 16px is 16px of nothing at the end of a line, and on the
+   narrowest phone the row is 290px of a 320px track — close enough that a trailing
+   margin is a real candidate for pushing the last label onto a second row, which
+   in a pinned bar is the 44px this file just spent a paragraph refusing to pay. */
+nav.top a:last-child { margin-right: 0; }
+/* The whole bar is grey now, on every page, including the one link that leaves it.
+   It used to be grey on the home page (six jumps to places you are already on) and
+   blue on deep pages, and the comment here defended that: "deep pages keep theirs
+   blue, there the same element is the only way out". That stopped being true the
+   moment deep pages got the whole index — every item in this row goes home now, so
+   none of them is the fire exit and there is nothing for blue to single out. What
+   blue would do instead is put seven of the site's strongest-marked links above the
+   first sentence of every page, which is the "nine equal-weight links, none of them
+   saying which matters" problem the old comment was already complaining about, one
+   block higher and two links worse. Chrome is grey. Hover and focus are still blue,
+   and the underline never leaves, so nothing here stops looking like a link.
+   Set on the anchors and not on the bar, and that is not a style choice: two hundred
+   lines up `a { color: var(--link) }` sets the colour on the element itself, which
+   beats anything the parent merely hands down. A grey nav.top with blue links sitting
+   inside it is what a colour on the bar buys you. */
+nav.top a { color: var(--meta); }
+/* The one item that says where you already are. Not a tab underline — the bar
+   already owns the only horizontal rule in this region, and a second, thicker,
+   3px-long one 4px above it is the "three rules within six pixels" reading this
+   file has ruled out twice. Colour and weight instead: it is the one item in the
+   row set in the text colour, which is exactly how .side strong and .lbl already
+   mark "this is the thing, not the commentary". The home page has no current
+   item and is not given a fake one: all six of its anchors are on the page you
+   are looking at, and which of them you are level with is a scroll position,
+   which is not knowable here without the JavaScript this site does not have. */
+nav.top a[aria-current] { color: var(--text); font-weight: 600; }
+/* Last, so it also wins on the current item: [aria-current] and :hover are the same
+   one-class-one-element weight, and whichever is written second takes it. Written
+   first, the current item was the one link in the bar that did not answer the
+   pointer. */
+nav.top a:hover { color: var(--link); }
+/* Six anchors measure 398px, and 350px is what a 390px phone has (320px at 360px,
+   which is the narrowest width this site is checked at). The three marked .more
+   are the three whose absence costs least: Contact repeats the three links already
+   in the opening block and again in the footer, and Education and Skills are the
+   end of the page, which is where scrolling was going to take you anyway. On a
+   deep page the row is the name plus the same three, measured 290px against that
+   same 320px.
+   The reason to re-derive this rather than inherit it: the arithmetic got WORSE,
+   not better. A wrapped row used to cost 44px of the first screen, once. Pinned,
+   it would cost 44px of every screen — 93px of a phone's 844, 11%, for three
+   labels you can reach by scrolling. */
 nav.top .more { display: none; }
 
 section { margin-bottom: 64px; }
@@ -728,7 +839,7 @@ footer.site a { color: var(--link); }
 
 @media (min-width: 44rem) {
   :root { --track: min(900px, 100%); --prose: 680px; --hang: 20px; }
-  body { font-size: 18px; line-height: 1.7; padding-top: 64px; }
+  body { font-size: 18px; line-height: 1.7; }
   h1 { font-size: 38px; }
   h3 { font-size: 19px; }
   .lead { font-size: 21px; line-height: 1.45; }
@@ -745,6 +856,14 @@ footer.site a { color: var(--link); }
   .contact a { min-height: 0; }
   nav.top a, .pager a, footer.site a { display: inline; min-height: 0; }
   nav.top .more { display: inline; }
+  /* Same 49px, reached the other way: the touch rows collapse back to a 24px line
+     of type, so the bar buys its height in padding instead. The 8px above the rule
+     is the h2's own 8px — a row of labels over a full-width rule is the shape this
+     site already uses for every section heading on it, and the bar is that shape
+     doing it for the whole document. The 40px underneath is the air the body's old
+     64px of top padding used to provide; 24px of what it provided is now inside
+     the bar, which is where the bar's cost partly went. */
+  nav.top { padding: 16px 0 8px; margin-bottom: 40px; }
   .golink a, .tryit > a, .linklist a { display: inline; min-height: 0; }
   /* The one exit that is not the card's own destination keeps a box around it. 18px
      of line meant two pixels of vertical slip landed you on a different page. The
@@ -1053,6 +1172,11 @@ footer.site a { color: var(--link); }
   .fig-diagram > figcaption { border-left: 0; padding-left: 0; margin-top: 8px; }
   .deltas.band { display: block; }
   .deltas.band > div { max-width: none; text-align: left; }
+  /* The bar is pinned on screen, and a pinned box is a known way to get the same
+     strip stamped onto all eleven pages of a PDF, or onto the first one twice. It
+     is also six links to anchors that do not exist on paper. It does not print —
+     which it already did not, but it was one property away from being a bug and
+     the property is new. */
   nav.top, .contact { display: none; }
   a { color: #000; text-decoration: none; }
   a[href^="http"]::after,

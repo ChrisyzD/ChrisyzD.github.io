@@ -8,7 +8,17 @@
 <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
-<nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
+<!-- The same bar as every other page. No aria-current on this one: the deep pages
+     mark the section they are filed under, and a page that does not exist is not
+     filed under anything. Marking one anyway would be the bar's only lie. -->
+<nav class="top">
+  <a href="/">← Yizhe Dai</a><a href="/#work">Work</a><a
+    href="/#experience">Experience</a><a
+    href="/#writing">Writing</a><a
+    class="more" href="/#education">Education</a><a
+    class="more" href="/#skills">Skills</a><a
+    class="more" href="/#contact">Contact</a>
+</nav>
 <h1>Page not found</h1>
 <p>That page does not exist. Nothing here is behind a login — it is just the wrong address.</p>
 <!-- Seven links of identical weight is a wall, and it was the one block on this site

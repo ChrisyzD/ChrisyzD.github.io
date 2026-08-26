@@ -10,7 +10,21 @@
 </head>
 <body>
 
-<nav class="top"><a href="/">← Yizhe Dai</a><a href="/#work">Work</a></nav>
+<!-- The same bar as the home page, plus the one item the home page has no use for:
+     its own name. Every other link in this row also goes home — to a named place on
+     it — so the name is no longer the fire exit it was when this nav was two links,
+     which is why the row is grey chrome now instead of seven blue destinations.
+     aria-current marks the section this page is filed under. That is the only "you
+     are here" this site can state honestly without JavaScript: it is a fact about
+     what the page IS, not about where the reader has scrolled to. -->
+<nav class="top">
+  <a href="/">← Yizhe Dai</a><a href="/#work" aria-current="true">Work</a><a
+    href="/#experience">Experience</a><a
+    href="/#writing">Writing</a><a
+    class="more" href="/#education">Education</a><a
+    class="more" href="/#skills">Skills</a><a
+    class="more" href="/#contact">Contact</a>
+</nav>
 
 <!-- The page head is a spread: who/what/when on the spine, and the boundary of my
      own work in the margin beside it. "My scope" was already a margin note by every

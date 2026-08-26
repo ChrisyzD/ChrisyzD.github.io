@@ -10,6 +10,21 @@
 </head>
 <body>
 
+<!-- The bar. It used to sit under the whole opening block, which put it at y=787 of an
+     844px phone screen — the site's only index, one pixel row above the fold, on a page
+     that runs 8,028px at that width. First on every page now, and pinned, so it is also
+     the answer at scroll 4,000 and not only at scroll 0.
+     Six anchors do not fit one row on a phone (398px against 350, and 320 at 360px), and
+     a wrapped row in a pinned bar costs its 44px on every screen rather than once. The
+     three marked .more are the three that cost least to lose: Contact is already in the
+     block below and again in the footer, and Education and Skills are where scrolling
+     ends up anyway. They are shown from 44rem up, where all six fit one line. -->
+<nav class="top">
+  <a href="#work">Work</a><a href="#experience">Experience</a><a href="#writing">Writing</a><a
+    class="more" href="#education">Education</a><a class="more" href="#skills">Skills</a><a
+    class="more" href="#contact">Contact</a>
+</nav>
+
 <!-- The opening block used to be four stacked lines that all stopped at the measure,
      with the track's own rule starting 24px underneath them — so the first thing a
      visitor saw on a wide screen was a 1280px line with a 767px block above it. The
@@ -53,16 +68,6 @@
     </ul>
   </div>
 </header>
-
-<!-- Six anchors do not fit one row on a phone, and a wrapped nav costs 44px of a
-     844px first screen — which is what was pushing the first project name under the
-     fold. The three marked .more are the three a phone reader reaches by scrolling
-     anyway; they are shown from 44rem up. -->
-<nav class="top">
-  <a href="#work">Work</a><a href="#experience">Experience</a><a href="#writing">Writing</a><a
-    class="more" href="#education">Education</a><a class="more" href="#skills">Skills</a><a
-    class="more" href="#contact">Contact</a>
-</nav>
 
 <!-- ============================ WORK ============================ -->
 <section id="work">
