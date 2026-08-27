@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Experience, education and skills · Chris Dai</title>
-<meta name="description" content="Four roles — Lark at ByteDance, Shenzhen Legion Technology, and two research roles at the University of Michigan — three degrees, and a skills list that says where each name on it is used on this site.">
+<title>Experience, projects, education and skills · Chris Dai</title>
+<meta name="description" content="Five entries — ByteDance, AISpeech, Shenzhen Legion Technology, PGF Technology Group and MetaFlow — two Michigan research projects, three degrees, and a skills list that says where each name on it is used on this site.">
 <link rel="preload" href="/assets/fonts/Geist-400-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/GeistMono-400-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
@@ -21,16 +21,45 @@
     href="/writing/">Writing</a><a class="more" href="/experience/" aria-current="page">Experience</a>
 </nav>
 
-<!-- Three blocks that used to be three separate sections of the home page, in the order
-     they were already in. They are one page because they are one question — what has he
-     done, what was he trained in, what can he use — and because a recruiter scanning on a
-     phone should meet them in one scroll rather than three.
-     The order is not the résumé PDF's (which runs education, skills, experience, projects,
-     in a LaTeX template's order). It is this site's, unchanged: the site is not the résumé,
-     it links to it, and re-ranking three blocks is a content decision this round did not
-     make. Every entry, every date, every number and every margin note below is the home
-     page's, moved and not rewritten. -->
-<h1>Experience, education and skills</h1>
+<!-- ============================ THIS ROUND ============================
+     THE PAGE IS FOUR SECTIONS NOW AND IT WAS THREE. What changed is not the
+     layout — every rule, every measure, every margin column below is the one the
+     last round built and none of them moved — it is what the sections hold and
+     the shape the entries are written in. Three decisions, in the order they
+     were made:
+
+     (1) EXPERIENCE IS THE FOUR COMPANIES AND THE ONE PROJECT, AND NOTHING ELSE.
+     It used to be four entries of which two were university research posts, so
+     "Experience" on this page meant "the five things that happened", which is a
+     list ordered by nothing. It is the four organisations I worked for or with
+     — ByteDance, AISpeech, Shenzhen Legion Technology, PGF Technology Group —
+     plus MetaFlow, which is not an organisation and is here anyway because it is
+     the only entry on the page that is still running and because putting it in
+     Projects would have meant introducing the same two-person project twice on
+     one page. Each of the four companies carries a mark to its own website; see
+     the stylesheet under .ext for why that mark is a 12px glyph and not the
+     domain spelled out, and see the report for why one of the four does not
+     have one.
+
+     (2) THE RESEARCH IS A SECTION OF ITS OWN, WITH THE PEOPLE NAMED. Two entries,
+     an advisor line on each. A research post with no advisor on it is the one
+     claim on a CV that a reader cannot begin to check; naming Lavieri, Golbus
+     and Krishnan turns each of them into something a recruiter can look up in
+     one search, and the NeuRRo entry links the lab itself.
+
+     (3) THE ENTRIES ARE BULLETS. Every entry used to be one or two paragraphs of
+     18/28 prose, which is the shape of an argument and not the shape of a list
+     of things done — and a reader who has arrived at this page has stopped
+     reading and started scanning. Each bullet is one thing built and what it
+     moved or what it solved, at 16/24 with 6px between; the stylesheet's .bul
+     block has the arithmetic. Nothing here is a new fact: the source for every
+     line is in the round's report, entry by entry.
+
+     WHAT DID NOT CHANGE: the two-column spreads under Education and Skills, the
+     absence of a second column beside Experience (the last round measured that
+     lane empty and closed it — do not reopen it), the name note in the margin,
+     and the type ladder. -->
+<h1>Experience, projects, education and skills</h1>
 <!-- IT IS A LEAD NOW AND IT WAS A CAPTION. Same words, and they were set in
      .meta — 15px, grey, the mark this site gives a figure's caption and a date —
      directly under a 38px h1, two and a half steps down. That is the same error
@@ -38,8 +67,8 @@
      writing: the sentence most worth reading, given the weakest mark on the page.
      All three index pages open the same way now — /work/ always did, /writing/
      gained one this round, and this is the third. -->
-<p class="lead">Four roles, three degrees, and a skills list that says where each name on it
-  is used on this site.</p>
+<p class="lead">Four companies and a project I co-develop, two research projects, three
+  degrees, and a skills list that says where each name on it is used on this site.</p>
 
 <!-- ============================ EXPERIENCE ============================ -->
 <section id="experience">
@@ -60,55 +89,205 @@
        So the place-and-stack line goes back under the title, which is where the source
        order always had it and where a phone, a printer and a reader with no stylesheet
        have been meeting it all along. Nothing in this section moved in the markup: the
-       only change is that `laned` came off the div. -->
+       only change is that `laned` came off the div.
+       STILL TRUE AT SEVEN ENTRIES, AND RE-MEASURED RATHER THAN ASSUMED. The bullets
+       this round put in made each entry taller, which is the one thing that could have
+       changed the answer — a taller entry is a taller empty lane, not a fuller one.
+       The material a lane would hold is still the place and the stack, and it is still
+       one mono line. -->
   <div class="compact">
 
     <article class="item" style="padding-top:0">
-      <div class="row"><h3>Lark, ByteDance — AI Solutions Intern</h3>
+      <div class="row"><h3>ByteDance<a class="ext" href="https://www.bytedance.com"
+          target="_blank" rel="noopener"
+          aria-label="ByteDance company website (opens in a new tab)"><svg viewBox="0 0 16 16"
+          fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h-3v9h9v-3"/><path
+          d="M9.5 2.5h4v4"/><path d="M13.5 2.5 7.75 8.25"/></svg></a> — AI Solutions
+        Intern</h3>
         <span class="when">May – Aug 2026</span></div>
-      <p class="role">Shanghai, China · Python, Flask, TypeScript, Playwright/CDP</p>
-      <p>Designed a unified <strong>trace schema</strong> that made two enterprise AI agents
-        comparable on real user tasks — driving both Electron clients over Chrome DevTools
-        Protocol, mapping two incompatible event vocabularies onto one field set, and scoring
-        the normalized runs side by side.</p>
-      <p>Separately, on the go-to-market side: discovery and technical qualification for
-        enterprise accounts, plus the internal enablement tooling behind it — a searchable hub
-        of <strong>800+</strong> assets with one-click deck assembly (sole developer) and a
-        demo site non-engineers edit themselves.</p>
+      <p class="role">Shanghai, China · Python, Flask, React, TypeScript, Playwright/CDP</p>
+      <ul class="bul">
+        <li>Put two enterprise AI agents on one <strong>trace schema</strong> — both Electron
+          clients driven over Chrome DevTools Protocol, two incompatible event vocabularies
+          mapped onto one field set — and scored them side by side on <strong>200+</strong>
+          real user-task cases; the comparison fed data-driven decisions on the internal
+          marketing side.</li>
+        <li>Sole developer of the pre-sales asset hub: <strong>800+</strong> assets behind one
+          searchable index, with one-click deck assembly.</li>
+        <li>Built the client-facing AI demo site — <strong>11</strong> interactive demos and
+          <strong>13</strong> case studies — on low-code tables, so non-engineers edit it
+          themselves.</li>
+      </ul>
+    </article>
+
+    <!-- THE SPONSOR IS THE ENTRY'S TITLE AND THE ENTRY IS NOT A JOB, which is a
+         combination that has to be said three times to be safe and is said three
+         times: in the title ("sponsored capstone"), in the mono line under it,
+         and in the grey note at the foot of the entry. AISpeech sponsored a
+         university capstone; it did not employ me, and an experience list is
+         exactly the place a reader would assume otherwise. -->
+    <article class="item">
+      <div class="row"><h3>AISpeech<a class="ext" href="https://www.aispeech.com"
+          target="_blank" rel="noopener"
+          aria-label="AISpeech company website (opens in a new tab)"><svg viewBox="0 0 16 16"
+          fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h-3v9h9v-3"/><path
+          d="M9.5 2.5h4v4"/><path d="M13.5 2.5 7.75 8.25"/></svg></a> — LLM data flywheel,
+        sponsored capstone</h3>
+        <span class="when">Spring – Summer 2026</span></div>
+      <!-- "Industry-sponsored" is not repeated here: the title says "sponsored
+           capstone" 28px above it and the note says which company sponsored it
+           four lines below. Saying it a third time in the mono line costs a
+           wrapped line and buys nothing. -->
+      <p class="role">UM–SJTU Joint Institute · 5-person team · Python, LLM agents,
+        retrieval</p>
+      <ul class="bul">
+        <li>Led the data flywheel end to end for the multimedia domain — simulate, validate,
+          fine-tune-feed, evaluate, regenerate — producing <strong>17,200</strong> governed
+          <code>reward = 1</code> dialogues, every batch through the same automated quality
+          gate.</li>
+        <li>Built the neuro-symbolic user simulator behind it: an agenda stack with explicit
+          state transitions and <strong>41</strong> persona archetypes, with rollouts grounded
+          on <strong>top-K = 20</strong> retrieved candidate tools.</li>
+        <li>Aimed regeneration at the <strong>11</strong> highest-error functions instead of
+          generating everywhere; fine-tuning on this corpus lifted judge-adjusted answer
+          acceptance <strong>72.80% → 82.72%</strong> and the strict multi-turn all-correct
+          rate <strong>39.93% → 59.95%</strong>.</li>
+      </ul>
+      <p class="note">AISpeech sponsored the capstone; it was not an employment relationship.
+        A teammate owned the model-routing pillar.</p>
+      <p class="golink"><a href="/work/data-flywheel/">Full case →</a></p>
     </article>
 
     <article class="item">
       <div class="row"><h3>Shenzhen Legion Technology — Data Engineering &amp; AI Intern</h3>
         <span class="when">Apr – Oct 2025</span></div>
-      <p class="role">Remote, China (part-time) · Python, SQL, dbt, RAG</p>
-      <p>Built the <strong>evaluation framework</strong> for a RAG data-governance copilot
-        serving dbt pipelines and lineage: structured cases across its three question classes
-        (catalog, SQL, data-QA), each graded on whether retrieval returned the right
-        catalog/lineage objects and whether the answer met governance rules — so prompt and
-        retrieval changes were re-scored on the same cases, not eyeballed. Designed the
-        copilot's prompt architecture behind those classes.</p>
+      <p class="role">Remote, China (part-time) · Project manager · Python, SQL, dbt, RAG</p>
+      <ul class="bul">
+        <li>Owned the development roadmap for <strong>cocoon</strong>, an open-source RAG
+          data-governance copilot serving dbt pipelines and lineage — feature scope and
+          release priorities, as project manager rather than on the upstream codebase.</li>
+        <li>Designed the copilot's prompt architecture: question classification across its
+          three classes (catalog, SQL, data-QA), entity extraction, and embedding-based
+          semantic retrieval.</li>
+        <li>Built its <strong>evaluation framework</strong> — structured cases graded on
+          whether retrieval returned the right catalog and lineage objects and whether the
+          answer met governance rules — so prompt and retrieval changes were re-scored on the
+          same cases instead of eyeballed.</li>
+      </ul>
+    </article>
+
+    <!-- NO LIVE LINK TO THE DEPLOYED TRACKER, and that is a decision with a reason
+         rather than an omission. The build is up and it is honest to say so; its
+         work-order endpoint currently answers without authentication, and the rows
+         behind it carry a real manufacturer's customer names. A clickable link on
+         a public CV page is a link to that. "Deployed on Vercel" is the claim the
+         evidence supports and the one this entry makes; the address is not here
+         until the endpoint is closed. The client's own site is a different thing
+         and is linked. -->
+    <article class="item">
+      <div class="row"><h3>PGF Technology Group<a class="ext" href="https://www.pgftech.com"
+          target="_blank" rel="noopener"
+          aria-label="PGF Technology Group company website (opens in a new tab)"><svg
+          viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+          d="M6.5 3.5h-3v9h9v-3"/><path d="M9.5 2.5h4v4"/><path
+          d="M13.5 2.5 7.75 8.25"/></svg></a> — factory-floor work-order tracker</h3>
+        <span class="when">Mar – Apr 2026</span></div>
+      <!-- "sole developer" and "4-person team" both come off this line: the first
+           bullet opens with the one and the note closes with the other, and the
+           mono line was wrapping to two to hold facts that are stated in full
+           twice within 200px of it. -->
+      <p class="role">Technical lead · IOE 424 university consulting engagement · Next.js,
+        TypeScript, Vercel Postgres, Playwright</p>
+      <ul class="bul">
+        <li>Sole developer of the full-stack tracker — <strong>16 of 16</strong> commits —
+          covering all <strong>9</strong> production stations of a cable-harness manufacturer
+          carrying roughly <strong>400</strong> concurrent work orders, deployed on
+          Vercel.</li>
+        <li>Took requirements straight from the client's General Manager, then validated the
+          build against their real Epicor production export through an import bridge that
+          absorbs <strong>30+</strong> column-name variants and sub-order merging.</li>
+        <li>Diagnosed stale reads across serverless instances and moved persistence through
+          three architectures — in-memory, Vercel Blob (rolled back), then Vercel Postgres —
+          until the dashboard read consistently.</li>
+        <li>Covered sign-in, dashboard, station, search, scan and reports with
+          <strong>6</strong> Playwright end-to-end specs.</li>
+      </ul>
+      <p class="note">A university consulting engagement, not a job. The dashboard code is
+        mine; the four-person team delivered the process analysis, SOPs and implementation
+        roadmap together. No pilot was run inside the project timeline, so there is no
+        measured before-and-after to quote.</p>
     </article>
 
     <article class="item">
-      <div class="row"><h3>University of Michigan — Cardiac Rehabilitation Wearable Study</h3>
+      <div class="row"><h3>MetaFlow — metadata-centric NL-to-SQL</h3>
+        <span class="when">Mar 2026 – present</span></div>
+      <p class="role">Two-person project · Python, FastAPI, React/TypeScript,
+        PostgreSQL</p>
+      <ul class="bul">
+        <li>Co-developing a metadata-centric NL-to-SQL system with one collaborator: a
+          question resolves through an inspectable relational intermediate representation
+          instead of generated SQL, so a wrong answer has an address you can point at.</li>
+        <li>I own the metadata layer, the evaluation suite and the studio front end —
+          <strong>20</strong> gold-case scenarios pinned across <strong>5</strong> pipeline
+          stages, plus data-quality rules and contract-as-test; my collaborator owns the
+          NL→IR→SQL engine.</li>
+      </ul>
+      <p class="golink"><a href="/work/metaflow/">Full case →</a></p>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================ PROJECTS ============================ -->
+<!-- The two research posts, out of Experience and into a section that says what
+     they are. Both are part-time university research; both have an advisor or a
+     PI on them by name, which is the one detail that makes a research claim
+     checkable by a stranger; and both already have a full case page on this
+     site, so the two bullets here are the summary and the link is the evidence. -->
+<section id="projects">
+  <h2>Projects</h2>
+  <div class="compact">
+
+    <article class="item" style="padding-top:0">
+      <div class="row"><h3>Cardiac rehabilitation wearable study — University of
+        Michigan</h3>
         <span class="when">Apr 2025 – Jan 2026</span></div>
-      <p class="role">Research Assistant (part-time) — SURE summer program, then continued on
-        the study · Ann Arbor, Michigan</p>
-      <p>Assembled the analysis dataset — <strong>400K+</strong> raw step records reconciled
-        onto one per-patient daily timeline, cleaning rules cutting 247 enrolled patients to a
-        <strong>191-patient analysis cohort</strong> — and built the temporal features,
-        phenotyping and plateau detection on top of it. <strong>~68%</strong> of that cohort had
-        suboptimal discharge timing against the standard 36-session model.</p>
+      <p class="role">Research assistant (part-time) · SURE summer program, then continued on
+        the study · Advisors: Profs. Mariel Lavieri and Jessica Golbus · Ann Arbor,
+        Michigan</p>
+      <ul class="bul">
+        <li>Assembled the analysis dataset: <strong>400K+</strong> raw step records reconciled
+          onto one per-patient daily timeline, with cleaning rules cutting
+          <strong>247</strong> enrolled patients to a <strong>191</strong>-patient analysis
+          cohort.</li>
+        <li>Built the temporal features, K-means/PCA phenotyping and Kalman plateau detection
+          on top of it — <strong>~68%</strong> of that cohort had suboptimal discharge timing
+          against the standard 36-session model.</li>
+      </ul>
       <p class="golink"><a href="/work/cardiac-rehab/">Full case →</a></p>
     </article>
 
     <article class="item">
-      <div class="row"><h3>NeuRRo Lab, University of Michigan</h3>
+      <div class="row"><h3>NeuRRo Lab<a class="ext" href="https://neurro-lab.engin.umich.edu"
+          target="_blank" rel="noopener"
+          aria-label="NeuRRo Lab website at the University of Michigan (opens in a new tab)"><svg
+          viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+          d="M6.5 3.5h-3v9h9v-3"/><path d="M9.5 2.5h4v4"/><path
+          d="M13.5 2.5 7.75 8.25"/></svg></a> — EMG biofeedback and muscle synergy</h3>
         <span class="when">Oct 2024 – Apr 2026</span></div>
-      <p class="role">Research Assistant (part-time) · Ann Arbor, Michigan · MATLAB,
-        Python/PyTorch, Unity, C#</p>
-      <p>Built the lab's real-time EMG biofeedback system and its MATLAB muscle-synergy analysis
-        pipeline, both used in clinical experiments.</p>
+      <p class="role">Research assistant (part-time) · University of Michigan · PI:
+        Chandramouli Krishnan · MATLAB, Python/PyTorch, Unity, C#</p>
+      <ul class="bul">
+        <li>Built the lab's real-time EMG biofeedback training system — muscle activity to
+          on-screen cursor, inside the game loop — used in the lab's clinical
+          experiments.</li>
+        <li>Built the MATLAB muscle-synergy analysis pipeline beside it, also used in those
+          experiments.</li>
+      </ul>
       <p class="golink"><a href="/work/emg-biofeedback/">Full case →</a></p>
     </article>
 
@@ -186,8 +365,8 @@
       <p><strong>Data &amp; databases</strong> — PostgreSQL · dbt (metadata &amp; lineage
         tooling) · gold-case SQL regression and contract tests · time-series feature
         engineering, missing-value imputation, cleaning rules for high-volatility series</p>
-      <p><strong>Frameworks &amp; tools</strong> — FastAPI, Flask, React, Playwright/CDP,
-        Git</p>
+      <p><strong>Frameworks &amp; tools</strong> — FastAPI, Flask, React, Next.js,
+        Playwright/CDP, Git</p>
     </div>
 
     <aside class="side">
@@ -201,7 +380,9 @@
         records reconciled onto one per-patient daily timeline, on the
         <a href="/work/cardiac-rehab/">cardiac study page</a>.</p>
       <p><strong>Playwright/CDP, Flask</strong> — driving two Electron clients over Chrome
-        DevTools Protocol for the Lark trace schema, in Experience above.</p>
+        DevTools Protocol for the ByteDance trace schema, in Experience above.</p>
+      <p><strong>Next.js, Playwright end-to-end</strong> — the nine-station work-order
+        tracker and its six e2e specs, in the PGF entry above.</p>
     </aside>
   </div>
 </section>
@@ -209,10 +390,13 @@
 <footer class="site">
   <p>Chris Dai · Boston, MA ·
     <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
-    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a class="brand" href="https://www.linkedin.com/in/yizhe-dai-61b83a369/"
+       target="_blank" rel="noopener"
+       aria-label="LinkedIn profile (opens in a new tab)"><svg viewBox="0 0 24 24"
+       fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.05-1.85-3.05-1.86 0-2.14 1.45-2.14 2.95v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14Zm1.78 13.02H3.55V9h3.57v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0Z"/></svg></a> ·
     <a href="/assets/ChrisDai_Resume.pdf">Résumé (PDF)</a> ·
     <a href="/">Home</a></p>
-  <p>Last updated 26 August 2026.</p>
+  <p>Last updated 27 August 2026.</p>
 </footer>
 
 </body>

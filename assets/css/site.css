@@ -804,11 +804,53 @@ h1 + section { margin-top: 40px; }
 
 /* A ruled list rather than a stack of essays: the résumé-skeleton blocks. The
    divider between two entries is a rule like any other, so it is as wide as the
-   entries it divides. */
-.compact .item { padding-top: 16px; max-width: var(--prose); }
-.compact .item + .item { margin-top: 16px; }
+   entries it divides.
+   THE GAP EITHER SIDE OF THAT RULE WENT 16px → 12px. Every entry on the page it
+   serves is now a title, a mono line and a bulleted list — a block with a hard
+   top edge and a hard bottom edge — where before it was a title over loose
+   prose that needed the air to stop running into its neighbour. A list does not
+   need it: the rule and the list's own left margin are already doing the
+   separating, and 12 + 1 + 12 is still a wider band than any gap inside an
+   entry (6px between bullets, 8px under the mono line). Across the eleven entry
+   boundaries this page now has, it is 88px. */
+.compact .item { padding-top: 12px; max-width: var(--prose); }
+.compact .item + .item { margin-top: 12px; }
 .compact h3 { font-size: 20px; line-height: 28px; letter-spacing: -0.6px; }
-.compact .item > p:last-child { margin-bottom: 0; }
+/* Was `> p:last-child`. Entries end in a <ul> now as often as in a <p>, and a
+   list that keeps its 8px under the last entry pushes the section rule down by
+   exactly that much for no reason a reader can see. */
+.compact .item > :last-child { margin-bottom: 0; }
+
+/* ---------- the entry bullets ---------- */
+/* An experience entry is a list of things done, not a paragraph about them, and
+   it was written as paragraphs because the page grew out of a home-page section
+   rather than out of a résumé. Bullets are what the material is.
+   16/24 AND NOT 18/28, which is the size the rest of this page reads at from
+   704px up. Two reasons and both are about rank. A bulleted fact is one step
+   under the prose around it — the same step .role and .meta already take — and
+   the reader scanning eleven entries is scanning, not reading. And it is
+   typography.body-md, a token this file already uses as the phone's reading
+   size, rather than an invented 22px leading: the density comes from the 6px
+   between items, which is the scale's own smallest step, not from squeezing a
+   line-height off the ladder.
+   The marker is grey rather than ink. It is punctuation for the list, not a
+   word in it, and at --meta it is 8.45:1 — well past the 3:1 a non-text mark is
+   held to, and one step back from the sentence it introduces. */
+.bul { margin: 0 0 8px; padding-left: 18px; font-size: 16px; line-height: 24px; }
+.bul li { margin-bottom: 6px; }
+.bul li:last-child { margin-bottom: 0; }
+.bul li::marker { color: var(--meta); }
+/* A boundary note under an entry — who else was on the team, what the thing was
+   not. It is .note's 14px grey, and it needs the 8px the list above it gives up. */
+.compact .item > .note { margin: 8px 0 0; }
+
+/* The résumé page's four sections. 64px is the site's gap between two sections
+   of DIFFERENT kinds — a grid of cards and a band of numbers. These four are one
+   kind, four times: the same ruled list of the same dated entries. 48px is the
+   step below it on the document's scale and it is the gap this page's own blocks
+   have to each other; the h2 rule above each one is what says a new section
+   started, and it says it without help. Three gaps, 48px off each. */
+#experience, #projects, #education { margin-bottom: 48px; }
 
 /* "title ——— dates": two ends on desktop, stacked on mobile. The two ends are
    the two ends of the MEASURE, not of the track. Deliberately not a <table>.
@@ -838,6 +880,80 @@ h1 + section { margin-top: 40px; }
 .side .contact { padding-left: 0; }
 .contact li { margin: 0; }
 .contact a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* ============================================================================
+   THE TWO ICON LINKS — .ext (a company's own site) and .brand (LinkedIn)
+   ============================================================================
+   Both exist for the same reason: a link whose whole content is its
+   destination's identity does not need that identity spelled out in words next
+   to it. Written out, the experience list would carry five underlined company
+   names a second time — "ByteDance (bytedance.com)" — and the two contact
+   blocks would carry "LinkedIn" plus, on hover, a 46-character profile URL.
+
+   THEY ARE NOT DECORATION AND THEY ARE NOT UNLABELLED. Every one of them is an
+   <a> with an aria-label naming the destination in words and saying the tab is
+   new, the <svg> inside is aria-hidden, and neither is the only way to anything
+   — the company name is beside the .ext mark in ink, and the résumé and the
+   e-mail address are still words in both contact blocks.
+
+   COLOUR. Both rest at --meta and gain --link on hover, which is the opposite
+   of this file's usual direction — every other link here is blue at rest — and
+   it is the same reason twice. An .ext mark sits INSIDE an h3, six of them down
+   one page, in a title that is otherwise ink: six blue glyphs in six titles is
+   a row of blue dots that becomes the loudest pattern on the page. And .brand
+   is the LinkedIn mark, which is a FILLED SHAPE and not a word — built and
+   measured in --link first, and at 16px of saturated #0070f3 it was the single
+   loudest colour object on the home page after the gradient rule, on a surface
+   whose whole design authority is ink, grey and hairline with blue reserved for
+   type you can click. A grey filled glyph does not read as a disabled link the
+   way grey TYPE among blue type would; it reads as an icon, which is what it
+   is.
+   Both are over the floor at rest: --meta is 8.45:1 against canvas where a
+   non-text graphic is held to 3:1, and pointing at either one raises contrast
+   rather than lowering it. The focus ring is the shared blue one, untouched.
+
+   SIZE. 12px for .ext and 16px for .brand, from the same reasoning: .ext is a
+   footnote on a 20px title and .brand is the item itself in a 20px row. */
+.ext, .brand { display: inline-flex; align-items: center; color: var(--meta);
+               text-decoration: none; }
+.ext:hover, .brand:hover { color: var(--link); }
+/* footer.site a paints its links --link and outranks the rule above on
+   specificity, so the mark has to be named there to keep its own colour. */
+footer.site .brand { color: var(--meta); }
+footer.site .brand:hover { color: var(--link); }
+.ext svg, .brand svg { display: block; }
+/* Inside an h3, so it must not inherit the title's 20px box: the mark is set
+   from its own baseline, 4px off the last word, and the -1px pulls its optical
+   centre onto the lowercase x-height rather than the cap line. */
+.ext { margin-left: 4px; vertical-align: -1px; }
+.ext svg { width: 12px; height: 12px; }
+.brand svg { width: 16px; height: 16px; }
+/* THE TOUCH FLOOR, AND THE TWO MARKS TAKE DIFFERENT ROUTES TO IT. A finger
+   needs 44px and these glyphs are 12 and 16.
+
+   .brand keeps the site's existing answer — min-height on the box — because it
+   is the answer every one of its neighbours already gives: in the footer and in
+   the home contact list, `footer.site a` and `.contact a` set min-height: 44px
+   on the e-mail and the résumé beside it, so the line box is 44px tall whether
+   this mark asks for it or not. Measured: the footer grows 149 → 152px on a
+   390px phone, and 3 of that is the glyph being 16px in a 20px line.
+
+   .ext CANNOT, and the reason is measured too. It sits inside an h3, and a
+   44px-tall inline-flex box inside a 20/28 heading inflates that heading's LINE
+   BOX to 44 — ByteDance's title went 28 → 44px, and the three wrapping titles
+   56 → 72. That is 67px of phone scroll, and it is visible: the gap under a
+   title stops matching the gap under the titles with no mark in them. So the
+   box stays the size of the glyph and the TARGET is a transparent 44 × 44
+   pseudo-element centred on it — the standard trick, and safe here precisely
+   because of where this mark lives: an h3 on this page is not itself a link and
+   the mono line under it is not either, so there is nothing for the overlay to
+   steal a tap from. It is not used on .brand for the mirror-image reason —
+   there the neighbours ARE links, 8px away, and a 44px overlay would reach
+   into them. */
+.brand { min-height: 44px; }
+.ext { position: relative; }
+.ext::after { content: ""; position: absolute; top: 50%; left: 50%;
+              width: 44px; height: 44px; transform: translate(-50%, -50%); }
 
 /* ============================================================================
    THE THREE DOORS (home) — components.card-soft
@@ -1327,6 +1443,12 @@ footer.site a { color: var(--link); }
   .contact { font-size: inherit; gap: 0 24px; }
   .contact a { min-height: 0; }
   nav.top a, .pager a, footer.site a { display: inline; min-height: 0; }
+  /* …except the two icon links, which stay flex boxes because that is what
+     centres a 12/16px glyph on a 28px line. .brand gives up the touch floor
+     here — from 44rem up the pointer is a mouse — and .ext never had one to
+     give up, its target being an overlay that costs no layout at any width.
+     Written after the rule above so it wins on order, not on weight. */
+  .ext, .brand, footer.site .brand { display: inline-flex; min-height: 0; }
   nav.top .more { display: inline; }
   /* Same 49px, reached the other way: the touch rows collapse back to a 24px
      line of type, so the bar buys its height in padding instead. 16 + 24 + 8 + 1

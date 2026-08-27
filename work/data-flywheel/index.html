@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LLM data flywheel for in-vehicle voice assistants · Chris Dai</title>
-<meta name="description" content="Undergraduate thesis: a user simulator, an LLM judge and targeted regeneration for an in-vehicle voice assistant. What I built, what it moved, and what the judge cannot tell me.">
+<meta name="description" content="Undergraduate capstone: a user simulator, an LLM judge and targeted regeneration for an in-vehicle voice assistant. What I built, what it moved, and what the judge cannot tell me.">
 <link rel="preload" href="/assets/fonts/Geist-400-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/GeistMono-400-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
@@ -38,16 +38,35 @@
 <p class="lead">Training data for a multi-model in-vehicle voice assistant. Instead of
 generating more data everywhere, measure first — then regenerate only where the failures
 are.</p>
-<p class="meta">June – August 2026 · Undergraduate thesis, UM–SJTU Joint Institute · Python,
-LLM agents, retrieval</p>
+<!-- THE DATES ARE A SEASON RANGE NOW AND THEY WERE TWO MONTHS. "June – August 2026"
+     was the stretch this page was written in, not the stretch the work happened in:
+     the design review that signs it off is dated 4 August 2026 and the project runs
+     from the spring semester. A date range on a CV page that starts after the work
+     did is wrong in the direction that flatters nobody, and it is the same range in
+     every other place the capstone is named on this site now. -->
+<p class="meta">Spring – Summer 2026 · Undergraduate capstone, UM–SJTU Joint Institute ·
+Python, LLM agents, retrieval</p>
   </div>
 
+  <!-- THIS NOTE IS THE SIGNED CONTRIBUTION REPORT'S OWN DIVISION OF WORK, and it
+       is worded from it rather than around it. The report says the team was five,
+       that a teammate owned the model-routing pillar, and that mine was the data
+       pillar — "design and operate the end-to-end flywheel for the multimedia
+       scenario". Three things follow and all three are in the sentences below.
+       The scope is a DOMAIN, not the project: multimedia, one of three. The verb
+       is "led … end to end", which is the report's own claim and is not the same
+       claim as leading the project. And the fine-tuning is described as something
+       the corpus was fed into — "fine-tuning on this corpus lifted …" — because
+       what the signed report records me producing is the corpus and the gates,
+       and who pressed which button on the cluster is not a thing it says. -->
   <aside class="side">
     <span class="lbl">My scope</span>
-    <p>I owned the data pillar: the user simulator,
-    the rollout and judging harness, the deterministic governance layer, and the targeted
-    regeneration. The figures below are end-to-end system numbers; the pillar I owned is one input
-    into them. Done part-time, alongside the Lark internship over the same summer.</p>
+    <p>I led the data flywheel end to end for the <strong>multimedia domain</strong> of a
+    five-person capstone: the user simulator, the rollout and judging harness, the
+    deterministic governance layer, and the targeted regeneration. A teammate owned the
+    model-routing pillar. The figures below are end-to-end system numbers; the corpus I
+    produced is one input into them. Done part-time, alongside the ByteDance internship over
+    the same summer.</p>
   </aside>
 </div>
 
@@ -57,8 +76,9 @@ LLM agents, retrieval</p>
      What is left on the spine is the sentence that carries the argument forward. -->
 <div class="spread">
   <div>
-    <p><strong>17,200</strong> verified (reward = 1) dialogues came out of the pipeline.
-    Fine-tuning the assistant on that corpus moved three end-to-end numbers:</p>
+    <p><strong>17,200</strong> verified (reward = 1) dialogues came out of the pipeline —
+    15,000 from the base pipeline and 2,200 from targeted regeneration. Fine-tuning on that
+    corpus lifted three end-to-end numbers:</p>
   </div>
 
   <aside class="side">
@@ -129,10 +149,12 @@ judge behind them is the thing I am least comfortable with.</p>
   <h2>Boundary</h2>
   <div class="spread">
     <div>
-      <p>This is an undergraduate thesis, not production. The three numbers at the top of this
-      page are end-to-end system numbers and the data pillar I owned is one input into them —
-      and every one of them is scored by an LLM judge, which is exactly the thing I am least
-      comfortable with. Both of those are picked apart below.</p>
+      <p>This is an undergraduate capstone, not production, and it is a five-person one: I led
+      the data flywheel end to end for the multimedia domain, a teammate owned the model-routing
+      pillar, and the three numbers at the top of this page are end-to-end system numbers with
+      my corpus as one input into them. Every one of them is also scored by an LLM judge, which
+      is exactly the thing I am least comfortable with. Both of those are picked apart
+      below.</p>
     </div>
     <aside class="side">
       <span class="lbl">Where the numbers come from</span>
@@ -152,11 +174,14 @@ judge behind them is the thing I am least comfortable with.</p>
        for, in the order they arrive; it claims nothing they do not. -->
   <div class="spread">
   <div class="thoughts-body">
-    <p>“I owned the data pillar” is a convenient phrase and it hides a seam. The four numbers
-    above belong to the whole system; the pillar is one input into them. When I describe this
-    work I try to keep that order — here is what the system did, here is the part of it that was
-    mine — rather than letting the two blur together, because the blurring is effortless and
-    one-directional and always flatters me.</p>
+    <p>“I led the data flywheel end to end” is a phrase with two edges on it, and both are worth
+    saying out loud. It is a domain and not the project: multimedia, one of three, on a
+    five-person team whose routing pillar was somebody else's. And what it covers is the corpus
+    and the gates around it — the numbers above are the system's, and fine-tuning on my data is
+    what moved them, which is a different sentence from the one where I ran the training. When I
+    describe this work I try to keep that order — here is what the system did, here is the part
+    of it that was mine — rather than letting the two blur together, because the blurring is
+    effortless and one-directional and always flatters me.</p>
 
     <p>The first check I would run is about the judge. <code>reward = 1</code> is the judge's
     verdict, the corpus was filtered on that verdict, and the improvement afterwards was scored
@@ -206,11 +231,13 @@ judge behind them is the thing I am least comfortable with.</p>
 <footer class="site">
   <p>Chris Dai · Boston, MA ·
     <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
-    <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
+    <a class="brand" href="https://www.linkedin.com/in/yizhe-dai-61b83a369/"
+       target="_blank" rel="noopener"
+       aria-label="LinkedIn profile (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.05-1.85-3.05-1.86 0-2.14 1.45-2.14 2.95v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14Zm1.78 13.02H3.55V9h3.57v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0Z"/></svg></a> ·
     <a href="/assets/ChrisDai_Resume.pdf">Résumé (PDF)</a> ·
     <a href="/experience/">Experience</a> ·
     <a href="/">Home</a></p>
-  <p>Last updated 26 August 2026.</p>
+  <p>Last updated 27 August 2026.</p>
 </footer>
 
 </body>
