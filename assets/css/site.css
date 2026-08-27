@@ -860,6 +860,16 @@ h1 + section { margin-top: 40px; }
    Not caption-mono's 12px: a date is a fact a recruiter reads, not a label they
    skim past, and 12px is under this site's floor for that. */
 .row { display: flex; flex-direction: column; margin-bottom: 8px; }
+/* A DATE DOES NOT BREAK. From 44rem up .row is a flex row and both children shrink,
+   so a title long enough to wrap squeezes the date column — and UAX#14 makes the en
+   dash a break opportunity, so "Apr 2025 – Present" came apart after the dash and set
+   itself on two lines. Non-breaking spaces do not fix that: the break is at the dash,
+   not at the space. This is the rule that does. It cannot cost an overflow, because
+   the only thing it makes rigid is at most 27 characters of 13px mono (~211px, the
+   Harvard row) inside a lane that is never narrower than the 44rem this row shape
+   starts at; what gives instead is the title, which is the right one of the two to
+   give. Every .when on the site is on /experience/, so the blast radius is one page. */
+.row .when { white-space: nowrap; }
 .row .when, .role {
   font-family: var(--font-mono);
   font-size: 13px;
