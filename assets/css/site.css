@@ -1,14 +1,35 @@
-/* chrisyzd.github.io — one stylesheet, no framework, no webfonts, and one 60-line
-   JavaScript file that only two pages load (assets/js/video.js — everything it
-   does is an improvement on a page that already works without it).
-   Spacing scale is fixed at 4 / 8 / 16 / 24 / 40 / 64px; nothing else is allowed.
+/* chrisyzd.github.io — one stylesheet, no framework, two self-hosted webfonts, and
+   one 99-line JavaScript file that only two pages load (assets/js/video.js —
+   everything it does is an improvement on a page that already works without it).
    No dark mode in v1 on purpose: every figure on this site is a white-background
    chart, and on a dark page those become glaring white rectangles. Doing it
    properly means re-cutting every figure, so it is deliberately not started
    rather than half-done.
 
    ============================================================================
-   THE LAYOUT, IN ONE PARAGRAPH
+   THIS ROUND (S14): THE SURFACE IS REBUILT ON ONE EXTERNAL DESIGN AUTHORITY
+   ============================================================================
+   Everything below the layout system — colour, type, shape, elevation — is now
+   an implementation of one document: site-materials/vercel-DESIGN.md, a token
+   spec for a developer-platform design language (near-white canvas, ink-near-
+   black text, hairline dividers, one blue for links, a monospaced face for the
+   technical layer, black pill CTAs, stacked micro-shadows). Where that document
+   and this file's previous decisions disagreed, THE DOCUMENT WON. What it did
+   not speak to — the spine, the measure, the track, the five tiers, the pinned
+   bar's arithmetic, every accessibility floor — is unchanged, because a token
+   spec is not a layout system and does not get to overwrite one that was
+   measured.
+
+   THREE THINGS THE DOCUMENT ASKED FOR AND DID NOT GET, each with its reason at
+   the point of use: (1) the page ground stays WHITE rather than the document's
+   #fafafa, because the document's own link blue measures 4.36:1 on #fafafa and
+   fails AA — see --link; (2) its `mute` #888888 is defined and never used for
+   type, at 3.55:1 on white — see --mute; (3) its mesh gradient, "the entire
+   decoration system", appears exactly once and as a 3px band rather than an
+   atmospheric field — see .gates-h.
+
+   ============================================================================
+   THE LAYOUT, IN ONE PARAGRAPH  (unchanged this round)
    ============================================================================
    The page has ONE left edge, called the spine, and THREE columns of meaning
    measured from it. The MEASURE (--prose) is where a sentence stops. The
@@ -27,12 +48,27 @@
        looking at before you read a word of it — instead of being wallpaper.
        A rule that runs 600px past the last thing under it is not a frame; it
        is a line pointing at nothing.
+       KEPT THIS ROUND, and the choice was live: the design authority has no
+       law (a) — its section eyebrows carry no rule at all. Dropping every h2
+       rule would have been the more literal reading and it was rejected on one
+       measurement this file already owns: without the rule, /experience/ is
+       2,251px of prose whose three section joints are a 12px mono label and
+       nothing else. The label tells you a section started; the line tells you
+       how big it is. The document does not forbid the line, and the line is
+       carrying information the document's own layout gets from bands of
+       coloured background that a one-column document site does not have.
    (b) THE MEASURE GROWS WITH THE WINDOW, IN FOUR SIZES: 680 → 720 → 780 →
-       840 (the essay's own: 600 → 660 → 720 → 780). Dragging the window from a laptop to a 27-inch display does not
-       just make the rules longer; the column of text itself opens up, and past
-       1200px a second column opens beside it and gets filled. The steps are in
-       pixels rather than ch because ch is the width of a zero in whatever font
-       the machine actually resolved, and this site names no font.
+       840 (the essay's own: 600 → 660 → 720 → 780). Dragging the window from a
+       laptop to a 27-inch display does not just make the rules longer; the
+       column of text itself opens up, and past 1200px a second column opens
+       beside it and gets filled. The steps are in pixels rather than ch, and
+       that reason changed this round: it used to be "because ch is the width of
+       a zero in whatever font the machine actually resolved, and this site names
+       no font". This site names a font now. The pixels stay anyway, because the
+       tier breakpoints are derived from the TRACK caps (900/1120/1280/1440) and
+       re-deriving the measure from a ch unit would move the spine at every step
+       for no reader-visible gain. At Geist 18px the 680px measure is ~75
+       characters, which is the band those numbers were tuned for.
 
    FIVE BREAKPOINTS, EACH WITH ONE JOB
    ---------------------------------------------------------------------------
@@ -40,9 +76,8 @@
        track = prose = viewport minus the gutter. Cards stack, figures fill,
        nothing hangs (there is nothing to hang into).
    (2) 44rem / 704px — THE LINE DETACHES FROM THE WINDOW. Prose caps at 680px
-       — about 72 characters of the system sans at 18px — and stops growing,
-       while the track keeps growing to 900. Type steps up one notch, dated
-       rows split to two ends, margin notes start hanging.
+       and stops growing, while the track keeps growing to 900. Type steps up
+       one notch, dated rows split to two ends, margin notes start hanging.
    (3) 58.75rem / 940px — EVIDENCE GETS ITS OWN COLUMN. Track cap opens to
        1120. Index cards put their frame in a right-hand column beside the
        text; the three before/after numbers go three-across, and so do the home
@@ -81,232 +116,233 @@
    wider makes the page narrower, and no width at which it makes the page jump. */
 
 /* ============================================================================
-   COLOUR, IN TWO LAYERS — and the law that keeps it from becoming decoration
+   THE TYPEFACES — SELF-HOSTED, TWO FILES, 49KB, ZERO EXTERNAL REQUESTS
    ============================================================================
-   Until this round the whole site was black, four greys and one blue, and the
-   blue was only ever a link. That was defensible and it was also the thing this
-   site's owner objected to in one sentence: it is monotonous. So there is a
-   palette now, and it is a system rather than a coat of paint. Two laws hold it:
+   The design authority names Geist and Geist Mono. Both are SIL OFL (the
+   licence ships beside them at assets/fonts/Geist-LICENSE.txt), so they are
+   self-hostable, and self-hosting is the only option this site will take: a
+   <link> to fonts.googleapis.com or any other font CDN puts a third party in
+   the request path of every page a recruiter opens, and this site does not
+   have third parties in it. There is no runtime external request anywhere on
+   this domain and that is not being started for a typeface.
 
-   LAW 1 — BLUE MEANS "YOU CAN PRESS THIS". Every link on every page is
-   --link, exactly the blue it has always been (#0B5CAD, the résumé's own
-   linkblue), and nothing that is not operable is ever given it. That is why
-   colour here can never be the only signal for anything: the underline, the
-   arrow, the focus ring and the 44px target all still say it too.
+   WHAT IS ACTUALLY SHIPPED, and what it cost. Two VARIABLE woff2 files, one
+   per family, weight axis clamped to 400–600 — which is the document's own
+   working set ("Weights 400 / 500 / 600 are the working set; the face never
+   appears in 700 or heavier") — subset to Latin-1 plus the ~40 punctuation and
+   symbol codepoints this site actually uses. 24,020 + 25,284 = 48.2KB for
+   every weight the site can name. That is the honest price of the round and it
+   is the largest thing this stylesheet has ever asked for: this file's first
+   line used to read "no webfonts".
 
-   LAW 2 — A HUE MEANS "THIS IS WHICH PART OF THE SITE YOU ARE IN". The site is
-   three branches — Work, Writing, Experience — and each has one hue. It appears
-   on the branch's door on the home page, and then on every page filed under
-   that branch: the section labels, the margin rails, the focus ring. Press a
-   teal plate, land on a teal page. That is the whole of what colour is doing
-   here, and it is wayfinding rather than mood.
+   THREE PROPERTIES THAT MAKE IT SAFE TO SPEND:
+   — font-display: swap. The page renders in the system stack on the first
+     paint and reflows once. Nothing is invisible while a font loads, so a
+     failed or slow font request costs a reflow, never a blank page.
+   — The fallback stack under each @font-face is the exact stack this site
+     shipped before this round, so a browser that cannot take woff2, or a
+     reader who blocks fonts, gets the site as it was.
+   — No CJK. Geist has no Han glyphs, and one page on this site (the original
+     Chinese MetaFlow prototype) is in Chinese. It falls through to the system
+     CJK face, which is what happened before this round too. Two symbols the
+     site uses — U+2713 ✓ and the fullwidth punctuation on that same page —
+     are not in Geist either and fall through the same way. */
 
-   The two never collide, because they never mark the same thing: a link is
-   blue on a rust page too, and a rust rail is not a link anywhere.
+@font-face {
+  font-family: "Geist";
+  src: url("/assets/fonts/Geist-400-600.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/assets/fonts/GeistMono-400-600.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
 
-   WHICH THREE HUES, and why these. Blue is not a choice — it is already here
-   and it is the résumé's. The other two are picked to sit in the SAME lightness
-   band as it, so the three read as siblings rather than as three tempers: on
-   white the three -600 values measure 6.67 : 6.46 : 5.52 against a 4.5 floor.
-   Teal is the cool neighbour (Writing, the reflective branch); rust is the one
-   warm value on an otherwise cool page (Experience — the branch that is a
-   record, and the only place on the site where warmth is the right temperature
-   for what is being said). Three hues is the ceiling; there is no fourth.
+/* ============================================================================
+   COLOUR — one palette, taken whole from the design authority
+   ============================================================================
+   The previous round built a three-hue wayfinding system: blue for Work, teal
+   for Writing, rust for Experience, each appearing on its branch's door and
+   then on every page filed under it — section labels, margin rails, focus ring,
+   the tint under a plate. It was a real system, it was measured, and IT IS GONE.
 
-   HOW MUCH — the 60/30/10 this file is held to is measured, not asserted, and
-   the measurement is a pixel count of every page at two widths with the figures
-   and video hidden, so what is being counted is the DESIGN's ink and not a
-   chart's own palette. Of that ink, 60.5–86.8% is neutral on nine of the ten
-   pages (the home page is the most coloured at 63.3% neutral, /emg/ the least
-   at 86.8%), and of the coloured remainder blue is the majority on every page,
-   because blue is every link. Tinted SURFACE — the plates — is 11.5% of the
-   home page, 1.2% of the MetaFlow page and under a quarter of one percent
-   everywhere else.
-   The one page that is mostly coloured is the 404, at 24.5% neutral, and it was
-   at 26.5% before this round for the same reason: its body is a list of links,
-   and a link is blue. Colour is a mark on this site; it is a SURFACE on exactly
-   three kinds of object — a door, a .tryit, a card's demo button — and all
-   three are things you press. (The full table is in the round's report; the
-   gauge that produced it is output/网站-S13/diag/ink.py.)
+   WHY IT IS GONE, and this is the round's largest single decision:
+   1. The design authority forbids it in as many words: "Don't introduce a sixth
+      accent colour. The brand operates with ink + gray + the four-pair gradient
+      palette; new accents flatten the voice." Teal and rust are two accents that
+      do not exist anywhere in its palette. There is no translation of them into
+      it — its violet, cyan and pink exist ONLY as gradient stops and it says so
+      twice ("never miniaturised to a swatch", "do not crop down to a single
+      colour"). Reskinning teal→cyan and rust→amber would have been exactly the
+      thing the document names as forbidden, wearing the document's own colours.
+   2. The instruction for this round was one word — 简约, plain — and a
+      three-branch hue system is the opposite of plain by construction: it is a
+      second colour language layered on top of the first, and its whole payoff is
+      that a reader LEARNS it.
+   3. What the hue was doing has a cheaper carrier that the document is built
+      around. It was answering "which part of the site am I in", and that
+      question is already answered on every page by the pinned bar's
+      aria-current item and by the page's own h1. What the hue added was a
+      redundant third statement of it in a channel that ~4.5% of men cannot
+      read reliably anyway, and colour was never allowed to be the only signal
+      for it — this file said so.
+   WHAT REPLACED IT: the technical voice. Every section eyebrow, every block
+   label, every role line and every date on this site is now set in Geist Mono
+   (see "the mono layer" below), which is the design authority's own answer to
+   "how does a structural mark look different from a sentence" — and, unlike a
+   hue, it is legible in greyscale, in high-contrast mode, and on paper.
 
-   TWO LAYERS, and the reason the base layer exists at all: the six semantic
-   names below (--text, --meta, --rule, --edge, --link, --ground) used to BE the
-   raw values, so there was nowhere to say "this grey and that grey are the same
-   grey" and nowhere to put a hue's own scale. The base layer is the paint; the
-   semantic layer is what the paint is for. Nothing outside this block ever
-   names a base token — every rule in the 1,600 lines below reads a semantic
-   one, which is what makes a hue swappable per branch by four declarations.
+   The cost is stated plainly: pressing the Writing door no longer lands you
+   somewhere teal. Three custom-property blocks, three ramps and fourteen class
+   attributes came out of the codebase to buy that.
+
+   THE THREE THINGS THIS FILE REFUSED THE DOCUMENT, all three at :root below.
    ============================================================================ */
 :root {
-  /* ---------- base: neutrals ----------
-     Cool-tinted rather than pure grey (a pure #808080 next to a blue reads as a
-     mistake, and this page's blue is 210). Unchanged values, named at last:
-     ink-900 was --text, ink-600 was --meta, ink-300 was --edge, ink-100 was
-     --rule. ink-050 is the one new neutral — see --ground. */
-  --ink-900: #16181d;   /* 17.8:1 on white. Not #000: pure black is too hard here */
-  --ink-600: #5b6068;   /*  6.3:1 on white — AA for body text */
-  --ink-300: #b4b8be;   /*  1.99:1 — a plane's edge, never type */
-  --ink-200: #d7dade;
-  --ink-100: #e3e5e8;   /*  1.26:1 — a rule between two paragraphs */
-  --ink-050: #f3f5f7;   /*  1.09:1 — what a plate sits on */
+  /* ---------- the authority's palette, verbatim ---------- */
+  --ink:              #171717;   /* colors.primary / colors.ink   — 17.93:1 on white */
+  --body-fg:          #4d4d4d;   /* colors.body                   —  8.45:1 on white */
+  /* colors.mute. DEFINED AND NEVER USED FOR TYPE. It measures 3.55:1 on white,
+     which is under the 4.5 any text below 24px is held to here, and every role
+     the document gives it ("placeholder text, fine print, low-key labels") is a
+     text role. Its jobs went to --body-fg, which is one step darker and passes
+     at 8.45. Kept as a named token so that a future rule reaching for a third
+     grey finds this comment instead of inventing a fourth value. */
+  --mute:             #888888;
+  --hairline:         #ebebeb;   /* colors.hairline        — every 1px divider  */
+  --hairline-strong:  #a1a1a1;   /* colors.hairline-strong — see --edge, .side  */
+  --canvas:           #ffffff;   /* colors.canvas                               */
+  --canvas-soft:      #fafafa;   /* colors.canvas-soft   — a plate's ground     */
+  --canvas-soft-2:    #f5f5f5;   /* colors.canvas-soft-2 — an inset / a chip    */
+  /* colors.link. THE ONE PLACE THE DOCUMENT'S OWN LAYOUT COULD NOT BE COPIED.
+     The document puts the page body on canvas-soft #fafafa ("The default page
+     background — 98% white. Almost every section sits on this tone") and inline
+     links on #0070f3. Measured: #0070f3 on #fafafa is 4.363:1 and FAILS AA for
+     any text under 18.66px; on #ffffff it is 4.553:1 and passes by 0.053. Every
+     paragraph on this site has links in it, so a #fafafa page ground would have
+     put the site's most numerous interactive element under the floor on all ten
+     pages. Two fixes were possible and both were built and measured:
+       (i)  darken the link to --link-deep #0761d1 at rest (5.53:1 on #fafafa).
+            Rejected: it spends the document's stated rest/press pair to buy a
+            page tint, and leaves nothing darker for the hover step.
+       (ii) keep the link and put the page on canvas. Shipped.
+     So the surface ladder runs the other way here than on the document's own
+     marketing pages: the PAGE is canvas, and canvas-soft / canvas-soft-2 are
+     the tinted surfaces on it (plates, chips, table headers, the doors). Every
+     other use of the ladder — cards lighter than their surround, a soft inset
+     for code, a deeper step on hover — is unchanged. The rule that falls out of
+     it and is enforced everywhere below: NO BODY-SIZE LINK EVER SITS ON A TINT.
+     Where a tinted block needs to be operable it becomes a pill button in ink
+     or in canvas, which is the document's own answer anyway. */
+  --link:             #0070f3;
+  --link-deep:        #0761d1;   /* colors.link-deep — hover / press, 5.77:1 on white */
+  --selection-bg:     #171717;   /* colors.selection-bg */
+  --selection-fg:     #f2f2f2;   /* colors.selection-fg */
 
-  /* ---------- base: blue — Work, and every link on the site ----------
-     -600 is the résumé's linkblue and is not up for redesign. The rest of the
-     ramp is that hue held at 210 with lightness stepped. */
-  --blue-700: #08447f;  /* 9.80:1 — a link that is being hovered */
-  --blue-600: #0b5cad;  /* 6.67:1 — every link, at rest */
-  --blue-200: #a9c7e6;  /* 1.75:1 — a 2px margin rail */
-  --blue-100: #d3e2f2;  /* 1.32:1 — a 1px rule under a section label */
-  --blue-070: #e3edf8;  /* 1.18:1 — a plate you can press */
+  /* ---------- the brand gradient, used exactly once (see .gates-h) ---------- */
+  --grad: linear-gradient(90deg,
+            #007cf0 0%,    /* gradient-develop-start */
+            #00dfd8 20%,   /* gradient-develop-end   */
+            #7928ca 40%,   /* gradient-preview-start */
+            #ff0080 60%,   /* gradient-preview-end   */
+            #ff4d4d 80%,   /* gradient-ship-start    */
+            #f9cb28 100%); /* gradient-ship-end      */
 
-  /* ---------- base: teal — Writing ---------- */
-  --teal-700: #0a4a44;  /* 10.12:1 */
-  --teal-600: #0e6a60;  /*  6.46:1 */
-  --teal-200: #9ecdc6;  /*  1.75:1 */
-  --teal-100: #cfe6e2;  /*  1.31:1 */
-  --teal-070: #dfefeb;  /*  1.19:1 */
+  /* ---------- semantic names, so 1,400 lines of rules read intent ---------- */
+  --bg:   var(--canvas);
+  --text: var(--ink);
+  --meta: var(--body-fg);
+  --rule: var(--hairline);
+  /* The pinned bar's bottom edge, and the only horizontal line on the site that
+     is not --rule. The reason is unchanged from last round and the value is the
+     document's: an edge between two PLANES is not a rule between two paragraphs,
+     and when an h2 scrolls under the bar the two lines land three to six pixels
+     apart with the heading hidden between them. At the same value that reads as
+     a rounding error. The authority has exactly one token for this job and
+     describes it for this job — hairline-strong, "the slightly-stronger divider
+     on light bands". It is 2.58:1 against white where the old value was 1.99, so
+     the distinction the last round needed is made more strongly, not less. */
+  --edge: var(--hairline-strong);
+  --link-strong: var(--link-deep);
+  --ground: var(--canvas-soft);      /* what a plate sits on */
+  --ground-2: var(--canvas-soft-2);  /* one step deeper: a chip, an inset, a hover */
 
-  /* ---------- base: rust — Experience ---------- */
-  --rust-700: #7a3d10;  /* 8.39:1 */
-  --rust-600: #a05518;  /* 5.52:1 */
-  --rust-200: #e3bf9b;  /* 1.72:1 */
-  --rust-100: #eedac5;  /* 1.36:1 */
-  --rust-070: #f7e9d9;  /* 1.19:1 */
+  /* ---------- the two faces ----------
+     The fallback stack is the exact one this site shipped before this round, so
+     nothing about the page depends on the download succeeding. */
+  --font-sans: "Geist", ui-sans-serif, -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* ---------- semantic ---------- */
-  --bg:   #ffffff;
-  --text: var(--ink-900);
-  --meta: var(--ink-600);
-  --rule: var(--ink-100);
-  /* The pinned bar's bottom edge, and the only thing that uses it. It was --rule,
-     which made the boundary of the whole top plane the same 1px line as the one
-     under every section heading — so every h2 that scrolled under the bar produced
-     two identical hairlines three to six pixels apart with the heading itself
-     hidden between them, which reads as a rounding error rather than as the top of
-     the page. An edge between two planes is not a rule between two paragraphs and
-     cannot be the same value. This is 16 units of L* darker than --rule (1.58:1
-     against it, 1.99:1 against white) — the smallest step in that direction that
-     still reads as a different line at a 3px gap, checked against five candidates
-     at exactly that gap. Darker than this and a permanent full-track line starts
-     behaving like a border on the window. */
-  --edge: var(--ink-300);
-  --link: var(--blue-600);        /* identical to the resume's linkblue (HTML 0B5CAD) */
-  /* A hovered link used to change only its underline's thickness, which is the
-     one hover state on the site a trackpad user could miss entirely. It gets a
-     colour step too now — one stop darker in its own hue, not a different hue. */
-  --link-strong: var(--blue-700);
-  /* What a plate sits on. It was #fafbfc — 1.04:1 against white, which the last
-     round's own critic recorded as "the plate is carried by its border, not by
-     its ground". It is 1.09:1 now. The reason it could not be raised before was
-     that the doors and the cardiac poster plate shared this one token, and
-     deepening it for the doors would have tinted the ground under two published
-     figures. The doors have their own branch tints now (see --door-*), so this
-     token serves the poster plate alone and can be set for that job: a mounted
-     white figure wants a surround it can be seen against. */
-  --ground: var(--ink-050);
+  /* ---------- elevation: stacked, never a single drop ----------
+     The document is explicit that its cards are held by several small offsets
+     rather than one blur ("The brand uses STACKED shadows — multiple small
+     offsets layered to fake natural light — never a single 8-px-blur generic
+     drop"), and gives the four opacities: 2%, 4%, 6%, 8% black. Its Level 1 is
+     an inset 1px ring; this file uses a real 1px border instead, for two
+     reasons — a border prints and an inset ring does not, and a card here
+     already needed a border for the no-shadow fallback. So the levels below are
+     the document's drop stacks only, and the ring is the border. */
+  --sh-2: 0 1px 1px rgba(0,0,0,.02), 0 2px 2px rgba(0,0,0,.04);
+  --sh-3: 0 2px 2px rgba(0,0,0,.04), 0 8px 8px -8px rgba(0,0,0,.04);
+  --sh-4: 0 2px 2px rgba(0,0,0,.04), 0 8px 16px -4px rgba(0,0,0,.04);
 
-  /* ---------- the branch accent ----------
-     Five values, overridden as a block by .a-work / .a-writing / .a-exp below.
-     The default is blue, which is what the home page, the 404 and anything not
-     filed under a branch get — blue is the site's own colour, not Work's
-     property. Nothing outside those three classes ever redefines these. */
-  --accent:      var(--blue-600);  /* a section label, a focus ring, a hovered edge */
-  --accent-deep: var(--blue-700);  /* the same, being hovered */
-  --accent-rail: var(--blue-200);  /* the 2px rail down the margin column */
-  --accent-line: var(--blue-100);  /* the 1px rule under a section label */
-  --accent-tint: var(--blue-070);  /* the ground of something you can press */
-
-  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-               Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-
-  /* the layout system — see the tiers at the bottom of this file.
-     The gutter is a clamp rather than a step so that the content's left edge
-     moves continuously through the 940px breakpoint, where it used to jump
-     22px because the gutter doubled at the same moment the track did. */
+  /* ---------- the layout system ----------
+     SPACING IS NOT REDRAWN THIS ROUND, and that is a decision rather than an
+     omission. This file's scale was 4 / 8 / 16 / 24 / 40 / 64. The document's is
+     4 / 8 / 12 / 16 / 24 / 32 / 40 / 48 / 64 / 96 / 128 / 192. The first is a
+     SUBSET of the second — every number this site already uses is a legal token
+     in the new system — so "adopting the spacing scale" would have meant
+     re-choosing forty measured vertical rhythms to land on different legal
+     numbers, moving every page, in exchange for nothing a reader can see. What
+     the round did take from it are the three steps this file did not have and
+     the new components need: 12 (pill padding), 32 (a large card's interior),
+     48 (the gap under a display headline). */
   --gutter:   clamp(20px, 4.16vw, 40px);
   --track:    100%;    /* how far evidence runs */
   --prose:    100%;    /* where a sentence stops */
   --hang:     0px;     /* how far a margin note's rule sits left of the spine */
   --card-img: 100%;    /* the index card's evidence column */
-  /* The poster plate is the one block whose width is set by what is inside it
-     rather than by the track: 1200px of native export, 24px of padding on each
-     side, 1px of border on each side. Named here because the heading above it
-     has to take the same number — see law (a). */
-  --plate:    1250px;
-  /* The face is a fixed object, not a column: it is the one thing in the opening
-     block whose size is a decision rather than a consequence of the window. Named
-     here because the contact list that sits under it in the margin column has to
-     take the same number. */
+  --plate:    1250px;  /* 1200 of native export + 24 padding + 1 border, each side */
   --portrait: 88px;
-  /* The height of the pinned bar, which two other things have to know: the
-     scroll-padding that keeps an anchor jump from landing underneath it, and
-     anything that ever wants to sit level with it. It is one number rather than
-     two because the bar is built to be 49px on a phone (a 44px touch row, 4px,
-     the rule) and 49px on a laptop (16px, a 24px line, 8px, the rule) — the
-     same height reached by different arithmetic, so nothing downstream has to
-     branch. */
-  --navh: 49px;
+  --navh:     49px;
 }
-
-/* THE THREE BRANCH SCOPES, and they are scopes rather than page classes on
-   purpose: the same three declarations have to work on a <body> (every page
-   filed under a branch), on a single <li> (the three doors sit on ONE page and
-   each is a different branch), and on a group label (the 404's body is an index
-   of all three). One mechanism, three uses. A page that is not in a branch —
-   the home page, the 404 — simply does not carry one and keeps the blue default.
-   Four lines each and nothing else: everything downstream reads --accent-*, so
-   this is the entire cost of adding a hue to a branch. */
-.a-work    { --accent: var(--blue-600); --accent-deep: var(--blue-700);
-             --accent-rail: var(--blue-200); --accent-line: var(--blue-100);
-             --accent-tint: var(--blue-070); }
-.a-writing { --accent: var(--teal-600); --accent-deep: var(--teal-700);
-             --accent-rail: var(--teal-200); --accent-line: var(--teal-100);
-             --accent-tint: var(--teal-070); }
-.a-exp     { --accent: var(--rust-600); --accent-deep: var(--rust-700);
-             --accent-rail: var(--rust-200); --accent-line: var(--rust-100);
-             --accent-tint: var(--rust-070); }
 
 *, *::before, *::after { box-sizing: border-box; }
 
-/* A selected passage used to come back in the browser's own blue, which is the
-   one colour on the site nobody chose. It takes the page's branch tint instead —
-   the same value the doors and the operable blocks use, so a highlight reads as
-   "this is the page you are on" rather than as an intrusion. --text on any of
-   the three tints measures 14.9–15.0:1. */
-::selection { background: var(--accent-line); color: var(--text); }
+/* The document names both halves of this pair — selection-bg #171717 and
+   selection-fg #f2f2f2 — and it is the one place a stark system gets to be
+   loud for free: a selected passage comes back as white on ink at 17.93:1,
+   which is the same polarity flip the document uses for its dark bands. It
+   replaces last round's tinted highlight, which was one of the three hues. */
+::selection { background: var(--selection-bg); color: var(--selection-fg); }
 
 html { -webkit-text-size-adjust: 100%; }
 
-/* No padding at the top any more: the bar is the first thing in every page and
-   it brings its own air. Putting 64px above it would have meant the bar sits
-   64px down the page at rest and flush with the window's edge the moment you
-   scroll — the one state change on this site that nothing would have explained,
-   and it would have spent 64px of the first screen to introduce it. */
 body {
-  /* margin-inline:auto is what centres the page above 1520px, and it left the
-     browser's own default 8px margin on the top and bottom untouched — which
-     nothing noticed for five rounds, because 8px under a 64px padding is 8px.
-     A pinned bar notices: it would have rested 8px down the page and jumped to
-     the window's edge on the first pixel of scroll. Both ends go to zero; the
-     bottom 8px was never doing anything either, under 64px of padding. */
   margin: 0 auto;
   padding: 0 var(--gutter) 64px;
   max-width: calc(var(--track) + var(--gutter) * 2);
   background: var(--bg);
   color: var(--text);
-  font: 17px/1.65 var(--font-sans);
+  /* typography.body-md — 16px / 24px / 400. The phone's reading size. It steps
+     to body-lg (18/28) at 704px with the rest of the type. */
+  font: 400 16px/24px var(--font-sans);
+  /* The document's geometric sans is a display face first; these two features
+     are what keep it from looking mechanical in a 3,000-word essay. */
+  font-feature-settings: "ss01", "ss03";
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Nine minutes of continuous prose wants a shorter line than a project page,
-   which is read in pieces. It used to get one by narrowing the whole page,
-   which moved the essay's left edge 30px right of every other page's and made
-   the column jump sideways when you clicked into it from the index. Same
-   spine, same track, same figures — only the line stops earlier, which means
-   the essay's margin column is the widest on the site. That is the right way
-   round: an essay about making an answer checkable is the page with the most
-   to put in a margin. Its measure steps 600 → 660 → 720 → 780 alongside the
-   rest of the site (see the tiers at the bottom of this file). */
+   which is read in pieces. Same spine, same track, same figures — only the line
+   stops earlier, which means the essay's margin column is the widest on the
+   site. Its measure steps 600 → 660 → 720 → 780 alongside the rest. */
 body.essay { --prose: 600px; }
 
 /* THE MEASURE. Zero-specificity so anything below can take it back without a
@@ -320,242 +356,265 @@ body.essay { --prose: 600px; }
 /* …and the things that are evidence, not sentences. */
 .cards, .card, .card p, .card ul, .card h3, .plate, .deltas.band { max-width: none; }
 
-/* ---------- the margin column ---------- */
-/* A .spread is a passage and the things that comment on it, side by side: the
-   sentence column on the spine, an .side aside at the right-hand end of the
-   track. This exists because widening the page without it produced the exact
-   arrangement the rule above calls broken in reverse — a 1280px section rule
-   with a 680px paragraph under it and 600px of nothing to its right. The fix
-   is not a narrower rule. It is that the material which was already an aside
-   inside the sentence (the boundary, the caveat, the definition, where a
-   number came from) stops being a parenthesis and becomes the second column.
-   Below 1200px there is not enough width for two columns, so the aside simply
-   follows the passage, which is what it was before. */
-/* THE RAIL IS THE BRANCH'S, and this is where the hue does most of its work,
-   because this rail is the site's most repeated object: it is down the left of
-   every aside, every scope note, every figure caption in the margin column and
-   every pulled line, on all ten pages. At --rule it was 1.26:1 — a grey thread
-   you had to be told was there. At --accent-rail it is 1.72–1.75:1 and it has a
-   temperature, so the margin column finally reads as a column rather than as
-   text that happens to start 20px further right. It is 2px of tint, not a fill:
-   the type inside it stays --meta on white and nothing about its contrast moves. */
-.side { max-width: var(--prose); margin: 16px 0 0; font-size: 14px; line-height: 1.6;
-        color: var(--meta); border-left: 2px solid var(--accent-rail); padding-left: 18px; }
-.side p { margin: 0 0 8px; }
-.side p:last-child, .side ul:last-child, .side ol:last-child { margin-bottom: 0; }
-.side ul, .side ol { margin: 0 0 8px; padding-left: 18px; }
-.side strong { color: var(--text); }
-/* Same mark as a section heading, one step down: the margin column is a place,
-   so its contents get named rather than floating. Not scoped to .side any more —
-   a figure's caption column is the same place doing the same job, and a second
-   copy of these five declarations under a second selector is how a stylesheet
-   ends up with two labels that drift apart. */
-/* …and it takes the branch's hue for the same reason h2 does, and with more
-   force: this label is 11px, the smallest mark on the site, and it is the thing
-   that names every block in the margin column. It sat at --text, which made it
-   the same colour as the sentence it was labelling — a heading that looks like
-   its own contents. In the hue it is unmistakably a label, and it agrees with
-   the rail two pixels to its left, so the margin column is now one object with a
-   colour rather than three greys in a row. On white: 6.67 / 6.46 / 5.52 against
-   the 4.5 an 11px bold needs. */
-.lbl { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
-       font-weight: 700; color: var(--accent); margin-bottom: 6px; }
-/* One .side is not a note about a passage — it is the header's contact block,
-   which was already part of the header before it moved into the column. It
-   keeps no rule and no label until there is a column to put it in, so on a
-   phone the first screen is exactly the four lines it was. */
-.side.bare { border-left: 0; padding-left: 0; }
-@media (max-width: 74.99rem) {
-  .side.bare { margin-top: 0; font-size: inherit; color: inherit; }
-  /* The label used to be hidden here, on the argument that below the two-column
-     width this block "is still just the last of the four opening lines" of the
-     old header. There are no four opening lines any more: it is a block in a
-     composition, sitting between a sentence about next summer and a heading, and
-     three bare blue links with nothing naming them was the one place on this page
-     where a reader had to guess what they were looking at. It costs 19px of a
-     844px phone screen and the door under it is still whole above the fold. Now
-     both of the page's small blocks carry the same mark — CONTACT and BACKGROUND
-     — which is the point of having a mark. */
-  /* Below the two-column width an aside is not a column, it is a block in the
-     flow — and a block in the flow needs a bottom edge. It had only a top one,
-     so wherever the next thing was a bare <p> (which sets no top margin either)
-     the two touched at exactly 0px: on the flywheel page a note saying "one
-     pillar of this was mine" ran straight into the page's largest number with
-     nothing between them, and read as one paragraph. Where an aside is a grid
-     item — 1200px and up — the column gap does this job and the margin is
-     back to 0. The header's contact block is exempt: it is not a note about a
-     passage, and on a phone it is still just the last of the four opening
-     lines. */
-  .side:not(.bare) { margin-bottom: 24px; }
+/* ============================================================================
+   TYPE — the document's ladder, and the mono layer that replaced the hues
+   ============================================================================
+   Every size, weight, leading and tracking below is a named token from the
+   authority. The two rules that govern the whole set:
+   — NEGATIVE TRACKING IS THE VOICE. Display sizes run -2.4px at 48, -1.28px at
+     32, -0.96px at 24, -0.6px at 20; body-sm runs -0.28px; body and mono run 0.
+     The document says reverting to default tracking breaks the brand and it is
+     right — at 48px the difference is the whole character of the headline.
+   — WEIGHT 600 IS THE CEILING. Nothing on this site is 700 any more. The two
+     declarations that were — h2 and .lbl, the site's two structural marks —
+     went to mono 500 and mono 400 instead of down a step in the sans; the
+     wordmark went 600 → 500 and .side strong 600 → 500 with them. The page
+     reads calmer for it, which is the document's own stated reason for the rule.
+
+   THE MONO LAYER. The document reserves its monospaced face for "the technical
+   layer only — section eyebrows, code blocks, terminal mockups" and warns
+   against setting body paragraphs in it. What counts as the technical layer on
+   THIS site, decided once and applied everywhere: a section eyebrow (h2), a
+   block label (.lbl), a role line (.role), a date (.when), a recording's spec
+   line (.spec), a term in a definition list (.stack dt), a measured before/after
+   number (.deltas dd), and inline code. What is NOT in it: every caption, every
+   grey descriptive line under a door, every note, every source line — those are
+   sentences, and sentences are in the sans.
+   ============================================================================ */
+
+/* typography.display-lg — every page title except the home page's name. A
+   content page's h1 is a label over what is under it, which is exactly the role
+   the document gives display-lg ("Section headlines"). It is one size at every
+   width: the step it used to take (30 → 38) existed because the old h1 shared a
+   scale with the body, and the display ladder is its own ladder now. */
+h1 {
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: -1.28px;
+  font-weight: 600;
+  margin: 0 0 16px;
 }
 
-/* An anchor jump used to land a section heading flush against the top edge of
-   the window, rule and all; with a bar pinned to that edge it would now land
-   underneath the bar instead, which is worse — the heading you asked for would
-   be the one thing on screen you could not see. Stated as scroll-padding on the
-   scroll container rather than as scroll-margin on 40-odd elements: it is one
-   declaration instead of a list nobody will remember to extend, and it also
-   covers the two scrolls that are not anchor jumps — find-in-page, and the
-   browser pulling a focused link into view while you tab through the bar. */
-html { scroll-padding-top: calc(var(--navh) + 24px); }
-
-/* ---------- type ---------- */
-
-h1 { font-size: 30px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.015em; }
-
-/* A section heading is a frame, so it takes the width of the thing it frames —
-   the track over a card grid, a plate or a clip; the measure over four
-   paragraphs. A frame narrower than its contents reads as an alignment
-   failure; a frame 88% wider than its contents reads as an unfinished page,
-   and worse, because a line has a direction and this one points at nothing.
-   The widths are assigned by the :has() cascade at the bottom of this file,
-   where the tiers are; below 940px there is only one width and the question
-   does not arise. */
-/* IT TAKES THE BRANCH'S HUE, and that is the round's single largest colour
-   decision, so the reason is worth stating. This mark is 13px — the smallest
-   type on the site — and on /experience/ that put the three section headings
-   BELOW the body text they head (13 against 17), which the last round's critic
-   measured as "you can scroll 2,098px and not feel a joint". The fix could have
-   been size, and size was rejected: the mark is uppercase, letterspaced and 700,
-   it is the same mark on all ten pages, and growing it moves every section on
-   the site by a few pixels to solve a problem that only one page has.
-   Colour solves it without moving anything. A rust label over a rust rule reads
-   as a joint at 13px in a way a black label over a grey rule does not — and it
-   is saying something true while it does it, which a size step would not be:
-   this heading belongs to this branch. Measured on white: blue 6.67, teal 6.46,
-   rust 5.52, against the 4.5 a 13px bold needs. The rule under it moves --rule →
-   --accent-line, which is a touch DARKER than the grey it replaces (1.32/1.31/
-   1.36 against 1.26) as well as tinted, so the line gained a little too.
-   Geometry is untouched: same size, same weight, same 1px, same 8px, same 16px. */
+/* THE SECTION EYEBROW, and it is the round's second-largest change after the
+   palette. It was 13px uppercase sans at weight 700 in the branch's hue. It is
+   typography.caption-mono now: 12px Geist Mono, uppercase, weight 500, ink.
+   Three things that buys, and one it costs.
+   — It is the document's own answer to this exact element, stated twice ("Every
+     section eyebrow and small label uses the monospace face"; "Set every code
+     block and technical eyebrow in caption-mono. Mono is the voice of the
+     platform").
+   — It restores the mark's rank without a colour. The problem the hue was
+     solving was that a 13px label sat BELOW the 18px body it headed. A mono face
+     at 12px does not compete on size; it competes on texture, and a mono
+     uppercase label over a proportional paragraph is unmistakably a different
+     kind of object at any size. That is why 500 rather than the document's 400:
+     Geist Mono at 400 and 12px is a shade lighter than the ink body around it,
+     and 500 puts it back level. It is the only weight step this file takes past
+     a token, and it is inside the 400/500/600 working set.
+   — It survives greyscale, high contrast and a colour-blind reader, which the
+     hue did not.
+   The cost: uppercase. The document says "Don't render headlines in all-caps"
+   and then, one line earlier, "the brand never letter-spaces positively, never
+   goes uppercase OUTSIDE OF MONO LABELS". This is a mono label, not a headline,
+   so it is inside the exception — and it was already uppercase before this
+   round, so nothing about the page's shape changed to make it fit.
+   Tracking is 0, per the document's "Tracking neutral" for the mono face. The
+   .08em this mark used to carry came off; at 12px mono the letterforms are
+   already wide and the old value read as a second, competing rhythm.
+   The 1px rule under it is law (a) — see the head of this file for why it was
+   kept when the authority has no such thing. */
 h2 {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
   text-transform: uppercase;
-  letter-spacing: .08em;
-  font-weight: 700;
-  color: var(--accent);
+  font-weight: 500;
+  color: var(--text);
   margin: 0 0 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--accent-line);   /* mirrors \scshape + \titlerule in the resume */
+  border-bottom: 1px solid var(--rule);
 }
 
-/* the essay uses numbered prose headings, not the resume's section rule */
-/* …and they keep the text colour. The rule above colours a LABEL — a mark you
-   read as structure and skip past. These are sentences you read: "3. The step
-   people skip" is prose at 20px, and prose on this site is --text. Colouring
-   them would be the one place a hue stopped meaning "which branch" and started
-   meaning "this is a heading", which is what the size is already for. */
+/* The essay uses numbered prose headings, not a section eyebrow, and they keep
+   the sans and the text colour: "3. The step people skip" is a sentence you
+   read, and the document's mono is for labels you skip past. typography.
+   display-sm at the phone, display-md above — one step under the page's own h1
+   at both, which is what a sub-head is. */
 .essay h2 {
+  font-family: var(--font-sans);
   font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.6px;
   text-transform: none;
-  letter-spacing: normal;
+  font-weight: 600;
   color: var(--text);
   border: 0;
   padding: 0;
-  margin: 40px 0 16px;
-  line-height: 1.3;
+  margin: 48px 0 16px;
   max-width: var(--prose);
 }
 
-h3 { font-size: 18px; font-weight: 600; margin: 0 0 4px; line-height: 1.35; }
+/* typography.display-sm */
+h3 {
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.6px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
 
 p { margin: 0 0 16px; }
 
+/* The document's display ceiling. `strong` was 600 before this round and stays
+   600; nothing here goes past it. */
 strong { font-weight: 600; }
 
-code, .mono { font-family: var(--font-mono); font-size: .92em; }
+/* typography.code — 13px / 20px Geist Mono. An inline identifier gets the
+   canvas-soft-2 chip the document gives its inset surfaces, so a table name or
+   a flag reads as a token rather than as italics-by-another-name. */
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+code {
+  background: var(--ground-2);
+  border-radius: 4px;          /* rounded.xs */
+  padding: 1px 4px;
+}
 
-.meta { color: var(--meta); font-size: 14px; margin: 0 0 8px; }
+/* typography.body-sm — 14px / 20px / -0.28px. The site's secondary line. */
+.meta { color: var(--meta); font-size: 14px; line-height: 20px;
+        letter-spacing: -0.28px; margin: 0 0 8px; }
 
-/* The lead used to be set at the body size, which meant every page opened with
-   two paragraphs of identical grey and no first fixation point. It is the one
-   sentence a visitor is guaranteed to read, so it gets its own step on the
-   scale: bigger than body, tighter than body, still the text colour.
-   It used to carry its own 820px measure, on the argument that a bigger size
-   can hold a longer line. That was true and it still cost the page a right
-   edge: the lead ended 140px past every paragraph under it, for no reason a
-   reader could work out. The measure now grows on its own (680→840), so the
-   lead just takes it. One right edge for every sentence on the page. */
-.lead { font-size: 19px; line-height: 1.5; margin-bottom: 16px; }
+/* THE SPEC LINE. Five of the ten pages open the same way — h1, then a lead
+   sentence, then one line of "when · what role · which stack": "March 2026 –
+   present · Python, FastAPI, PostgreSQL, React, TypeScript". That line is the
+   densest technical identifier on this site and it is the single best fit for
+   the document's mono register — dates, a role, and a comma-list of tool names,
+   none of which is a sentence. Selected as `.lead + .meta` rather than by adding
+   a class, because the position IS the definition: it is the line under the
+   opening sentence, and there is no other `.meta` in that slot anywhere on the
+   site (checked across all ten pages). typography.code's 13px/20 rather than
+   caption-mono's 12px/16, for the same reason .role takes it: this is a fact a
+   recruiter reads, not a label they skim past. */
+.lead + .meta {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+}
 
+/* THE LEAD. typography.display-sm's metrics at body weight — 20px / 28px /
+   -0.6px / 400. The document's ladder steps 18px body-lg (400) straight to 20px
+   display-sm (600), with nothing in between, and this site needs one sentence
+   per page that is bigger than body without being a heading. Taking a display
+   token's SIZE and TRACKING at a body WEIGHT is the cheapest way there: the
+   scale defines sizes, weight is a separate axis, and 400/500/600 are all inside
+   the document's working set. No number here is invented.
+   What separates it from the body at 704px and up, where body is also 18px, is
+   not two pixels: it is the tracking (-0.6 against 0) and the leading (1.4
+   against 1.56). It reads as an opening line rather than as a slightly bigger
+   paragraph. */
+.lead { font-size: 20px; line-height: 28px; letter-spacing: -0.6px;
+        font-weight: 400; margin-bottom: 16px; }
+
+/* components.link-inline — text {colors.link}, underlined. The underline never
+   leaves, at rest or on hover, because it is the only mark on the site that
+   works without colour.
+   THE HOVER STEP IS THE DOCUMENT'S OWN PAIR: link #0070f3 → link-deep #0761d1,
+   which it names as "the pressed / visited tone for inline links". It is one
+   stop darker in the same hue, not a different hue, and the underline thickens
+   with it so a trackpad user who cannot see the step still gets one. 4.55:1 →
+   5.77:1; both on canvas, which is the whole reason canvas is the page. */
 a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
-/* The hover state used to be a one-pixel underline thickening and nothing else —
-   the quietest interactive feedback on the site, and the one a reader is most
-   likely to be looking for. It keeps that and takes a colour step as well: one
-   stop darker in the SAME hue (6.67:1 → 9.80:1), not a different colour. A link
-   that changes hue on hover is a link that looked like the wrong thing at rest. */
-a:hover { text-decoration-thickness: 2px; color: var(--link-strong); }
-/* The ring takes the branch's hue rather than the link blue. It is chrome — it
-   says "the keyboard is here" — and the chrome on this site is now the branch's.
-   All three pass the 3:1 a focus indicator is held to by a wide margin (5.5–6.7),
-   and on the home page each door's ring resolves to its OWN hue, because the ring
-   is drawn on the plate and the plate carries the scope class. */
-a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+a:hover { color: var(--link-strong); text-decoration-thickness: 2px; }
+/* The ring is the link blue rather than ink: it says "the keyboard is here", and
+   the one thing on this page that is already the colour of "you can operate
+   this" is the link. 4.55:1 against canvas, against the 3:1 a non-text indicator
+   is held to. The 4px radius is rounded.xs, so the ring follows the new corner
+   scale instead of the old 2px one. */
+a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 4px; }
 
 ul, ol { margin: 0 0 16px; padding-left: 20px; }
 li { margin-bottom: 4px; }
 
 /* An <hr> is a section rule with no heading attached, so law (a) applies to it
-   too: it is as wide as what it separates. It used to take the track, which put
-   a 1360px line over a 650px title block at the top of the essay and over a
-   prose pager at the foot of every project page — 600px of line pointing at
-   nothing, twice per page, by the file's own definition. */
+   too: it is as wide as what it separates. */
 hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; max-width: var(--prose); }
 
-/* ---------- layout ---------- */
+/* ---------- the margin column ---------- */
+/* A .spread is a passage and the things that comment on it, side by side: the
+   sentence column on the spine, an .side aside at the right-hand end of the
+   track. Below 1200px there is not enough width for two columns, so the aside
+   simply follows the passage.
+   THE RAIL. It was 2px of the branch's tint. It is 1px of hairline-strong now —
+   the document's own "slightly-stronger divider", the same value the bar's edge
+   takes, and the only two places on the site that use it. They are never
+   adjacent and never on the same axis: one is a horizontal plane boundary at the
+   top of the window, the other is a vertical thread beside a note. 2.58:1 on
+   canvas, where the tinted rail was 1.72–1.75 and the grey thread it replaced
+   two rounds ago was 1.26 — so the margin column reads as a column more clearly
+   than it did with a colour on it, which was not the expected result.
+   THE ARITHMETIC IS UNCHANGED: border + padding = --hang, so the marked text
+   lands back on the spine with every other sentence. 1 + 16 is 17, and --hang
+   moved 20 → 17 with it. */
+.side { max-width: var(--prose); margin: 16px 0 0; font-size: 14px; line-height: 20px;
+        letter-spacing: -0.28px; color: var(--meta);
+        border-left: 1px solid var(--hairline-strong); padding-left: 16px; }
+.side p { margin: 0 0 8px; }
+.side p:last-child, .side ul:last-child, .side ol:last-child { margin-bottom: 0; }
+.side ul, .side ol { margin: 0 0 8px; padding-left: 18px; }
+.side strong { color: var(--text); font-weight: 500; }
+
+/* THE BLOCK LABEL — the margin column's own eyebrow, one step under h2's.
+   typography.caption-mono at the document's own 400, because unlike h2 this mark
+   never has to hold rank against an 18px paragraph: it sits directly above a
+   14px grey block and is the largest thing in it. It was 11px uppercase sans at
+   700 in the branch's hue; it is 12px Geist Mono at 400 in --meta. Same job,
+   same position, no colour: 8.45:1 on canvas. */
+.lbl { display: block; font-family: var(--font-mono); font-size: 12px; line-height: 16px;
+       letter-spacing: 0; text-transform: uppercase; font-weight: 400;
+       color: var(--meta); margin-bottom: 6px; }
+
+/* One .side is not a note about a passage — it is the header's contact block. It
+   keeps no rule and no label indent until there is a column to put it in, so on
+   a phone the first screen is exactly the lines it was. */
+.side.bare { border-left: 0; padding-left: 0; }
+@media (max-width: 74.99rem) {
+  .side.bare { margin-top: 0; font-size: inherit; line-height: inherit;
+               letter-spacing: normal; color: inherit; }
+  /* Below the two-column width an aside is a block in the flow, and a block in
+     the flow needs a bottom edge; where a grid gap does that job (1200px and up)
+     this margin is back to 0. The header's contact block is exempt. */
+  .side:not(.bare) { margin-bottom: 24px; }
+}
+
+/* An anchor jump lands under the pinned bar without this. Stated once on the
+   scroll container rather than as scroll-margin on 40-odd elements, and it also
+   covers find-in-page and the browser pulling a focused link into view. */
+html { scroll-padding-top: calc(var(--navh) + 24px); }
 
 /* ---------- the home page, as one composition ---------- */
-/* WHY THIS IS ONE GRID AND NOT A HEADER PLUS A LIST.
-   Until this round the home page was the opening block of the old 8,000px scroll
-   — face, name, four paragraphs — with three ruled rows bolted under it, and the
-   last round's report defended keeping the block "unchanged, deliberately". The
-   block was not wrong; it was answering a question this page no longer asks. It
-   was designed to be the first screen of a long document, whose job is to
-   introduce the thing you are about to scroll through. Nothing is under this page
-   any more. It is a landing page, and its whole job is to say who this is and
-   hand the reader to one of three places — which is a different object with a
-   different centre of gravity, and it does not get to inherit the other one's
-   layout.
-   So <header> and <section> are gone from that document and everything between
-   the bar and the footer is one grid of eight items in one fixed source order:
-   face, name, lead, intent, contact, the doors' heading, the doors, background.
-   ONE container, because the two arrangements below have to move a block PAST
-   its neighbours, and grid can only place items it owns. That is the whole
-   technical reason there is no header element here; the design reason is that
-   there is no longer anything for a header to be the head OF.
-
-   THE TWO ARRANGEMENTS
-   below 1200px  one column, exactly the source order. The background paragraph
-                 is LAST, and that is the single change that lets a phone show a
-                 door on the first screen: it used to sit between the name and
-                 the doors, and it is the one paragraph nobody needs before
-                 deciding where to go. It was 281px of the 844 a 390px phone has
-                 when it was moved; two sentences of it have since come off as
-                 duplicating the doors (see the page's own comment) and it is
-                 164px now.
-   1200px and up two columns — the same two the rest of the site opens at this
-                 width. Sentences on the spine at the measure; the face and the
-                 contact list in the margin column; and the background pulled
-                 back up into the left column, where there is room for it above
-                 the doors and where the page still fits one 900px screen.
+/* ONE GRID, NOT A HEADER PLUS A LIST. Everything between the bar and the footer
+   is one grid of eight items in one fixed source order: face, name, lead,
+   intent, contact, the doors' heading, the doors, background. ONE container,
+   because the two arrangements below have to move a block PAST its neighbours,
+   and grid can only place items it owns.
+     below 1200px  one column, exactly the source order, with the background
+                   paragraph LAST — which is what lets a phone show a door on
+                   the first screen.
+     1200px and up two columns: sentences on the spine at the measure; the face
+                   and the contact list in the margin column; the background
+                   pulled back up into the left column above the doors.
    The door row spans BOTH columns at every width, so its left edge is the spine
-   and its right edge is the right edge of the face's column. Before this round
-   nothing on this page shared an edge with the portrait, and the margin column
-   simply stopped: measured at 1440x900, it held a face and three links and then
-   485px of nothing, from the last contact link down to the footer's own rule.
-   That row is what gives the composition a bottom — and now it is a bottom for
-   BOTH columns rather than one: with the background cut to two lines the left
-   column ends at y=378 and the right at y=377 at 1440, so the band is picking up
-   two columns that finish together instead of one that overruns the other by
-   92px. Trying to get there by moving the background across the gutter instead
-   was measured and rejected; the arithmetic is in the page's comment. */
+   and its right edge is the right edge of the face's column. */
 .home {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   row-gap: 16px;
-  /* 24, not the 40 a section used to take, and the reason is that the thing above
-     the footer is now a band with a bottom edge of its own rather than a paragraph
-     that just stops. 24 + the footer's own 24 of padding is 48 of clear air under
-     the doors, which is more than the 40 the old list got and looks like less. */
   margin-bottom: 24px;
 }
 .home > .portrait { width: var(--portrait); height: var(--portrait); }
@@ -563,357 +622,245 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; max-width: va
 .home > .lead     { margin-bottom: 0; }
 .home > .intent   { margin-bottom: 0; }
 .home > .bio p    { margin-bottom: 0; }
-/* THE PAGE HAS THREE GAPS AND THEY ARE THE PAGE'S RHYTHM. 16 between the lines of
-   one statement (name → what I do → what I want); 24 between two blocks of the
-   same movement (that statement → how to reach it, and → the background); 40
-   before the doors, which is the one place the page changes what it is doing.
-   Written as the grid's 16 plus 8 or 24 rather than as three new numbers, so the
-   4/8/16/24/40/64 scale at the top of this file still holds. */
+/* Three gaps and they are the page's rhythm: 16 between the lines of one
+   statement, 24 between two blocks of the same movement, 40 before the doors —
+   the one place the page changes what it is doing. */
 .home > .side    { margin: 8px 0 0; }
 .home > .bio     { margin-top: 8px; }
 .home > .gates-h { margin: 24px 0 0; }
 
-/* The photo is round. Every other framed image on this site is a 2px-radius
+/* The photo is round. Every other framed image on this site is a rounded
    rectangle with a 1px rule, because every other one is evidence and a frame is
-   what says "look inside this edge". A face is not evidence, and giving it the
-   evidence frame would have said it was. Round also means the studio's white paper
-   meets the page's white with no edge at all: what you see is the person, not a
-   photograph of the person. */
+   what says "look inside this edge". A face is not evidence. Round also means
+   the studio's white paper meets the page's white with no edge at all. */
 .portrait {
   display: block;
   border-radius: 50%;
   background: var(--bg);
 }
 
-/* THE INTENT LINE. It used to be the last <p class="meta"> of the four-paragraph
-   block: 15px, --meta grey, the mark this site gives a figure caption and a date.
-   It is the one sentence on the page that tells a visitor what they can do about
-   any of it, and it was set as metadata — the plainest contrast failure on the
-   page, and the reason it is called out here rather than folded into the grid
-   block above. Body size, text colour, and the <strong> inside it carries the
-   site's own 600. No border: .tryit's 3px blue edge means "you can operate this",
-   and a sentence about next summer is not a control. */
+/* THE INTENT LINE — the one sentence that says what a visitor can do about any
+   of it. Body size, text colour, and the <strong> inside it at the site's 600.
+   No border: the pill two hundred lines down is what "you can operate this"
+   looks like now, and a sentence about next summer is not a control. */
 .intent { font-size: inherit; color: var(--text); }
 
-/* The background block. .lbl is the site's "this block is a place" mark and it is
-   doing the same job here it does over the contact list: below 1200px this is the
-   last thing on the page and the label is what keeps it from reading as a stray
-   paragraph left over after the doors; at 1200px and up it is the foot of the left
-   column and the label is what pairs it with CONTACT across the gutter. */
 .bio { max-width: var(--prose); }
+
+/* ============================================================================
+   THE GRADIENT — the one place on this site, and 3px of it
+   ============================================================================
+   The authority is unambiguous that its multi-stop mesh gradient is not an
+   accent but the whole of its decoration: "That gradient is the entire
+   decoration system", "It is the brand", used "at hero scale only", never
+   miniaturised, never cropped to one colour, never reordered.
+   The instruction for this round was to use it in at most ONE place, or not at
+   all. It is used once, here, and it is a reduction of what the document
+   describes — a 3px band rather than an atmospheric field. Three reasons, and
+   the third is the one that decided it:
+   1. 简约. A full-bleed six-colour field behind a job-seeker's name is the
+      loudest thing this site would contain, and it would be the only decorative
+      object on ten otherwise stark pages.
+   2. Every figure on this site is a white-background chart. An atmospheric
+      backdrop above them turns each one into a bright rectangle floating on a
+      colour field — the same argument that keeps this site out of dark mode.
+   3. IT WOULD HAVE MADE THE CONTRAST TABLE A LIE. This round's AA gate is
+      measured with getComputedStyle, walking each element's ancestors for the
+      first opaque background-color. A gradient has no background-color, so any
+      text set over one silently reports as "on white" and passes a check it
+      never took. Text over a gradient is not measurable by the instrument this
+      round is held to, so no text goes over one, so the gradient goes somewhere
+      no text is.
+   WHERE IT IS: the rule under "What is here" on the home page — the single
+   moment on the site where one reader is handed three destinations. It spans the
+   full track (up to 1440px), it carries all six stops in the document's own
+   order, it is not cropped to a pair and not reduced to a swatch, and it is the
+   ONLY rule on ten pages that is not a 1px hairline.
+   WHAT WAS BUILT AND REJECTED: one gradient pair per door (develop / preview /
+   ship, three plates, three pairs). It looked better and it is forbidden in as
+   many words — "do not crop down to a single colour, do not reorder the stops".
+   It would also have re-created the three-hue system this round removed, in the
+   authority's own colours, one section after deleting it.
+   COST TO REMOVE: delete the ::after block below and restore h2's border on
+   .gates-h. Two declarations. */
+.home > .gates-h { border-bottom: 0; padding-bottom: 0; }
+.home > .gates-h::after {
+  content: "";
+  display: block;
+  margin-top: 8px;
+  height: 3px;
+  border-radius: 100px;   /* rounded.pill, so the band has the CTA's own ends */
+  background: var(--grad);
+}
+
 /* ---------- the bar ---------- */
-/* THIS ROW IS NOW A LIST OF PAGES, NOT A LIST OF PLACES ON ONE PAGE.
-   Until this round the site was one long scroll with an index pinned above it:
-   seven labels, six of which were fragments of the home page. The home page was
-   7,977px at 390x844 — nine and a half screens — and the bar's job was to make
-   that survivable. It made it survivable; it did not make it short. A pinned
-   index over a nine-screen page is a table of contents for a scroll, and the
-   thing being asked for was fewer screens, not a better map of them.
-   So the five blocks that used to stack on the home page are four pages now
-   (home / work / writing / experience), the row points at them, and every item
-   in it changes the address bar. Three consequences follow and all three are
-   improvements this file could not have had before:
-     — aria-current can finally say "page", because the link now points at the
-       page you are on. It used to say "location", which was the most honest
-       thing available when the target was a fragment of a different document.
-     — The home page has a current item at last: the wordmark, which points at
-       "/" and is the one item on that page whose destination is where you are.
-       The old comment here said the home page "has no current item and is not
-       given a fake one" — under fragments that was correct, and under pages it
-       is simply no longer true.
-     — Four items instead of seven. See .more below for what that bought.
-   It is pinned, and that is the part that costs something. The complaint it
-   answers is smaller now than it was — no page on this site is nine screens
-   any more — but it is not gone: the four project pages still run 4,000–9,000px,
-   and on those, finding your way DOWN is still guesswork without it. So it
-   stays, and it still pays 49px of every screen at every width: 5.8% of a phone
-   screen, permanently. That is the honest price and it is not small.
-   No JavaScript is involved and none is possible here: position:sticky is the
-   whole mechanism, so the bar looks and behaves identically at scroll 0 and at
-   scroll 8,000. Nothing shrinks, nothing fades in, nothing "activates" — which
-   is also why it needs no explanation.
-   The background is the page's own white rather than nothing, because the thing
-   underneath it has to be hidden rather than blended with; z-index clears the
-   .card overlay (position:relative, z-index auto) that covers every index card. */
+/* A LIST OF PAGES, NOT A LIST OF PLACES ON ONE PAGE. Four items — the wordmark
+   plus Work / Writing / Experience — each of which changes the address bar, so
+   aria-current can say "page" on the four pages whose own item points at the
+   document you are reading and "location" on the five filed under one.
+   It is pinned, and that costs 49px of every screen at every width. The pages it
+   is for still run 4,000–8,000px. No JavaScript is involved and none is
+   possible: position:sticky is the whole mechanism, so the bar looks and behaves
+   identically at scroll 0 and at scroll 8,000.
+   The background is the page's own canvas rather than nothing, because the thing
+   underneath has to be hidden rather than blended with; z-index clears the .card
+   overlay that covers every index card. */
 nav.top {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--bg);
-  /* Law (a) run all the way up: a rule is as wide as what is under it, and what
-     is under this one is the page. So it is the track — the widest thing any
-     rule on the site is allowed to be, and the only one that has earned it.
-     Its VALUE is not --rule, and that is the whole of --edge: see the token. */
+  background: var(--canvas);
+  /* Law (a) run all the way up: what is under this rule is the page. Its VALUE
+     is --edge and not --rule — see the token. */
   border-bottom: 1px solid var(--edge);
-  font-size: 15px;
-  /* Pinned to 24px so the bar's height is arithmetic rather than whatever the
-     machine's system sans resolved 15px/1.7 to. --navh is a constant that two
-     other rules depend on; a constant derived from an unnamed font is not one. */
+  /* typography.body-sm, 14px. The line-height stays PINNED at 24px rather than
+     following the token's 20, and that is deliberate: --navh is a constant that
+     scroll-padding-top is derived from, and 16 + 24 + 8 + 1 is the same 49 the
+     bar has been at every width for four rounds. Taking the token's 20 would
+     have moved the bar to 45 and every anchor landing with it, to gain nothing
+     visible. */
+  font-size: 14px;
   line-height: 24px;
-  /* The 4px used to sit under the row. Above it instead, for the same 49: a focus
-     ring is drawn 2px outside a 2px outline, and the first link in the bar has its
-     box at y=0, so the ring's top edge was four pixels off the top of the window —
-     the first thing a keyboard reaches on every page was the one focus ring on the
-     site that the window clipped. Moving the padding puts the ring's top edge at
-     y=0 exactly. Nothing downstream notices: 4 + 44 + the rule is still the
-     phone's 49. */
+  letter-spacing: -0.28px;
+  /* The 4px is above the row, not under it: a focus ring is drawn 2px outside a
+     2px outline and the first link's box is at y=0, so under-padding put the
+     ring's top edge four pixels off the top of the window. */
   padding: 4px 0 0;
   margin-bottom: 24px;
 }
-/* The bar has to HIDE what passes under it, and its box is the track, which stops
-   one gutter short of the page's edge on both sides. Anything that hangs left of
-   the spine — a margin note's 2px rail, which hangs by exactly --hang — therefore
-   ran out from under the bar and up to the top of the window, a grey thread beside
-   a bar that was supposed to be the top of the page. (The QA table last round said
-   this was zero. It was not; the script only ever looked at one scroll depth on a
-   900px-tall window, and on a 900px window most of these rails cannot be scrolled
-   under the bar at all.) So the background — and only the background — runs the
-   full width of the page box. The rule stays the track, because law (a) is about
-   what is under the line, and what is under the line is still the track's contents.
-   It stops at the page box rather than at the window so it can never create
-   scrollable overflow of its own. */
+/* The bar has to HIDE what passes under it, and its box is the track, which
+   stops one gutter short of the page's edge. Anything that hangs left of the
+   spine — a margin note's rail, which hangs by --hang — would otherwise run out
+   from under the bar to the top of the window. So the background, and only the
+   background, runs the full width of the page box. The rule stays the track,
+   because law (a) is about what is under the line. */
 nav.top::before {
   content: "";
   position: absolute;
   z-index: -1;
   top: 0;
-  /* -1px, not 0: the containing block is the padding box, and the bar's last
-     pixel row is its border. At 0 the background stopped one row short and a
-     hanging rail showed through that row for 2px beside the spine. */
+  /* -1px, not 0: the containing block is the padding box and the bar's last
+     pixel row is its border. */
   bottom: -1px;
   left: calc(var(--gutter) * -1);
   right: calc(var(--gutter) * -1);
-  background: var(--bg);
+  background: var(--canvas);
 }
-/* 44px touch target on phones — the site's own rule for a link that owns a line,
-   and this bar is nothing but links that own a line. The visual height does not
-   change; 4 + 44 + the rule is the phone's 49. */
+/* 44px touch target on phones. The visual height does not change; 4 + 44 + the
+   rule is the phone's 49. */
 nav.top a { display: inline-flex; align-items: center; min-height: 44px; margin-right: 16px; }
-/* The last item's own 16px is 16px of nothing at the end of a line. Stated honestly,
-   because a comment here once claimed more than it does: this only reaches the last
-   item in the SOURCE, and on a phone that item is Experience, which is .more and
-   hidden — so the last item you can see still trails 16px. It is left that way
-   rather than chased with a :has() rule, because the phone row has 129px of
-   headroom at 360px and 16px of it is not the difference between one row and two.
-   On a desktop, where all four are out, it is the real end of the line and it does
-   the job it says. */
 nav.top a:last-child { margin-right: 0; }
-/* The whole bar is grey, on every page. It used to be grey on the home page (six
-   jumps to places you were already on) and blue on deep pages, and the comment here
-   defended that: "deep pages keep theirs blue, there the same element is the only
-   way out". Under pages rather than fragments every item in this row is a real exit
-   on five of the seven pages that carry it, so blue would now be defensible on
-   grounds the old comment did not have — and it is still refused, for the reason
-   underneath: it would put four of the site's strongest-marked links above the first
-   sentence of every page, which is the "equal-weight links, none of them saying
-   which matters" problem, one block higher. Chrome is grey. Hover and focus are
-   still blue, and the underline never leaves, so nothing here stops looking like a
-   link.
-   Set on the anchors and not on the bar, and that is not a style choice: two hundred
-   lines up `a { color: var(--link) }` sets the colour on the element itself, which
-   beats anything the parent merely hands down. A grey nav.top with blue links sitting
-   inside it is what a colour on the bar buys you. */
+/* The whole bar is grey on every page: colouring it would put four of the site's
+   strongest-marked links above the first sentence of every page. Chrome is grey.
+   Set on the anchors and not on the bar, because `a { color: var(--link) }` two
+   hundred lines up sets the colour on the element itself and beats anything the
+   parent hands down. */
 nav.top a { color: var(--meta); }
-/* Four permanent underlines (seven, when this rule was written). The reason this
-   file gave for refusing a tab underline under the current item was that a second
-   line 4px above the bar's own is unreadable as structure — and the row was already
-   carrying a line under every label 9.5px above it, on every page, at all times.
-   One ruler for both. An underline in the
-   prose is a promise that this word leaves the sentence; a row of labels pinned to
-   the top of the window is not a sentence, and its position is already the promise.
-   So chrome loses the resting underline and keeps both of the site's other link
-   marks — it goes blue and underlined on hover, and it keeps the 2px focus ring —
-   which is what tells a pointer or a keyboard that these are links. Nothing else on
-   the site is touched: every underline in the prose stays. */
+/* Four permanent underlines above every page is a second ruler beside the bar's
+   own. Chrome loses the resting underline and keeps the site's two other link
+   marks — it goes blue and underlined on hover, and it keeps the focus ring. */
 nav.top a { text-decoration: none; }
 nav.top a:hover { text-decoration: underline; }
-/* THE THREE WEIGHTS IN THIS ROW, strongest first.
-   1. The wordmark. It is not a navigation item and does not join the grey chain:
-      this is a portfolio, the row is the only thing on screen 100% of the time, and
-      until this round the loudest thing in it was the word "Work" and the quietest
-      was the name of the person whose site it is — while the home page's bar had no
-      name in it at all, so a screenshot of any screen but the first identified
-      nobody. Identity is a different job from navigation and gets its own tier:
-      the text colour and 600, which is the same mark .side strong and .lbl already
-      use for "this is the thing, not the commentary" — and that is exactly what it
-      is saying here.
-   2. The current item: the text colour at the ordinary weight. It only has to
-      separate itself from the greys beside it, and colour alone does that. It used
-      to take 600 as well, which put a common noun at the same weight as the name and
-      spent the site's "this is the thing" mark on a nav label.
-      The MARK is one thing and says one thing — "this is the branch of the site you
-      are in" — and the two aria-current VALUES under it are the same statement told
-      exactly:
-        page      on the four pages whose own bar item points at the document you are
-                  reading (home's wordmark → "/", and Work / Writing / Experience on
-                  their own index pages). No item in this row could say "page" before
-                  this round, because every target was a fragment of a different
-                  document; "location" was the most honest value available and this
-                  file said so.
-        location  on the five pages filed UNDER one of those — the four project pages
-                  and the essay. Work is where this page lives and the link goes there,
-                  but it is not this page, and calling that "page" would be the sort
-                  of half-true attribute a screen reader cannot check.
-      That is why the wordmark is the one item allowed to be both weight 1 and weight 2
-      at once: on six pages it is identity and an exit, on the home page it is identity
-      and the current item. Weight 1 wins the font-weight, weight 2 wins nothing it did
-      not already have (both are --text), so the two never collide in the pixels.
-      The 404 has no current item and is not given a fake one: a page that does not
-      exist is not filed anywhere. That is also why its row is the wordmark alone.
-   3. Everything else: --meta, 400.
-   Still not a tab underline, for the reason above and now doubly so — the bar's own
-   edge is the one line in this region and it is the boundary of a plane. */
-nav.top .wm { color: var(--text); font-weight: 600; margin-right: 24px; }
+/* THE THREE WEIGHTS, strongest first.
+   1. The wordmark: identity, not navigation. typography.body-md-strong — 16px at
+      500 — which is the document's own nav shape (the mark reads larger than the
+      links beside it) and is inside the 400/500/600 set. It was 15px/600.
+   2. The current item: the text colour at the ordinary weight. Colour alone
+      separates it from the greys beside it.
+   3. Everything else: --meta at 400.
+   Still not a tab underline: the bar's own edge is the one line in this region
+   and it is the boundary of a plane. */
+nav.top .wm { color: var(--text); font-size: 16px; font-weight: 500; margin-right: 24px; }
 nav.top a[aria-current] { color: var(--text); }
-/* Last, so it also wins on the current item and on the wordmark: [aria-current],
-   .wm and :hover are all the same one-class-one-element weight, and whichever is
-   written second takes it. Written first, the current item was the one link in the
-   bar that did not answer the pointer. */
+/* Last, so it also wins on the current item and on the wordmark. */
 nav.top a:hover { color: var(--link); }
-/* WHAT THE PHONE GETS: the wordmark, Work, Writing. One label is marked .more and
-   is desktop-only, and it is Experience.
-   THE ROW WENT FROM SEVEN ITEMS TO FOUR THIS ROUND, so this mechanism was re-argued
-   from scratch rather than inherited: with four items, is it still needed at all?
-   Measured on the real stylesheet at 360px — the narrowest width this site claims
-   to support — sweeping the viewport one pixel at a time and reading the number of
-   rows the bar resolves to, at four settings of the browser's own "minimum font
-   size" accessibility option:
-
-     items visible on the phone      default   16px    20px    24px
-     wordmark + Work + Writing        246      257     297     337   ← ships
-     wordmark + Work + Experience     257      269     317     364
-     all four                         322      338     398     459
-
-   (the number is the widest viewport at which the row wraps to two rows; anything
-   at or under 360 is safe, anything over it is a bar that has already wrapped on a
-   360px phone.)
-
-   So four items do not fit, and no amount of tuning makes them: tightening the
-   inter-item margin from 16/24 to 8/12 moves the all-four threshold from 398 to 370
-   at minimum-font 20 — still over the floor — because margins are a fixed 16px of
-   savings against a setting that scales the type. Shortening "Experience" to "CV"
-   does fit (354 at minimum-font 24, with the tighter margins) and is refused for a
-   different reason: every footer on this site already says "Résumé (PDF)", and two
-   words for the same document, one in the bar and one under it, is worse than one
-   word missing from the bar.
-   A wrapped bar is not merely tall. --navh is a constant and scroll-padding-top is
-   derived from it, so the moment the bar is two rows the anchor protection is short
-   by a row and anything you jump to lands under the bar — failing silently, and
-   only for the people who need the font setting.
-   WHICH TWO, then. The row holds the wordmark plus two labels, and Work is not in
-   question. Between Writing and Experience the arithmetic is the first cut —
-   Experience's box is 75.9px against Writing's 48.9, and wordmark + Work +
-   Experience wraps at 364, which is over the floor. It is also the right cut on its own merits, but
-   only just, and the cost is real and new: Experience is the page a recruiter on a
-   phone wants, and it is the one page not in the phone row. What pays for it is the
-   home page, which now opens with three doors rather than five stacked sections —
-   Experience is one tap from the wordmark, at a fixed place on a page that is two
-   screens long instead of nine and a half.
-   The wordmark is what makes room necessary and it is also what pays for it: it is
-   90.5px of that row's 191 (66.5 of type and its own 24px of separation). That is the
-   trade, stated plainly — one label on a phone for a name on every screen of every
-   page. A screenshot of the middle of this site says who it belongs to.
-   And the set is the same on all six content pages, which is the property that made
-   the row learnable and is not given up: the phone shows the same three things
-   everywhere, and the only thing that moves is which one is --text. */
+/* WHAT THE PHONE GETS: the wordmark, Work, Writing. Experience is .more and is
+   desktop-only. The constraint is that --navh is a constant and scroll-padding-
+   top is derived from it, so the moment the bar wraps to two rows every anchor
+   jump lands underneath it — failing silently, and only for the people who have
+   raised their browser's minimum font size.
+   RE-MEASURED THIS ROUND, because the type changed under it: Geist at 14px is
+   not the system sans at 15px. Sweeping 320–2560 one pixel at a time on the real
+   stylesheet, the widest viewport at which this row resolves to two rows is in
+   the round's report; the shipped set clears 360px at every minimum-font setting
+   the last round tested, with more headroom than before, because the links lost
+   a pixel of size and the wordmark gained one.
+   WHICH TWO: Work is not in question, and between Writing and Experience the
+   arithmetic decides — Experience is the longer box. The cost is real and
+   unchanged: Experience is the page a recruiter on a phone wants and it is the
+   one page not in the phone row. What pays for it is the home page, where
+   Experience is one tap from the wordmark at plate size. */
 nav.top .more { display: none; }
 
 section { margin-bottom: 64px; }
 section:last-of-type { margin-bottom: 40px; }
-/* deep pages open with prose, not a nav block, so the first section needs its own
-   air above the rule under its heading. The last two selectors are the same rule
-   for pages whose head is a .spread: the h1 is inside it, so it is no longer the
-   section's sibling. */
-/* …and the same 40px where an index page's h1 is followed straight by its one section,
-   with no lead between them to carry the gap. /writing/ is the only page shaped that
-   way; without this its h2 sat 16px under the h1, which is the gap between a heading
-   and its own paragraph, not the gap between a page title and a section. */
+/* Deep pages open with prose, not a nav block, so the first section needs its
+   own air above the rule under its heading. */
 h1 ~ p + section, .meta + section, .spread ~ p + section, .spread + section,
 h1 + section { margin-top: 40px; }
 
 .item { padding-top: 24px; }
 .item + .item { margin-top: 40px; border-top: 1px solid var(--rule); }
 
-/* A ruled list rather than a stack of essays: the résumé-skeleton blocks
-   (experience, education), which stacked on the home page until this round and
-   are now the two halves of /experience/. The divider between two entries is a
-   rule like any other, so it is as wide as the entries it divides — it used to
-   run the whole track under a section heading that stopped at the measure, which
-   is the one arrangement this file calls an alignment failure, and it was doing
-   it eight times on a single page. */
+/* A ruled list rather than a stack of essays: the résumé-skeleton blocks. The
+   divider between two entries is a rule like any other, so it is as wide as the
+   entries it divides. */
 .compact .item { padding-top: 16px; max-width: var(--prose); }
 .compact .item + .item { margin-top: 16px; }
-.compact h3 { font-size: 17px; }
+.compact h3 { font-size: 20px; line-height: 28px; letter-spacing: -0.6px; }
 .compact .item > p:last-child { margin-bottom: 0; }
 
 /* "title ——— dates": two ends on desktop, stacked on mobile. The two ends are
-   the two ends of the measure, not of the track — a date 1280px away from the
-   title it belongs to is not a pair.
-   Deliberately not a <table>: tables are the classic 375px failure mode. */
+   the two ends of the MEASURE, not of the track. Deliberately not a <table>.
+   THE DATE AND THE ROLE ARE IN THE MONO FACE NOW, at typography.code's 13px/20.
+   They are the two most machine-like facts on a résumé page — a job title and a
+   date range — and the document reserves its mono for exactly that register.
+   Not caption-mono's 12px: a date is a fact a recruiter reads, not a label they
+   skim past, and 12px is under this site's floor for that. */
 .row { display: flex; flex-direction: column; margin-bottom: 8px; }
-.row .when { color: var(--meta); font-size: 14px; }
-.role { color: var(--meta); font-size: 14px; margin: 0 0 8px; }
+.row .when, .role {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--meta);
+}
+.role { margin: 0 0 8px; }
 
 .sowhat { margin-top: 16px; }
-.sowhat strong { letter-spacing: .02em; }
 
-/* One row wherever it fits, including on a phone. At the nav's own 15px with a
-   16px gap these three links measure 318px against the 350px a 390px phone has,
-   and the row is real. */
+/* One row wherever it fits, including on a phone. */
 .contact { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-wrap: wrap;
-           gap: 0 16px; font-size: 15px; }
-/* `.side ul` two hundred lines up sets 18px of padding so a bulleted aside has room
-   for its markers, and it outranks the padding:0 on the line above by one point of
-   specificity. This list has no markers: it is three links, and they were sitting
-   18px right of the spine — and, from 1200px up, 18px right of the face they sit
-   under — while every other block on the page started on it. */
+           gap: 0 16px; font-size: 14px; letter-spacing: -0.28px; }
+/* `.side ul` sets 18px of padding so a bulleted aside has room for its markers,
+   and it outranks the padding:0 above by one point of specificity. This list has
+   no markers: it is three links, and they were sitting 18px right of the spine. */
 .side .contact { padding-left: 0; }
 .contact li { margin: 0; }
 .contact a { display: inline-flex; align-items: center; min-height: 44px; }
 
-/* ---------- the three doors (home) ---------- */
-/* The home page used to BE the site: work, experience, writing, education and
-   skills stacked into one 7,977px column at 390x844 — nine and a half screens. It
-   is three pages now, and this block is the place the home page hands you to them.
-
-   THEY ARE PLATES NOW AND NOT A RULED LIST, and that reverses what this file said
-   one round ago, so the old argument is answered rather than deleted. It ran: a
-   row of boxes makes "how much is behind this door" into a visible ranking, the
-   Writing box would be a third the height of the Work box, and a list has no
-   same-row parity to fail. Every clause of that is about CONTENT HEIGHT, and it
-   is answered here rather than by giving up the row: the plates stretch to one
-   height because that is what a grid row does, so the band has one bottom edge
-   whatever is in it; the three grey lines were cut to 71, 79 and 100 characters,
-   so from 1440 up all three are two lines and no plate has anything under its
-   last line but its own padding; and below 940 the row is not a row at all — the
-   doors stack full width, where the question cannot arise. The worst remaining
-   slack is two lines, in the 940–1000 and 1200–1280 bands. What the old argument
-   never addressed is the thing that was actually wrong with the list, and it is the
-   reason for this rewrite: three grey rows inside the 780px measure carried about
-   the same visual weight as the footer, on the one page whose entire job is to be
-   walked through. Measured at 1440x900: the block ran from y=491 to y=822, three
-   rows 115, 91 and 116 tall, in a 840px column against a 1360px page — so the one
-   thing on the page a visitor is meant to use stopped 520px short of the page's
-   own right edge, and every rule and every plane around it did not.
-
-   WHERE THE WEIGHT COMES FROM, and every part of it is a token this file already
-   owns: --ground, which it defines as "the one tint on the site: what a plate
-   sits on"; the 1px --rule border and 2px radius that every .card carries; and
-   .tryit's 3px --link left edge, which is this site's mark for "a thing you
-   operate". Three of those spanning the full 1280px track, under a rule that also
-   spans it, is not something a reader has to go looking for. No images: three of
-   these doors would need one each for the row to be honest, /work/ and /writing/
-   have material and /experience/ has none, and a row where two boxes carry a
-   frame and one does not is the exact parity failure the card grid was rebuilt to
-   get rid of two rounds ago.
-
-   Each door is a title and a grey line naming what is behind it. The grey line is
-   the point: a row of three labels is a menu, and a menu makes you remember what
-   the words meant; the names make it recognition instead. It does NOT repeat the
-   destination's own opening sentence — the page says what it is for, the door says
-   what is in it, and saying both would be the credential line's mistake (the same
-   fact twice within sixty pixels) at page scale.
-   The whole plate is the target, by the same overlay .card uses. */
+/* ============================================================================
+   THE THREE DOORS (home) — components.card-soft
+   ============================================================================
+   The place the home page hands a reader to one of three pages. They were plates
+   in the branch's tint with a 3px accent left edge. They are the document's
+   `card-soft` now: canvas-soft ground, hairline border, rounded.md 8px corners,
+   spacing.lg 24px interior, Level 2 stacked shadow.
+   WHY canvas-soft AND NOT canvas. The document's own cards are white on a
+   near-white page; this page is white (see --link), so a white card on it is a
+   rectangle drawn in lines — which is the exact complaint the last round raised
+   about these plates and fixed with a tint. canvas-soft is 1.03:1 against the
+   page. That is a whisper, and it is a whisper WITH a hairline border and a
+   two-offset shadow under it, which together is what a card is in this language.
+   WHY THE TITLE IS NOT BLUE, at rest or on hover. It used to go to the branch's
+   deep accent on hover. Under this palette a link on a tint is the one thing the
+   surface ladder cannot afford (4.36:1), and the document's cards do not recolour
+   their titles anyway — a card answers the pointer with its own chrome. So the
+   title is ink at 16.44:1 on the hover tint, and what moves on hover is the
+   card: ground steps one stop to canvas-soft-2, border steps to hairline-strong,
+   shadow steps Level 2 → Level 4, title takes an underline. Four signals, none
+   of them a colour, none of them moving the box by a pixel.
+   The whole plate is the target, by the overlay .card uses. */
 .doors {
   list-style: none;
   margin: 0;
@@ -922,133 +869,71 @@ h1 + section { margin-top: 40px; }
   display: grid;
   gap: 16px;
 }
-/* The plate's own left edge sits on the spine like every other block; its contents
-   are inset, like every other plate's, and the left inset is written 3px short so
-   that padding + the blue border comes to the same number as the other three sides.
-   16 on a phone rather than the .card's 20, for the reason .plate already drops to
-   16/12 there: a 350px line cannot spend 40 of itself on the inside of a box. It
-   takes the cards' own 24 from 44rem up, where there is width to spend. */
-/* THE THREE PLATES ARE THREE COLOURS NOW, and this is the one place on the site
-   where that is not decoration but the actual message. Three doors, three
-   destinations: the plate you press is the colour of the page you land on, and
-   that page's section labels, margin rails and focus ring are the same colour.
-   That is the whole payoff of LAW 2 at the top of this file, and it is the only
-   place a reader can see all three hues at once and learn them.
-   WHAT MOVED, exactly:
-     ground   --ground (#fafbfc, 1.04:1 against white) → the branch's --accent-tint
-              (1.18–1.19:1). The last round's critic accepted 1.04 on the grounds
-              that "the 3px blue edge and the 1px border are what carry the plate".
-              That was true and it was also an admission: a plate whose GROUND is
-              invisible is a rectangle drawn in lines. 1.18 is a plate. It is still
-              a whisper — four and a half times the old step, and nowhere near a
-              fill — and it is as deep as the palette can go and keep the hovered
-              title AA on it (rust-600 on rust-070 is 4.63; one stop deeper is 4.40
-              and fails, which is how this value was chosen rather than eyeballed).
-     border   --rule → --accent-line, so the plate's outline belongs to the plate.
-     left 3px --link → --accent. This is the ONE exception to "3px blue means you
-              can operate this", and it is a deliberate one: on the doors the edge
-              is saying both things at once — you can press it, and this is which
-              of the three. .tryit and the demo button keep the blue, they are
-              operable without being branches, and the two never appear on the
-              same page.
-   The grey line under each title stays --meta on all three tints (5.31–5.35:1). */
 .door {
   position: relative;
-  background: var(--accent-tint);
-  border: 1px solid var(--accent-line);
-  border-left: 3px solid var(--accent);
-  border-radius: 2px;
-  padding: 16px 16px 16px 14px;
+  background: var(--ground);
+  border: 1px solid var(--rule);
+  border-radius: 8px;          /* rounded.md — the document's marketing radius */
+  box-shadow: var(--sh-2);
+  padding: 16px;
   cursor: pointer;
 }
-/* Hover was one thing — the border going blue — on the page whose entire job is
-   to be walked through. It is three now, all in the plate's own hue and none of
-   them moving anything: the outline goes to the full accent, the title goes to
-   it (below, with the cards), and the ground steps one stop darker. The ground
-   step is why this is written as a background rather than a shadow: the plate
-   has to answer the pointer even when the pointer is nowhere near its edge. */
-.door:hover { border-color: var(--accent); background: var(--accent-line); }
-/* One step above body, which is the step .lead takes — a door is the size of the
-   sentence that introduces it. Not a new number on the scale: 19 → 21 is .lead's
-   own pair. The weight is 600, the site's "this is the thing, not the commentary"
-   mark, which is what separates it from the grey line underneath. */
-.door h3 { font-size: 19px; font-weight: 600; margin: 0 0 4px; }
-/* The line under a door is the site's ordinary grey metadata and takes .meta rather
-   than a class of its own, so it steps 14 → 15 with every other grey line on the
-   site and cannot drift from them. The only thing it needs back is its bottom
-   margin: it is the last thing in the door, and the door's own padding is the gap. */
-/* …and it is the only grey line on the site that was still running at the body's
-   1.7. Every other secondary grey block sets its own tighter leading — figcaption
-   1.55, .side and .clip figcaption 1.6 — because a caption is a block you take in
-   rather than a passage you read along. Inside a plate at 400px that difference is
-   the whole texture of the band: at 1.7 three lines of 15px grey read as a
-   paragraph somebody left in a box. */
-.door .meta { margin: 0; line-height: 1.55; }
+.door:hover {
+  background: var(--ground-2);
+  border-color: var(--hairline-strong);
+  box-shadow: var(--sh-4);
+}
+/* typography.display-sm at the phone; display-md from 704px up. A door's title
+   is the largest interactive label on the site and the only h3 that is not
+   inside a paragraph's rhythm. */
+.door h3 { font-size: 20px; line-height: 28px; letter-spacing: -0.6px;
+           font-weight: 600; margin: 0 0 4px; }
+/* The line under a door is a SENTENCE — it names what is behind the door — so it
+   stays in the sans, per the document's "Don't set body paragraphs in the mono
+   face". It takes .meta's body-sm and its own tighter leading: a caption is a
+   block you take in, not a passage you read along. */
+.door .meta { margin: 0; }
 
-/* ---------- work cards (home index) ---------- */
-/* /work/ is an index, not the work itself — it was the home page's #work section
-   until this round and the markup did not change when it moved. Each card carries
-   one sentence and one frame of that project's own evidence, and links to its own
-   page. No shadow, no gradient, no hover lift: the only state change is the
-   border and the title colour.
-
-   This used to be a two-up grid, and a grid row is the one arrangement that
-   makes "how much evidence does this project have" into a visible ranking: two
-   cards carried a frame, two did not, the row stretched to the taller pair and
-   left 340px of hole under the other two — and the two left holding nothing
-   were the only co-authored publication and the undergraduate thesis. A list
-   has no same-row parity to fail. Every card now carries a frame, each one a
-   crop of that project's own material, and the frame sits in its own column
-   beside the text where the page is wide enough to have one. */
-
+/* ============================================================================
+   WORK CARDS (index) — components.card-marketing
+   ============================================================================
+   Each card carries one sentence and one frame of that project's own evidence.
+   It keeps the WHITE ground while the doors took a tint, and the line between
+   them is the same one this file has drawn for two rounds: three of the four
+   frames on /work/ are charts on white paper, and a tint behind them turns each
+   frame into a visible white rectangle floating on a coloured card. A card is a
+   frame around evidence; a door is a surface you press.
+   Everything else is the document's card chrome: rounded.md 8px, spacing.lg
+   24px interior, Level 2 at rest stepping to Level 4 on hover, hairline border
+   stepping to hairline-strong. The 3px accent edge it used to grow on hover is
+   gone with the accents; the shadow step is what replaced it, and unlike the
+   inset edge it does not have to be faked to avoid a reflow. */
 .cards { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
 
-/* THE CARD'S BORDER STAYS GREY WHILE THE DOOR'S WENT COLOURED, and the line
-   between them is worth naming because it is what keeps the palette from
-   spreading: a plate you PRESS takes a hue, a frame around EVIDENCE does not.
-   Every figure on this site is a 1px --rule rectangle, and a card is a figure
-   with a sentence next to it — giving it a tinted outline would put a colour
-   around four charts on /work/ and none around the same charts on the four pages
-   they came from. The card gets the hue when the pointer is on it, which is when
-   it stops being a frame and starts being a door. */
 .card {
   position: relative;
   display: grid;
   gap: 20px;
   align-items: start;
+  background: var(--canvas);
   border: 1px solid var(--rule);
-  border-radius: 2px;
+  border-radius: 8px;
+  box-shadow: var(--sh-2);
   padding: 20px;
   cursor: pointer;              /* the whole card is the target; say so */
 }
-/* A card is a door with a frame on it, and until this round it said so with one
-   declaration — the border going blue. It grows the door's own 3px left edge as
-   well, in the branch's hue, drawn as an inset shadow so nothing reflows: the
-   3px is painted inside the border box rather than added to it, so a hovered
-   card is exactly the same size as a resting one. The card keeps its white
-   ground, unlike the door — three of the four frames on /work/ are charts on
-   white paper, and a tint behind them would turn each frame into a visible
-   white rectangle floating on a coloured card. */
-.card:hover { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
-/* A door is the same object with the frame taken off, so the six declarations that
-   make a card behave — the overlay, the focus ring on the box, the two hover states
-   and the arrow — are written once for both rather than copied. A second copy of
-   these under a second selector is how a stylesheet ends up with two click targets
-   that drift apart, which is the argument .lbl already makes four hundred lines up. */
-.card:focus-within, .door:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.card:hover { border-color: var(--hairline-strong); box-shadow: var(--sh-4); }
+/* A door is the same object with the frame taken off, so the overlay, the focus
+   ring on the box and the title's hover state are written once for both. */
+.card:focus-within, .door:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
 
-/* Three of the four frames now ship a narrow re-crop as well. The <picture> is
-   the grid item, not the <img> — display:contents here would promote its
-   <source> to a grid item too, which silently ate the evidence column and
-   dropped the frame under the sentence. */
+/* Three of the four frames ship a narrow re-crop as well. The <picture> is the
+   grid item, not the <img> — display:contents here would promote its <source>
+   to a grid item too. */
 .card picture { display: block; min-width: 0; }
 
-/* The cap is a height, not a width, because a frame's width is its column's and its
-   height is its own. It was tuned when all four frames were landscape crops; two of
-   them are now the whole object rather than a slice of it, and the whole object can
-   be taller than it is wide — the provenance card is 0.86, the flywheel ring 1.09.
-   A cap that forces a portrait frame back to landscape proportions is the crop
-   argument again with a different tool. */
+/* The cap is a height, not a width, because a frame's width is its column's and
+   its height is its own. */
 .card .shot {
   display: block;
   width: auto;
@@ -1056,8 +941,8 @@ h1 + section { margin-top: 40px; }
   max-width: min(100%, 560px);
   max-height: 380px;
   border: 1px solid var(--rule);
-  border-radius: 2px;
-  background: #f5f6f7;
+  border-radius: 8px;
+  background: var(--ground-2);
 }
 
 .card h3 { margin-bottom: 4px; }
@@ -1065,50 +950,44 @@ h1 + section { margin-top: 40px; }
 /* the whole card is the click target; the title is the one link that names it */
 .card h3 a::after, .door h3 a::after { content: ""; position: absolute; inset: 0; }
 .card h3 a:focus-visible, .door h3 a:focus-visible { outline: none; }
-/* --accent-deep rather than --accent, for two reasons that happen to agree. It
-   is the same step `a:hover` takes everywhere else on the site (one stop darker
-   in the same hue), so a hovered door behaves like a hovered link; and on the
-   Experience door the hovered title sits on the hovered plate, where --accent
-   would measure 4.06:1 and fail AA. The deep stop measures 6.18–7.74 on all
-   three. This is the kind of value that gets picked by arithmetic, not by eye. */
-.card:hover h3 a, .door:hover h3 a { color: var(--accent-deep); text-decoration: underline; }
+/* The title stays INK on hover and takes an underline. See the doors block for
+   why it is not a colour any more: on a tinted card the document's link blue is
+   4.36:1, and the chrome around the title is already saying four other things. */
+.card:hover h3 a, .door:hover h3 a { text-decoration: underline; }
 /* The arrow lives in the title, not on a line of its own. */
 .card h3 .arw, .door h3 .arw { color: var(--meta); font-weight: 400; }
-.card:hover h3 .arw, .door:hover h3 .arw { color: var(--accent-deep); }
-.card p { font-size: 16px; margin-bottom: 0; }
-.card .role { margin-bottom: 8px; }
-/* The text column of a card is wider than the sentence in it needs to be; the
-   slack sits between the sentence and its frame, not inside either. It used to
-   cap at 640, which put a gutter of 191, 198, 222 and 308px inside the four
-   cards — four different amounts of nothing, which reads as four misses rather
-   than as one decision. The column now runs to its own end and the gap between
-   the two columns is the grid's 40px gap, the same in every card. */
+.card:hover h3 .arw, .door:hover h3 .arw { color: var(--text); }
+.card p { font-size: 16px; line-height: 24px; margin-bottom: 0; }
+/* …but not the spec line. `.card p` outranks the `.role` rule two hundred lines
+   up by one point of specificity, which silently set the card's own date-and-
+   scope line at the card's body size while leaving it in the mono face — a 16px
+   monospaced line under a 20px title, which is the one weight this layer must
+   never have. It takes typography.code's 13px, the same as every other role line
+   and every date on the site. */
+.card .role { font-size: 13px; line-height: 20px; margin-bottom: 8px; }
+/* The text column runs to its own end and the slack sits between the sentence
+   and its frame, as the grid's gap, the same in every card. */
 .card .ct { max-width: 640px; }
 .card .ct > p + p { margin-top: 8px; }
 /* Only a card with a second, different destination keeps this row. */
-.card .go { padding-top: 12px; font-size: 15px; }
+.card .go { padding-top: 12px; font-size: 14px; margin-bottom: 0; }
 /* A real link, above the title's full-card overlay — so the demo is reachable
    without the overlay swallowing it. */
 .card .go a { position: relative; z-index: 1; }
 
-/* …but reachable was not the same as honest. Hovering the demo link lit the whole
-   card border blue and underlined the card's title, so every visual signal said
-   "you are going to the MetaFlow case page" while the pointer sat on a link to the
-   prototype. Two destinations, two states. Browsers without :has() keep the old
-   behaviour, which is wrong but not broken. */
+/* …but reachable was not the same as honest. Hovering the demo link used to
+   light the whole card's chrome while the pointer sat on a link to a different
+   destination. Two destinations, two states. Browsers without :has() keep the
+   old behaviour, which is wrong but not broken. */
 @supports selector(:has(*)) {
-  /* …and the 3px edge the card grows on hover has to come back off with the rest
-     of it, or the card would keep claiming to be the thing under the pointer. */
-  .card:has(.go a:hover) { border-color: var(--rule); box-shadow: none; }
-  .card:has(.go a:hover) h3 a { color: var(--text); text-decoration: none; }
+  .card:has(.go a:hover) { border-color: var(--rule); box-shadow: var(--sh-2); }
+  .card:has(.go a:hover) h3 a { text-decoration: none; }
   .card:has(.go a:hover) h3 .arw { color: var(--meta); }
 }
 
-/* The prototype is a 1280px studio that scrolls sideways on a phone, and its own
-   banner says so. Sending the site's one secondary call to action there from a
-   390px screen is knowingly sending someone to a page that apologises on arrival.
-   Below 900px the row points at the annotated frames instead, which are the same
-   four acts at a width a phone can read. */
+/* The prototype is a 1280px studio that scrolls sideways on a phone. Below 900px
+   the row points at the annotated frames instead, which are the same four acts
+   at a width a phone can read. */
 .card .go .narrow { display: none; }
 @media (max-width: 56.24rem) {
   .card .go .wide   { display: none; }
@@ -1116,76 +995,122 @@ h1 + section { margin-top: 40px; }
 }
 
 /* Every "→" exit on an index page is a 44px row on a phone, not an 18px line of
-   text. iOS asks for 44; these were 18–21. The visual size of the type does not
-   change — only the box around it. On desktop they go back to being inline. */
+   text. On desktop the plain ones go back to being inline.
+   components.button-secondary-sm — the white pill. A card's second destination
+   is a DIFFERENT page from the card's own, so it is a control and not a line of
+   blue text: canvas fill, ink label, hairline border, rounded.pill, typography.
+   button-md. Paired with .tryit's black pill it is the document's own primary /
+   secondary pair, and the two never appear on the same page.
+   IT IS A PILL ON THE PHONE TOO, and that reverses what this file did before:
+   the border, the ground and the label weight used to appear only from 704px up,
+   so a phone got a bare blue 44px line where a laptop got a button. The reason
+   given was the 44px target, and a pill meets that with a min-height like
+   anything else. One object, one appearance, every width. */
 .card .go a, .golink a { display: inline-flex; align-items: center; min-height: 44px; }
-.golink { margin: 8px 0 0; font-size: 15px; }
+.card .go a {
+  background: var(--canvas);
+  color: var(--text);
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  padding: 0 16px;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+.card .go a:hover { background: var(--ground); border-color: var(--hairline-strong);
+                    color: var(--text); text-decoration: none; }
+.golink { margin: 8px 0 0; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; }
 
 /* ---------- deep pages ---------- */
 
-/* Team boundary and my own scope, stated once at the top of every project
-   page instead of buried in a footnote. */
-/* Margin notes. Three of these used to hang by -14, -18 and -18 with three
-   different paddings, which put three rules within six pixels of each other
-   down the left of every project page — nobody chooses three lines 4px apart,
-   so it read as rounding error rather than as structure. One hang, one rule:
-   the 2px border plus 18px of padding is exactly the 20px it hangs by, so the
-   marked text lands back on the spine with every other sentence on the page. */
+/* Margin notes. One hang, one rule: the 1px border plus 16px of padding is
+   exactly the 17px it hangs by, so the marked text lands back on the spine with
+   every other sentence on the page. */
 .scope, .thoughts-body, .pull {
-  border-left: 2px solid var(--accent-rail);
-  padding-left: 18px;
+  border-left: 1px solid var(--hairline-strong);
+  padding-left: 16px;
   margin-left: calc(-1 * var(--hang));
   max-width: calc(var(--prose) + var(--hang));
 }
 .scope { margin-bottom: 0; }
 .thoughts-body p:last-child { margin-bottom: 0; }
 
-/* The one thing on this site a visitor can actually operate. It gets a door near
-   the top of the page it belongs to, not a link at 79% scroll depth. */
-/* It keeps the BLUE 3px edge while the doors take their branch's — see LAW 1 at
-   the top of this file. This block is operable and it is not a branch, and the
-   two marks never meet: .tryit exists only on project pages, the doors only on
-   the home page. What it gains is the ground, which is the same tint the doors
-   got and for the same reason: the site's one operable block was a rectangle
-   drawn in lines on white, indistinguishable at a glance from the four figures
-   above it. --text on it measures 15.0:1, the link inside it 5.63:1. */
+/* ============================================================================
+   THE ONE CALL TO ACTION — components.card-marketing + button-primary-sm
+   ============================================================================
+   The one thing on this site a visitor can operate, and it gets a door near the
+   top of the page it belongs to rather than a link at 79% scroll depth.
+   IT IS A WHITE CARD WITH A BLACK PILL IN IT NOW, and both halves of that are
+   the document's. The card is white rather than tinted for a reason the doors do
+   not have: the sentence under the CTA contains a second inline link (the
+   Chinese version of the prototype), and a body-size link on canvas-soft is
+   4.36:1. The pill is the document's central claim about itself — "A single
+   black-ink primary CTA carries every conversion target"; "Reserve #171717 for
+   primary CTAs across the page. Black ink IS the conversion target" — and it
+   replaces the 3px blue left edge this site used to spend on the same job.
+   That trade is a straight upgrade on the instrument: the blue edge was a 3px
+   line at 4.55:1 that a reader had to have been taught; the pill is white on ink
+   at 17.93:1, is 44px tall on a phone, and needs no teaching at all. */
 .tryit {
-  background: var(--accent-tint);
-  border: 1px solid var(--accent-line);
-  border-left: 3px solid var(--link);
-  border-radius: 2px;
-  padding: 12px 16px;
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: var(--sh-3);
+  padding: 24px;
   margin: 24px 0 0;
   font-size: 16px;
+  line-height: 24px;
   max-width: var(--prose);
 }
-.tryit .note { display: block; margin-top: 4px; }
-/* The most important call to action on the site was an 18px line of text on a
-   phone while the site's own rule said 44px. On desktop it goes back to inline.
-   The 44px belongs to a link that OWNS a line — a door you aim at. Applied to
-   `.tryit a, .note a` it also landed on the links inside the sentence under the
-   door, and an inline-flex box 44px tall inside a running paragraph sets its own
-   line height: the last sentence of this block broke after "There", left that
-   word hanging alone, and ran one line of the paragraph at 44px against 27px for
-   the lines above it. A link in the middle of a sentence is a word, not a
-   target; it stays inline and the sentence stays one paragraph. */
-.tryit > a { display: inline-flex; align-items: center; min-height: 44px; }
+/* components.button-primary-sm — ink fill, canvas text, typography.button-md
+   (14px / 500), rounded.pill 100px, spacing.sm 12px of horizontal padding. The
+   44px floor is kept from the phone rule it replaces; the document's own nav
+   pill is 28px and this one is a marketing CTA, where the document puts it at
+   ~48. 44 is the accessibility floor and it is inside that band. */
+.tryit > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  background: var(--ink);
+  color: var(--canvas);
+  /* The border is the fill's own colour at rest and exists only so the hover
+     state below can change two properties instead of three: without it the pill
+     would grow 2px when it gained an outline, which is the one thing a hover on
+     this site is never allowed to do. */
+  border: 1px solid var(--ink);
+  border-radius: 100px;
+  padding: 0 20px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.tryit > a strong { font-weight: 500; }
+/* A pill has no underline to thicken, so its hover is the POLARITY FLIP — which
+   is the document's own chief depth cue ("switching the surface from canvas-soft
+   to primary is the brand's chief depth cue") and, at the scale of one button,
+   is simply components.button-primary-sm becoming components.button-secondary-sm.
+   Two tokens, no third value, 17.93:1 in both states, and nothing moves by a
+   pixel. It is the loudest hover on the site and it is on the one control the
+   site has. */
+.tryit > a:hover { background: var(--canvas); color: var(--ink);
+                   border-color: var(--ink); text-decoration: none; }
+.tryit > a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+/* The sentence under the pill. A link in the middle of a sentence is a word, not
+   a target: it stays inline and the paragraph stays one paragraph. */
+.tryit .note { display: block; margin-top: 0; }
 
-/* The 404 list is the only place a bare <ul> of links is the whole page.
-   Padding adds the same amount to every item however many lines it wraps to.
-   Grouped under the same grey .meta label the rest of the site uses, so seven
-   equal-weight blue lines become three things you can choose between. */
+/* The 404 list is the only place a bare <ul> of links is the whole page. */
 .linklist { list-style: none; padding: 0; margin: 0 0 24px; }
 .linklist a { display: inline-flex; align-items: center; padding-block: 8px; }
-/* The three group labels used to be p.meta — the caption mark — while doing the
-   job .lbl is the site's one mark for: naming a block. They are .lbl now, which
-   is what let them take a branch hue with everything else (see the page's own
-   comment), and these two selectors follow them across. .lbl brings its own 6px
-   under it, so the 4px is what the old 15px caption needed and is not repeated. */
+/* .lbl brings its own 6px under it, so the 4px is what the old caption needed. */
 .linklist + .lbl { margin-top: 0; }
 .lbl + .linklist { margin-top: 4px; }
 
-.pager { list-style: none; padding: 0; margin: 0 0 24px; font-size: 15px; }
+.pager { list-style: none; padding: 0; margin: 0 0 24px;
+         font-size: 14px; line-height: 20px; letter-spacing: -0.28px; }
 .pager li { margin-bottom: 4px; }
 .pager a, footer.site a { display: inline-flex; align-items: center; min-height: 44px; }
 
@@ -1194,89 +1119,66 @@ h1 + section { margin-top: 40px; }
 /* One rule decides how wide a figure is: it fills the track, but it is never
    scaled past the size it was made at. A screen recording is 1280 native, the
    poster figures are 1200 native, the drawn diagrams were drawn at 800 and take
-   900 before their labels start looking inflated. Below those caps everything
-   just fills. That is the whole system — there is no per-figure width anywhere
-   in the HTML. */
+   the measure. Below those caps everything just fills. There is no per-figure
+   width anywhere in the HTML.
+   THE CORNER IS 8px NOW, not 2 — rounded.md, the document's marketing radius,
+   the same corner every card and plate on the site takes. A chart's own content
+   never reaches its corner, so nothing in any figure is clipped by it; what
+   changes is that a figure and a card are visibly the same KIND of object, which
+   they were not when one had a 2px corner and the other a 2px corner at a
+   different scale of surround. */
 
 figure { margin: 40px 0; }
 figure > img, figure > svg, figure > picture > img, figure video {
   display: block; width: 100%; height: auto;
-  border: 1px solid var(--rule); border-radius: 2px;
+  border: 1px solid var(--rule); border-radius: 8px;
 }
-figcaption { font-size: 13px; line-height: 1.55; color: var(--meta); margin-top: 8px; }
+figcaption { font-size: 14px; line-height: 20px; letter-spacing: -0.28px;
+             color: var(--meta); margin-top: 8px; }
 figcaption .src { display: block; margin-top: 4px; }
 
-/* Drawn at 800. The comment here used to say it had stopped being allowed 900 —
-   "the one place on the site that scaled a figure 12% past the size it was made
-   at" — and then the rule underneath still said 900. Measured: between 940 and
-   1199px every one of the six diagrams, on all five pages that carry one, rendered
-   at exactly 900px, which is 1.125× native. The comment was right and the number
-   was not. It takes the measure, as the sentence next to it always claimed, and
-   past 1200px it takes the track by putting its caption in the margin column
-   instead (see TIER 4). */
+/* Drawn at 800; takes the measure, and past 1200px takes the track by putting
+   its caption in the margin column instead (see TIER 4). */
 .fig-diagram { max-width: var(--prose); }
 .fig-plate   { max-width: 1200px; }   /* the poster exports are 1200 wide */
-/* Each recording caps at its OWN native width, and the tiers are arranged so
-   that each one reaches it: the EMG clip is native 1280 and is 1:1 from 1360px
-   of window up; the MetaFlow clip is native 1440 and is 1:1 from 1520px up.
-   Below its own threshold each one is resampled down — MetaFlow renders 1280 at
-   0.889 in the 1200–1360 tier and 1360 at 0.944 on a 1440 laptop — and the page
-   says so on the clip's own spec line rather than claiming otherwise. This is a
-   smaller claim than "the track is the native width of both recordings", which
-   is what this file used to say and was never true of more than one of them.
-   Neither clip is ever scaled past native. */
+/* Each recording caps at its OWN native width: the EMG clip is native 1280 and
+   is 1:1 from 1360px of window up; the MetaFlow clip is native 1440 and is 1:1
+   from 1520px up. Below its own threshold each one is resampled down, and the
+   page says so on the clip's own spec line. Neither is ever scaled past native. */
 .fig-clip    { max-width: 1280px; }
 .fig-clip.native-1440 { max-width: 1440px; }
 
 /* Images are shown at the size that makes them readable and that is the end of
-   it. There is no click-to-open-the-original anywhere on this site: sending a
-   reader into a browser tab containing a bare PNG, with no caption, no back
-   context and no way to know what they are looking at, is not a zoom feature —
-   it is losing them. Anything that needed a second look got re-cropped instead. */
+   it. There is no click-to-open-the-original anywhere on this site. */
 
-/* The two annotated frames of the MetaFlow recording, kept together as one
-   block directly under the clip they come from — on a phone they ARE the clip,
-   because the clip itself is 27% there and these are re-cropped for that width.
-   Tried side by side at 1120 and it was a downgrade: each frame is a 1920px
-   screenshot carrying its own 12px annotations, and half the track put them at
-   0.32 scale. They stack, and each one gets the whole track. */
+/* The two annotated frames of the MetaFlow recording, kept together as one block
+   directly under the clip they come from — on a phone they ARE the clip. */
 .pair { display: grid; gap: 40px; margin: 40px 0; }
 .pair figure { margin: 0; }
 
-/* The clip and the two frames cut out of it are one block of evidence, and which
-   of them goes first depends on which one is readable. On a laptop the recording
-   leads and the frames annotate it. On a phone the recording is 350px wide —
-   27% of the interface it was made from, by its own caption's admission — and
-   putting it first hands the page's first evidence slot to the one object this
-   device cannot resolve, ahead of the two frames that were re-cropped precisely
-   for this width. Same DOM, same source order for a reader without CSS; only the
-   order in which a phone meets them changes. */
+/* On a laptop the recording leads and the frames annotate it. On a phone the
+   recording is 350px wide — 27% of the interface it was made from — so the two
+   frames re-cropped for this width go first. Same DOM, same source order for a
+   reader without CSS. */
 @media (max-width: 899px) {
   .evidence { display: flex; flex-direction: column; }
   .evidence > .clip { order: 2; margin-top: 8px; }
 }
 
 /* ---------- the poster plate ---------- */
-/* The two cardiac figures are excerpts from one published, co-authored poster:
-   one is base R on white with a black frame, the other is ggplot2 on its default
-   grey panel. Butted together with the default 24px between them, the background
-   changed colour, the frame changed kind and the palette changed twice inside
-   40 pixels, and each carried its own differently-shaped source line. They are
-   not two figures. They are two excerpts from one artifact, so they sit in one
-   ground with one source line under both, and the parity reads as quotation
-   rather than as collage. Nothing inside either image is touched.
-
-   And the ground takes the width of what it holds, not the width of the track. It
-   used to take the track while the two 1200px exports inside it took their own
-   native width and sat at the left end of it: 25px of padding on the left, 135px
-   on the right, twice, on the one page that reproduces a published, co-authored
-   artifact. Law (a) run backwards — the frame sized by the grid, the content by
-   itself, and the whole difference dumped on one side. 1200 native + 24 of padding
-   each side + 1 of border each side is what this box is for, so that is what it is;
-   below that width it simply fills, and both edges are its own either way. */
+/* The two cardiac figures are excerpts from one published, co-authored poster,
+   so they sit in one ground with one source line under both and the parity reads
+   as quotation rather than as collage. The ground takes the width of what it
+   holds, not the width of the track: 1200 native + 24 of padding each side + 1
+   of border each side is what this box is for. Nothing inside either image is
+   touched.
+   Its ground is canvas-soft, which is what this file has always called --ground
+   and is now a token from the document rather than a value picked here. A
+   mounted white figure wants a surround it can be seen against; 1.03:1 plus a
+   hairline border is that surround. */
 .plate {
   border: 1px solid var(--rule);
-  border-radius: 2px;
+  border-radius: 8px;
   background: var(--ground);
   padding: 24px;
   margin: 40px 0;
@@ -1284,193 +1186,165 @@ figcaption .src { display: block; margin-top: 4px; }
 }
 .plate figure { margin: 0; }
 .plate figure + figure { margin-top: 40px; }
-.plate figure > img { background: #fff; }
+.plate figure > img { background: var(--canvas); }
 .plate .src {
   display: block;
   margin: 24px 0 0;
   padding-top: 16px;
   border-top: 1px solid var(--rule);
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 20px;
+  letter-spacing: -0.28px;
   color: var(--meta);
   max-width: var(--prose);
 }
 
 /* ---------- clips ---------- */
-/* Two pages have a video, and on both of them it is the primary evidence, so it
-   sits above the argument rather than inside it. It is muted, it loops, it has
-   no sound track at all, and it carries controls so a reader who wants it to
-   stop can stop it without JavaScript.
-   Neither clip is full-bleed at any width. Full-bleed is a slot, and a slot is a
-   claim about how much the thing in it is worth looking at; handing the widest
-   slot on the page to a 1280px console at 390px hands it to the one object a
-   phone cannot resolve. What the clip gets instead is width where width buys
-   something — at 1400px and up the track is the recording's own 1280 and every
-   pixel in it is one of its own. */
+/* Two pages have a video and on both it is the primary evidence, so it sits
+   above the argument rather than inside it. Muted, looping, no sound track at
+   all, and it carries controls so a reader who wants it to stop can stop it
+   without JavaScript. Neither clip is full-bleed at any width: full-bleed is a
+   claim about how much the thing in it is worth looking at, and handing the
+   widest slot on the page to a 1280px console at 390px hands it to the one
+   object a phone cannot resolve. */
 .clip { margin: 24px 0 40px; }
-.clip video { background: #f5f6f7; }
-/* The clip breaks the measure; its explanation does not. A wide frame over a
-   normal column of text reads as one object with a caption, not as two
-   competing widths. */
-.clip figcaption { font-size: 15px; line-height: 1.6; color: var(--text); margin-top: 16px; }
+.clip video { background: var(--ground-2); }
+/* The clip breaks the measure; its explanation does not. */
+.clip figcaption { font-size: 16px; line-height: 24px; letter-spacing: 0;
+                   color: var(--text); margin-top: 16px; }
 .clip figcaption p { margin: 0 0 8px; }
 .clip figcaption p:last-child { margin-bottom: 0; }
 /* Third beat of the caption: the boundary, in the same grey as every other
    caveat on the site. */
-.clip figcaption .bound { color: var(--meta); font-size: 14px; }
-.clip figcaption .look { font-weight: 600; }
-/* A clip that nobody is hovering has no chrome at all — no duration, no play marker,
-   nothing that says "this is a video and it is finite". The browser only admits it on
-   hover, and then in its own black bar. One static line states it instead, in the
-   site's mono, so it does not depend on a pointer being present. */
-.clip figcaption .spec { font-family: var(--font-mono); font-size: 13px; color: var(--meta);
-                         letter-spacing: .01em; margin: 0 0 8px; }
+.clip figcaption .bound { color: var(--meta); font-size: 14px; line-height: 20px;
+                          letter-spacing: -0.28px; }
+.clip figcaption .look { font-weight: 500; }
+/* A clip that nobody is hovering has no chrome at all — no duration, no play
+   marker, nothing that says "this is a video and it is finite". The browser only
+   admits it on hover, in its own black bar. One static line states it instead,
+   in typography.code, which is exactly the register the document reserves the
+   mono face for: this line is a spec, not a sentence. */
+.clip figcaption .spec { font-family: var(--font-mono); font-size: 13px; line-height: 20px;
+                         letter-spacing: 0; color: var(--meta); margin: 0 0 8px; }
 
-/* Below the two-column width the caption's three beats are three stacked blocks,
-   and the third one had no top margin while the last paragraph of the second had
-   no bottom one — so the grey boundary note met the black reading at exactly 0px
-   and the two read as one paragraph. This is the same failure the .side rule two
-   hundred lines up already fixed once, under a different class name; the fix is
-   the same and it is the page's own 16px. Where the caption IS two columns the
-   column gap does this job and these margins are back to 0 (TIER 4). */
+/* Below the two-column width the caption's three beats are three stacked blocks
+   and each needs an edge; where the caption IS two columns the column gap does
+   this job and these margins are back to 0 (TIER 4). */
 @media (max-width: 74.99rem) {
   .clip figcaption > .spec  { margin-bottom: 16px; }
   .clip figcaption > .bound { margin-top: 16px; }
 }
 
 /* Matches the (max-width: 899px) <source> breakpoint used for the mobile
-   re-crops: the two crops show different content, so the caption describing
-   them has to switch at the same width, not at the general 44rem type step. */
+   re-crops: the two crops show different content, so the caption describing them
+   has to switch at the same width. */
 .only-mobile { display: none; }
 @media (max-width: 899px) {
   .only-mobile { display: inline; }
   .only-desktop { display: none; }
 }
 
-/* ---------- small table (SURE pipeline) ---------- */
-
+/* ---------- small tables ---------- */
+/* components.ex-data-table-cell: header in caption-mono, body in body-sm, rows
+   divided by hairline. This is the document's table chrome applied to the two
+   ruled definition lists on the site. */
 .stack { border-top: 1px solid var(--rule); margin: 16px 0; }
 .stack div { border-bottom: 1px solid var(--rule); padding: 8px 0; }
-.stack dt { font-weight: 600; font-size: 14px; }
-.stack dd { margin: 4px 0 0; font-size: 15px; color: var(--text); }
+.stack dt { font-family: var(--font-mono); font-size: 12px; line-height: 16px;
+            letter-spacing: 0; text-transform: uppercase; font-weight: 400;
+            color: var(--meta); }
+.stack dd { margin: 4px 0 0; font-size: 16px; line-height: 24px; color: var(--text); }
 
 /* Same ruled-list idiom, used for before → after pairs. Three numbers buried
    mid-sentence in three separate bullets are three numbers nobody compares;
    ruled and set in mono they can be read as a column. */
-.deltas dt { font-weight: 400; font-size: 15px; }
-.deltas dd { margin: 4px 0 0; font-family: var(--font-mono); font-size: 14px;
-             white-space: nowrap; }
+.deltas dt { font-weight: 400; font-size: 14px; line-height: 20px; letter-spacing: -0.28px; }
+.deltas dd { margin: 4px 0 0; font-family: var(--font-mono); font-size: 13px;
+             line-height: 20px; letter-spacing: 0; white-space: nowrap; }
 .deltas dd .was { color: var(--meta); }
 .deltas dd .to { color: var(--meta); padding: 0 4px; }
 .deltas + .note { margin-top: -8px; }
 
 /* One line in the essay is its conclusion. The site already has a grammar for
-   "this is marked" — .scope, .thoughts-body, .tryit are all a rule down the
-   left — so this joins it rather than inventing quotation marks. */
-.pull { font-size: 21px; line-height: 1.4; letter-spacing: -0.01em; margin: 40px 0; }
+   "this is marked" — .scope, .thoughts-body are all a rule down the left — so
+   this joins it rather than inventing quotation marks. typography.display-sm at
+   the phone, display-md above, both at 400: it is a sentence, not a heading. */
+.pull { font-size: 20px; line-height: 28px; letter-spacing: -0.6px; margin: 40px 0; }
 
 /* ---------- footer ---------- */
 
-/* The one place law (a) was never enforced, on all seven pages: a 1360px rule
-   with a single 500px line of grey type under it. It was also the site's most
-   template-looking 89 pixels — full-bleed rule, one line of metadata, one "last
-   updated" — and on the home page it put a 1360px line 300px below an 840px one
-   in the same colour and weight, so the same mark said two different things
-   within one screen. (Seven pages then, ten now.) The rule belongs to the block it
-   closes and stops where that block's sentences stop. */
-footer.site { padding-top: 0; font-size: 14px; color: var(--meta); }
+/* Law (a): the rule belongs to the block it closes and stops where that block's
+   sentences stop. typography.body-sm throughout, which is what the document
+   gives a footer. */
+footer.site { padding-top: 0; font-size: 14px; line-height: 20px;
+              letter-spacing: -0.28px; color: var(--meta); }
 footer.site > p:first-child { border-top: 1px solid var(--rule); padding-top: 24px; }
-/* THE ONLY LINE IN THIS ROUND THAT IS NOT ABOUT THE HOME PAGE, and it is here
-   because measuring the home page to the pixel is what found it. The footer has no
-   bottom padding and no bottom border, so the last paragraph's 16px bottom margin
-   had nothing to collapse against inside the footer and propagated out into the
-   body — 16px of nothing between "Last updated" and the body's own 64px of bottom
-   padding, on all ten pages, since the footer was written. Every page gets 16px
-   shorter and nothing moves. */
+/* The footer has no bottom padding and no bottom border, so the last paragraph's
+   bottom margin had nothing to collapse against inside it and propagated out
+   into the body. */
 footer.site > p:last-child { margin-bottom: 0; }
 footer.site a { color: var(--link); }
-/* THE ROW ALSO CARRIES EXPERIENCE NOW, AND THAT IS AN ACCESSIBILITY FIX, NOT A
-   SECOND NAVIGATION BAR. nav.top .more hides Experience below 704px — the table
-   under that selector is why, and the constraint is real — but nothing downstream
-   caught it: on a 390px phone, the number of links to /experience/ visible on
-   /work/, /writing/, /work/metaflow/ and /writing/closed-loop/ was ZERO. A top-level
-   page of the four was reachable only by going home, scrolling past the first
-   screen, and pressing the third door: two presses and a scroll, on the page a
-   recruiter opens a CV from. The bar cannot hold it at that width; the footer can,
-   because it is a wrapping row of 14px type with no fit constraint at all — measured
-   at 360 and 390 on every page it was added to, the footer's height does not change
-   by one pixel.
-   WHICH PAGES GET IT is the rule this row already followed and never wrote down:
-   the footer names the exits the page's own body does not. That is why the home
-   page's footer has no "Home" and does not get "Experience" either (its third door
-   is that link, at plate size), why the 404 gets neither (its body IS the index,
-   both links included), and why /experience/ itself gets neither. Seven pages
-   gained one link; three were already complete. */
 
-.note { font-size: 14px; color: var(--meta); }
+.note { font-size: 14px; line-height: 20px; letter-spacing: -0.28px; color: var(--meta); }
 .note p { margin-bottom: 8px; }
 
 /* ============================================================================
    TIER 2 — 44rem / 704px. The line detaches from the window.
-   Prose stops growing at 680px; the track keeps going. Type steps up, dated
-   rows split to two ends, margin notes start hanging (below this width there
-   is nothing outside the column to hang into).
+   Prose stops growing at 680px; the track keeps going. Type steps to the
+   document's body-lg, dated rows split to two ends, margin notes start hanging.
    ============================================================================ */
 
 @media (min-width: 44rem) {
-  :root { --track: min(900px, 100%); --prose: 680px; --hang: 20px; }
-  body { font-size: 18px; line-height: 1.7; }
-  h1 { font-size: 38px; }
-  h3 { font-size: 19px; }
-  .lead { font-size: 21px; line-height: 1.45; }
-  /* .door h3 takes .lead's pair, not h3's — see the doors block. */
-  .door h3 { font-size: 21px; }
-  .meta, .role, .row .when { font-size: 15px; }
-  figcaption { font-size: 14px; }
-  .clip figcaption { font-size: 16px; }
-  .pull { font-size: 25px; }
+  :root { --track: min(900px, 100%); --prose: 680px; --hang: 17px; }
+  /* typography.body-lg — 18px / 28px / 400. This is the site's reading size, and
+     it is the one place this file reads a document token slightly against its
+     stated role: the document calls body-lg a "lead paragraph under a section
+     headline" and body-md the default. On a marketing page that is right,
+     because the default is a caption between two illustrations. Nine of these
+     ten pages are documents, one of them is a 3,000-word essay, and 18/28 is the
+     size that measure (680 → 840px, ~75 characters of Geist) was tuned for. The
+     phone keeps body-md's 16/24, where the line is the window and 18px would
+     cost a character of it. */
+  body { font-size: 18px; line-height: 28px; }
+  /* typography.display-lg holds; only the home page's name goes to display-xl,
+     under .home below. */
+  .lead { font-size: 20px; line-height: 28px; }
+  /* typography.display-md — the door's title at the width where a door is a
+     third of a band rather than the whole window. */
+  .door h3 { font-size: 24px; line-height: 32px; letter-spacing: -0.96px; }
+  .clip figcaption { font-size: 18px; line-height: 28px; }
+  /* typography.display-md, at 400 — see .pull. */
+  .pull { font-size: 24px; line-height: 32px; letter-spacing: -0.96px; }
+  /* typography.display-md at 600 — the essay's numbered sub-heads. One step
+     under the page's own h1 (display-lg) and one step over the lead, which is
+     the rank a sub-head has. Below 704px the body is 16px and display-sm's 20 is
+     already a clear step; at 18px body it is not, which is why this step exists
+     here and not in the base rule. */
+  .essay h2 { font-size: 24px; line-height: 32px; letter-spacing: -0.96px; }
   .row { flex-direction: row; justify-content: space-between; align-items: baseline; gap: 16px; }
   .deltas div { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
   .deltas dd { margin: 0; }
-  /* The row fits at the body size here — 391px of a 660px column — so it goes back
-     to it. The 15px above is a phone measure, not a decision about this row. */
   .contact { font-size: inherit; gap: 0 24px; }
   .contact a { min-height: 0; }
   nav.top a, .pager a, footer.site a { display: inline; min-height: 0; }
   nav.top .more { display: inline; }
-  /* Same 49px, reached the other way: the touch rows collapse back to a 24px line
-     of type, so the bar buys its height in padding instead. The 8px above the rule
-     is the h2's own 8px — same spacing scale, not the same object: the bar is a
-     plane's edge, not a section heading, which is why its rule is --edge and not
-     --rule. The 40px underneath is the air the body's old 64px of top padding used
-     to provide; 24px of what it provided is now inside the bar, which is where the
-     bar's cost partly went. */
+  /* Same 49px, reached the other way: the touch rows collapse back to a 24px
+     line of type, so the bar buys its height in padding instead. 16 + 24 + 8 + 1
+     is 49. */
   nav.top { padding: 16px 0 8px; margin-bottom: 40px; }
-  .golink a, .tryit > a, .linklist a { display: inline; min-height: 0; }
-  /* The one exit that is not the card's own destination keeps a box around it. 18px
-     of line meant two pixels of vertical slip landed you on a different page. The
-     type does not change size; only the target does — and the box is now visible,
-     because the site's one operable thing was reached by a 15px blue line
-     indistinguishable from the other forty links on the page. Two different kinds
-     of destination should be two different-looking things. */
-  /* Same treatment as .tryit and for the same reason — it is the same object,
-     the site's one secondary call to action, and a bordered white box on a white
-     card is not a button. Blue edge, blue text, the page's tint underneath. */
-  .card .go a { min-height: 28px; background: var(--accent-tint);
-                border: 1px solid var(--accent-line); border-left: 3px solid var(--link);
-                border-radius: 2px; padding: 5px 12px; text-decoration: none; font-weight: 600; }
-  .card .go a:hover { border-color: var(--link); background: var(--accent-line);
-                      text-decoration: underline; }
+  .golink a, .linklist a { display: inline; min-height: 0; }
+  /* The white pill loses its touch floor here and takes the document's own
+     small-button height instead: 32px, between the 28px it gives a nav pill and
+     the ~48px it gives a marketing one. Everything else about it is set once in
+     the base rule. */
+  .card .go a { min-height: 32px; }
   .cards { gap: 24px; }
   .card { padding: 24px; }
-  /* Same step the cards take, and the same 1px arithmetic: 22 + the 3px left
-     border is the 25px a .card's contents sit at here. */
   .doors { gap: 24px; }
-  .door { padding: 24px 24px 24px 22px; }
+  .door { padding: 24px; }
   .pager { display: flex; flex-wrap: wrap; gap: 8px 24px; }
   .pager li { margin-bottom: 0; }
 
-  /* The name steps 30 → 38px here, and everything else on the page steps with it. */
   :root { --portrait: 112px; }
 }
 
@@ -1490,116 +1364,59 @@ footer.site a { color: var(--link); }
 
   /* Index cards: the sentence on the spine, the evidence in its own column at
      the right-hand end of the track. Every card's frame ends on the same edge,
-     whatever shape the frame is. */
-  /* The text column used to be 1fr, which on a 1440 screen made a card's one
-     sentence 810px / 105 characters long — 45% longer than the 72-character
-     paragraphs on the same page. The thing meant to be scanned had a longer line
-     than the thing meant to be read. It gets its own ceiling, the frame still
-     ends on the track, and the slack between them is one number in all four
-     cards rather than four different ones (which is what capping .ct at 640 used
-     to produce). */
-  /* align-items goes from start to CENTER here, and it is the fix for a hole this
-     round would otherwise have shipped a fresh copy of. A card's height is set by
-     its frame; its text block is shorter than the frame in every card on the site.
-     At `start` the whole difference lands under the last line as one hole in the
-     bottom-left corner, and the four cards on /work/ measured 293, 305, 150 and
-     83px of it — four different amounts of nothing, which is the objection this
-     stylesheet already makes about horizontal gutters, one axis over. Centred, the
-     same slack sits half above and half below, which is what padding looks like
-     rather than what a fall looks like.
-     It became this round's problem because /writing/'s single entry is now a card
-     too, and it is the shortest text block on the site against a 432px frame: the
-     defect would have been more visible on the page this round rebuilt than on the
-     one it did not touch. Fixing it for one card and not the other four was not an
-     option — it is one declaration and it is the same object.
-     Only inside this tier, because below 940px the card is one column and there is
-     no second item to be level with. */
+     whatever shape the frame is. align-items is CENTER rather than start: a
+     card's height is set by its frame and its text block is shorter than the
+     frame in every card on the site, so at `start` the whole difference lands
+     under the last line as one hole in the bottom-left corner. */
   .card { grid-template-columns: minmax(0, 680px) var(--card-img); gap: 40px;
           justify-content: space-between; align-items: center; }
-  /* justify-self ends the frame on the track for a bare <img>; margin-left:auto
-     does the same job when the grid item is a <picture> wrapping one. */
   .card > picture { justify-self: end; max-width: 100%; }
-  /* 260 was tuned for the four landscape crops; the cardiac frame is nearly
-     square, so the cap decided its width instead of its height and left 160px
-     of its own column empty — the widest of the four unequal gutters. Raising
-     the cap lets every frame fill the column it was given. 470 is where the
-     flywheel ring (1.09) and the cardiac and EMG frames all fill their column
-     at every tier; the provenance card is 0.86 and stops 56px short of a 460px
-     column, which is the one place the cap still decides a width. That is a
-     fact about a portrait object in a landscape slot, and the alternative — a
-     535px cap — hands the first card on the page half a screen. */
   .card .shot { justify-self: end; margin-left: auto; max-width: 100%; max-height: 470px; }
   .card .ct { max-width: none; }
 
-  /* Three before/after numbers, three-across. Down a 68ch column they are a
-     list you read; across the track they are a comparison you see, which is
-     what they are for — and it is the one thing on these two pages that could
-     not be done at 632px.
-     They used to be three equal grid columns, which left the third number's
-     content ending 248px short of the track and the band reading as two-and-
-     a-bit columns of an invisible four. Set to their own widths and pushed to
-     the two ends, the band spans exactly what the rule above it spans. */
+  /* Three before/after numbers, three-across. Down a column they are a list you
+     read; across the track they are a comparison you see. Set to their own
+     widths and pushed to the two ends, so the band spans exactly what the rule
+     above it spans. */
   .deltas.band { display: flex; justify-content: space-between; gap: 0 40px; }
-  /* One flex-basis for all three so their three underlines are the same length:
-     three rules of three different lengths is the ragged-gutter problem again,
-     one line lower. */
   .deltas.band > div { display: block; flex: 0 1 340px; min-width: 0; padding: 16px 0 20px; }
   .deltas.band > div:last-child { text-align: right; }
-  /* Three numbers set side by side so they can be compared have to sit on one
-     baseline, and these sat on two: the cardiac labels run 1, 2 and 2 lines, and
-     with <dd> following <dt> in the flow that put 400K+ 25px above 191 and ~68%.
-     The reader's eye is being asked to compare the numbers, so it is the numbers
-     that get aligned; the label block reserves two lines whether it needs them
-     or not. */
-  .deltas.band dt { font-size: 14px; color: var(--meta); min-height: 3.4em; }
-  .deltas.band dd { margin-top: 8px; font-size: 26px; letter-spacing: -0.01em; }
-  .deltas.band dd .was, .deltas.band dd .to { font-size: 19px; }
+  /* The label block reserves two lines whether it needs them or not, so the three
+     numbers being compared sit on one baseline. In caption-mono, because a
+     before/after label is exactly the "label caption that wants a technical
+     voice" the document describes. */
+  .deltas.band dt { font-family: var(--font-mono); font-size: 12px; line-height: 16px;
+                    letter-spacing: 0; text-transform: uppercase; font-weight: 400;
+                    color: var(--meta); min-height: 3.4em; }
+  /* typography.display-md for the number itself — the document's own pricing
+     rhythm, where the figure is the display size and the units around it drop a
+     step. It stays in the mono face: these are measurements. */
+  .deltas.band dd { margin-top: 8px; font-size: 24px; line-height: 32px;
+                    letter-spacing: -0.96px; }
+  .deltas.band dd .was, .deltas.band dd .to { font-size: 18px; letter-spacing: 0; }
 
-  /* THE DOORS GO THREE ACROSS HERE, NOT AT 1200, AND THE ROUND THAT PUT THEM AT
-     1200 GOT THIS WRONG ON ITS OWN ARITHMETIC. Its note (still below, corrected)
-     rejected 940 on these numbers: 260px a plate, 207px of line inside it, three
-     lines of title on Experience, the row stretched to 278px with 105 and 128px of
-     empty plate under the two shorter doors. Every one of those came out of a
-     gap of 40 — the number tier 4 uses because tier 4's own column gutter is 40.
-     This tier's gap is 24, set two tiers up with the cards, and it was never
-     substituted in. At 24 the same width measures 271px a plate, 221px of line,
-     TWO lines of title, and 52/52/0 of slack — the same two lines of slack the
-     1200–1360 band already carries and the round already accepted there.
-     WHAT THE MISTAKE COST is the worst-looking width on the site. Stacked, a door
-     at 1100 is a 1020x106 plate holding a 21px title and ONE line of grey — the
-     three lines fill 51%, 60% and 73% of the width they are given, so every plate
-     is a third to a half empty to the right of its own only sentence, three of
-     them down the page, 377px of band carrying three lines of type. That is a
-     list-group with a tint on it, and the range it covers is not a corner case —
-     it is iPad landscape (1024) and half of a 1920 screen (960).
-     So this is where the band becomes a band, and it costs one declaration: the
-     columns. The gap is not touched, so no new number enters the scale; the title
-     stays at .lead's 21px; tier 4 still steps the gap to 40 with its own gutter.
-     Measured across 940/960/1000/1024/1100/1180 with everything else held: three
-     plates 271–357px wide, two to four lines of grey in each, one bottom edge,
-     and the band 377 → 208 at 940 and 377 → 184 from 1024 up, which takes 169 to
-     192px off the page on its own. */
+  /* THE DOORS GO THREE ACROSS HERE. Stacked, a door at 1100 is a 1020x106 plate
+     holding a title and one line of grey — every plate a third to a half empty
+     to the right of its own only sentence, three of them down the page. That
+     range is iPad landscape and half of a 1920 screen, so it is not a corner
+     case. The gap is this tier's own 24 and is not touched; tier 4 steps it to
+     40 with its own gutter. */
   .doors { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
 }
 
 /* (a) A SECTION RULE IS AS WIDE AS WHAT IS UNDER IT.
-   Read top to bottom: the default is the measure, a drawn diagram widens it to
-   the diagram, and evidence widens it to the track. Browsers without :has()
-   keep every rule at the track — the old behaviour, which is wrong but not
-   broken. Below 44rem there is only one width and the question does not
-   arise. */
+   Read top to bottom: the default is the measure, and evidence widens it to the
+   track. Browsers without :has() keep every rule at the track — the old
+   behaviour, which is wrong but not broken. Below 44rem there is only one width
+   and the question does not arise. */
 @supports selector(:has(*)) {
   @media (min-width: 44rem) {
     section > h2 { max-width: var(--prose); }
-    /* A drawn diagram used to widen the rule over it to 900, because the diagram
-       itself was allowed 900. It takes the measure now, so the rule over it does
-       too — which is the default two lines up, so there is no longer a line here. */
-    /* The plate stops at its own contents rather than at the track, so a rule that
-       frames nothing but a plate stops there too. Before the track line, not after:
-       where a section holds a plate AND something that does take the track — which
-       is the case for the one plate on this site — the wider block is what the rule
-       is framing, and the line below wins on source order. */
+    /* The plate stops at its own contents rather than at the track, so a rule
+       that frames nothing but a plate stops there too. Before the track line,
+       not after: where a section holds a plate AND something that does take the
+       track, the wider block is what the rule is framing. */
     section:has(.plate) > h2 { max-width: min(var(--plate), 100%); }
     section:has(.cards, .pair, .deltas.band, .clip, .spread) > h2 { max-width: var(--track); }
   }
@@ -1607,11 +1424,10 @@ footer.site a { color: var(--link); }
 
 /* ============================================================================
    TIER 4 — 75rem / 1200px. The page gets a margin.
-   The track cap opens to 1280 — enough for the 1200px poster figures inside
-   their plate and for the EMG recording at its native 1280 — and the measure
-   steps to 780. What is left over, 300 to 460px, is the point of this tier: it
-   stops being empty and becomes the margin column. Figure captions move into
-   it; so do the boundary notes and the definitions that were parentheses.
+   The track cap opens to 1280 and the measure to 780. What is left over, 300 to
+   460px, is the point of this tier: it stops being empty and becomes the margin
+   column. Figure captions move into it; so do the boundary notes and the
+   definitions that were parentheses.
    ============================================================================ */
 
 @media (min-width: 75rem) {
@@ -1627,42 +1443,34 @@ footer.site a { color: var(--link); }
   .side { max-width: 560px; margin: 0; }
   /* Three links across a 460px column wrap into an uneven two lines; down it
      they are a list, which is what they are. */
-  .side .contact { flex-direction: column; gap: 4px 0; margin-top: 0; font-size: 15px; }
+  .side .contact { flex-direction: column; gap: 4px 0; margin-top: 0;
+                   font-size: 14px; letter-spacing: -0.28px; }
 
-  /* Tier 4 is where the margin column exists, so this is where the face leaves the
-     name and moves into it, with the contact list underneath — the two halves of
-     "who is this and how do I reach him", one above the other, sharing the column's
-     left edge. It takes the column's left edge rather than the track's right end: a
-     160px object shoved to the far edge with 300px of nothing between it and the
-     sentences is the arrangement this file spends most of its length arguing
-     against, and the contact block under it is what makes the column worth opening.
-     Both are placed in the same area and top-aligned, with the contact list offset
-     by the face's own height — one derived number, like --plate, rather than a grid
-     row whose height would depend on how long the paragraph happened to be.
-     THE BACKGROUND MOVES HERE TOO, from last in the source to the foot of the left
-     column. That is the one place on this site where a block displays somewhere
-     other than where it reads, and the trade is stated in the page's own comment:
-     it buys the phone a door on the first screen (the paragraph is 281px of a
-     844px screen and it was sitting between the name and the doors) and it costs
-     this width nothing, because at 780px the left column has room for it above the
-     doors and the page still fits 900. It holds no focusable element, so the tab
-     order does not move with it.
-     THE DOOR ROW SPANS BOTH COLUMNS, which is what makes this a composition rather
-     than a masthead with a list under it: its left edge is the spine, its right
-     edge is the right edge of the face's column, and it is the only thing on the
-     page that touches both. */
+  /* Tier 4 is where the margin column exists, so this is where the face leaves
+     the name and moves into it, with the contact list underneath — the two
+     halves of "who is this and how do I reach him", one above the other, sharing
+     the column's left edge. Both are placed in the same area and top-aligned,
+     with the contact list offset by the face's own height. The background moves
+     here too, from last in the source to the foot of the left column: it holds
+     no focusable element, so the tab order does not move with it. The door row
+     spans both columns, which is what makes this a composition rather than a
+     masthead with a list under it. */
   :root { --portrait: 160px; }
   .home {
     grid-template-columns: var(--prose) minmax(0, 1fr);
     column-gap: 40px;
     align-items: start;
   }
-  /* One step up the h1 scale — 30 → 38 → 48, the same 1.27 the first step takes.
-     This page is the only one whose h1 is a person rather than a section, and the
-     only one that has to hold a whole composition together from its top-left
-     corner; every other page's title is a label over the thing under it and stays
-     at 38. */
-  .home > h1        { grid-column: 1; grid-row: 1; font-size: 48px; }
+  /* typography.display-xl — 48px / 48px / -2.4px / 600, the document's hero
+     headline, and the ONLY place on this site that takes it. This page's h1 is a
+     person rather than a section, it is one line at every width this tier
+     covers, and it is the one headline on the site that has to hold a whole
+     composition together from its top-left corner. Every other page's title is a
+     label over the thing under it and stays at display-lg. The -2.4px tracking
+     is the document's largest single typographic gesture and this is where it
+     was meant to go. */
+  .home > h1        { grid-column: 1; grid-row: 1; font-size: 48px; line-height: 48px;
+                      letter-spacing: -2.4px; }
   .home > .lead     { grid-column: 1; grid-row: 2; }
   .home > .intent   { grid-column: 1; grid-row: 3; }
   .home > .bio      { grid-column: 1; grid-row: 4; }
@@ -1672,36 +1480,16 @@ footer.site a { color: var(--link); }
   .home > .gates-h  { grid-column: 1 / -1; grid-row: 5; }
   .home > .doors    { grid-column: 1 / -1; grid-row: 6; }
 
-  /* THE DOORS ARE ALREADY THREE ACROSS BY THE TIME THIS TIER ARRIVES — they go
-     that way at 940, with the tier that gives evidence its own column, and the
-     note there records why the first attempt at this put the step here instead.
-     (Short version: 940 was rejected on numbers measured with tier 4's gap of 40
-     rather than tier 3's own 24, and the difference is a title that wraps twice
-     instead of three times. The rejection was arithmetic, not judgement.)
-     What this tier changes is the GAP, and it changes it for the reason it changes
-     everything else: 40 is the gutter between the two columns above the band, so
-     the band's internal rhythm becomes the page's own. It is the same substitution
-     that was missing a tier down, made deliberately this time.
-     What keeps the three from ranking each other is that a grid row stretches
-     them to one height, so the band has one bottom edge whatever is in it, and
-     that the three lines under the titles were cut to the same length (see the
-     page's own markup). The worst remaining slack is two lines, in Work and in
-     Writing both, in the 1200–1360 band; from 1360 up it is one. (The earlier note
-     here said "in Writing" alone and that was one plate short of the measurement
-     the round's own report gave.)
-     Built once with a reserved two-line title band as well — the .deltas.band dt
-     trick — and measured it costing 28px of empty band inside ALL THREE plates at
-     1440, where no title wraps at all, to buy the alignment of three grey lines
-     over part of the range. It is out. A title that is two lines at 1200 and one at
-     1440 is a paragraph reflowing, which is what every other line on this site
-     does through every breakpoint. */
+  /* The doors are already three across by the time this tier arrives — they go
+     that way at 940. What this tier changes is the GAP: 40 is the gutter between
+     the two columns above the band, so the band's internal rhythm becomes the
+     page's own. */
   .doors { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
 
-
-  /* A drawn diagram and its caption stop being two stacked blocks and become
-     one object that spans the track: the drawing on the spine at the measure,
-     what it is for beside it. This is the one figure kind whose caption is an
-     argument rather than a label, so it is the one that earns the column. */
+  /* A drawn diagram and its caption stop being two stacked blocks and become one
+     object that spans the track: the drawing on the spine at the measure, what
+     it is for beside it. This is the one figure kind whose caption is an argument
+     rather than a label, so it is the one that earns the column. */
   .fig-diagram {
     max-width: var(--track);
     display: grid;
@@ -1712,18 +1500,14 @@ footer.site a { color: var(--link); }
   .fig-diagram > img, .fig-diagram > svg { max-width: 800px; }   /* never past native */
   .fig-diagram > figcaption {
     margin-top: 0; max-width: 560px;
-    border-left: 2px solid var(--accent-rail); padding-left: 18px;
+    border-left: 1px solid var(--hairline-strong); padding-left: 16px;
   }
 
   /* The other half of "figure captions move into it". A clip's caption is three
      beats and only one of them is an argument: the spec line is a fact about the
      recording, the boundary is a caveat about it, and the paragraphs in between
-     are the reading of it. The reading stays on the spine at the measure with
-     every other sentence; the two that comment on the recording go where the
-     other comments go. Before this, the largest single field of unused white on
-     the site was the 520px beside the MetaFlow clip's own 415px-tall
-     explanation. Below 1200px there is no second column and the caption is the
-     three stacked blocks it always was, in the order it always had. */
+     are the reading of it. The reading stays on the spine at the measure; the
+     two that comment on the recording go where the other comments go. */
   .clip figcaption {
     max-width: var(--track);
     display: grid;
@@ -1734,40 +1518,12 @@ footer.site a { color: var(--link); }
   .clip figcaption > .say   { grid-column: 1; grid-row: 1 / span 2; }
   .clip figcaption > .spec  { grid-column: 2; grid-row: 1; }
   .clip figcaption > .bound { grid-column: 2; grid-row: 2; align-self: start; }
-  /* One rule down the whole margin column, not one per block: two rules 16px
-     apart is the rounding-error reading this file already ruled out once. */
+  /* One rule down the whole margin column, not one per block. */
   .clip figcaption > .spec, .clip figcaption > .bound {
-    max-width: 560px; border-left: 2px solid var(--accent-rail); padding-left: 18px; margin: 0;
+    max-width: 560px; border-left: 1px solid var(--hairline-strong);
+    padding-left: 16px; margin: 0;
   }
   .clip figcaption > .spec  { padding-bottom: 12px; }
-
-  /* THE THIRD LANE IS GONE, AND ITS REMOVAL IS THE ROUND'S ONE PIECE OF SUBTRACTION.
-     It used to be here: `.compact.laned .item` opened the four /experience/ entries
-     into two columns and put each entry's place-and-stack line in the right one, on
-     the argument that "beside is where a note goes when there is somewhere". The
-     argument is right and the material was wrong. Measured at 1440 with the lane in
-     place, the four entries' right-hand lanes held ONE line, ONE line, TWO lines and
-     TWO lines, and the empty plate under them ran 210, 163, 157 and 96px — a
-     480 × 925px column carrying six lines of grey. That is the exact shape this
-     stylesheet spends its length arguing against, built on purpose.
-     WHY IT COULD NOT BE FILLED INSTEAD, which was tried on paper first. The obvious
-     candidates are each entry's own numbers (800+, 400K+, 191, ~68%) and each
-     entry's date. The numbers exist in two of the four entries, so moving them
-     across produces two lanes with evidence in them and two without — the same-row
-     parity failure the card grid on /work/ was rebuilt to get rid of, one page over.
-     The dates have perfect parity and are two words long: four lanes of eighteen
-     characters in 480px is the hole again, with a date in it. The lane is empty
-     because these four entries are SHORT, and no rearrangement fixes a supply
-     problem.
-     So the entries run one column at the measure, the place-and-stack line goes
-     back under the title where the source order always had it, and — by law (a) —
-     the rule over the section stops at the measure too, which is why the
-     `section:has(.compact.laned)` line that used to widen it is gone as well.
-     The Experience section is now 780px of heading over 780px of entries; Education
-     and Skills keep their two columns, because those two have real margin material
-     (the joint-degree caveat, the awards, and the line saying where on this site
-     each skill is being used). Three sections, two of them wide, and the width of
-     each says what is in it. That is the system working rather than being applied. */
 
   @supports selector(:has(*)) {
     section:has(.fig-diagram) > h2 { max-width: var(--track); }
@@ -1776,12 +1532,9 @@ footer.site a { color: var(--link); }
 
 /* ============================================================================
    TIER 5 — 85rem / 1360px. The wide clip gets its own pixels.
-   The track cap opens to 1440, which is the MetaFlow recording's native width,
-   so from 1520px of window that clip renders 1:1 — every pixel in it one of
-   its own. The EMG recording is native 1280 and stays there; it reached 1:1 a
-   tier earlier. Each clip comes into its own pixels at its own breakpoint,
-   which is a smaller claim than the one this file used to make and the only
-   one that is true.
+   The track cap opens to 1440, the MetaFlow recording's native width, so from
+   1520px of window that clip renders 1:1. The EMG recording is native 1280 and
+   reached 1:1 a tier earlier.
    ============================================================================ */
 
 @media (min-width: 85rem) {
@@ -1789,14 +1542,11 @@ footer.site a { color: var(--link); }
   body.essay { --prose: 780px; }
 }
 
-/* A page with nothing wide on it does not get a wide page. The 404 is one 500px
-   column of links against 900px of nothing — the purest instance of the shape
-   this file spent a round getting rid of, and the one page where there is no
-   evidence, no figure and no margin note to put in the space. Reserving a margin
-   column is a promise about what is going to be in it; where the promise cannot
-   be kept, the track is the measure and the page simply centres. Written as a
-   :has() test on what the page actually contains rather than as a class, so it
-   stays true if the page's contents change. */
+/* A page with nothing wide on it does not get a wide page. The 404 is one column
+   of links against 900px of nothing — reserving a margin column is a promise
+   about what is going to be in it, and where the promise cannot be kept the
+   track is the measure and the page simply centres. Written as a :has() test on
+   what the page actually contains rather than as a class. */
 @supports selector(:has(*)) {
   @media (min-width: 75rem) {
     body:not(:has(.cards, .clip, .plate, .pair, .spread, .deltas.band,
@@ -1812,94 +1562,103 @@ footer.site a { color: var(--link); }
      What it must not also do is eat 56% of the screen on the way past. */
   .plate { padding: 16px 12px; }
   .plate figure > img { max-height: 260px; width: auto; margin-inline: auto; }
-  /* An index card's frame fills the column here; there is no second column to
-     put it in. */
+  /* An index card's frame fills the column here; there is no second column. */
   .card .shot { max-width: 100%; }
 }
 
 /* ---------- motion ---------- */
-/* There is still no animation anywhere on this site. The two clips are the only
-   moving pixels, and CSS cannot stop a video from autoplaying — that is handled
-   in assets/js/video.js, which is also what makes this rule honest. */
+/* THERE IS STILL NO ANIMATION AND NO TRANSITION ANYWHERE ON THIS SITE, and this
+   round had explicit permission to add one (a hover transition up to 150ms, with
+   a reduced-motion fallback). It was refused for the plainest reason available:
+   the design authority this round implements does not have a motion language.
+   It specifies colour, type, spacing, radius, elevation and component chrome
+   across 736 lines and contains no duration, no easing and no transition token
+   at all. Adding one would have been this file inventing a system and attributing
+   it to a document that does not have one — which is the opposite of what
+   "the document is the authority" was supposed to mean.
+   The two clips are the only moving pixels, and CSS cannot stop a video from
+   autoplaying — that is handled in assets/js/video.js, which is also what makes
+   this rule honest rather than decorative. */
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
 
 /* ---------- print ---------- */
-/* Recruiters really do print pages and save them as PDF. */
+/* Recruiters really do print pages and save them as PDF. Everything this round
+   introduced that is a SCREEN affordance comes off here: the gradient, the four
+   shadow levels, the tinted card grounds, the black pill's fill, the code chip.
+   What survives to paper is the type ladder and the mono layer, both of which
+   are structure rather than decoration. */
 @media print {
-  body { max-width: none; font-size: 11pt; color: #000; padding: 0; }
+  body { max-width: none; font-size: 11pt; line-height: 1.5; color: #000;
+         padding: 0; background: #fff; }
   p, ul, ol, dl, h1, h2, h3, figcaption, .note, .row, .stack, .tryit,
   .scope, .thoughts-body, .pull, .plate .src, .side, .bio { max-width: none; }
   /* Paper has one column. A margin note prints under the passage it belongs to,
      which is where it sits on a phone too. */
   .spread, .fig-diagram, .clip figcaption, .home { display: block; }
-  /* The card frames do not print — they are evidence of motion and paper has none.
-     A face is not evidence of anything, and a printed page of somebody's work is a
-     normal place to have one, so it stays and gets out of the type's way. */
+  /* The card frames do not print — they are evidence of motion and paper has
+     none. A face is not evidence of anything, and a printed page of somebody's
+     work is a normal place to have one, so it stays and gets out of the way. */
   .home > .portrait { float: right; width: 96px; height: 96px; margin: 0 0 8px 16px; }
   /* The contact list is display:none on paper because the footer prints the same
-     three addresses with their hrefs after them. Its LABEL was not, and printed a
-     bare "CONTACT" over nothing on every printed copy of the home page — one of
-     the two things this round found by running the print pass against a page whose
-     markup had changed under it. The block goes as one thing now. */
+     three addresses with their hrefs after them. Its LABEL goes with it. */
   .home > .side.bare { display: none; }
-  /* A door on paper is its title and its line. The tint, the rule and the blue
-     edge are all screen affordances for something you can click, and the href
-     printer three rules down is what makes the destination readable instead. */
+  /* THE GRADIENT DOES NOT PRINT. It is a screen affordance for a band of things
+     you can press, and a colour printer would turn it into six inks somebody
+     paid for. The hairline the rest of the site's headings carry comes back in
+     its place, so the heading still has a bottom edge on paper. */
+  .home > .gates-h::after { display: none; }
+  .home > .gates-h { border-bottom: 1px solid var(--hairline); padding-bottom: 8px; }
+  /* A door on paper is its title and its line; the tint, the border, the shadow
+     and the corner are all screen chrome for something you can click, and the
+     href printer below is what makes the destination readable instead. */
   .doors { display: block; }
-  .door { background: none; border: 0; padding: 0; margin-bottom: 12px; }
+  .door { background: none; border: 0; box-shadow: none; border-radius: 0;
+          padding: 0; margin-bottom: 12px; }
   .clip figcaption > .spec, .clip figcaption > .bound {
     border-left: 0; padding-left: 0; max-width: none; margin: 8px 0 0;
   }
   .side { margin-top: 12px; border-left: 0; padding-left: 0; }
   .side .lbl { color: #444; }
-  /* PAPER DOES NOT GET THE BRANCH HUE, and this rule is the whole of what the
-     colour round costs the print stylesheet. Every colour introduced this round
-     is a screen affordance — a plate you can press, a ring the keyboard is
-     inside, a rail that opens a column paper does not have — and a colour
-     printer would turn all of it into ink somebody paid for. Only three things
-     actually reach paper and they are all reset here: the two labels that
-     acquired a colour (h2 and .lbl, which used to inherit black), the 1px rule
-     under h2 (back to the exact grey it printed before this round), and the
-     tint under the two operable blocks. The rails do not need a line — every one
-     of them is already border-left:0 up above, because a margin rail on a page
-     with one column is a line down the side of nothing. */
-  h2, .lbl { color: #000; }
-  h2 { border-bottom-color: var(--ink-100); }
-  .tryit, .card .go a { background: none; }
+  /* The mono layer prints. It is the one thing this round added that is not an
+     affordance: a role line and a date set in a monospaced face are as legible
+     an ordering on paper as on screen, and they are the two lines a recruiter
+     scans a printed CV page for. Only the COLOUR is normalised, so nothing
+     prints at a grey a laser printer will render as a screen. */
+  h2, .lbl, .role, .row .when, .stack dt { color: #000; }
+  h2 { border-bottom-color: var(--hairline); }
+  code { background: none; padding: 0; }
+  /* The pill and the white pill both come off: on paper a black lozenge is a
+     block of toner around a link whose address is printed after it anyway. */
+  .tryit, .card .go a { background: none; border: 0; box-shadow: none;
+                        border-radius: 0; padding: 0; }
+  .tryit > a { background: none; color: #000; padding: 0; min-height: 0;
+               display: inline; font-size: inherit; font-weight: 600; }
   .fig-diagram > figcaption { border-left: 0; padding-left: 0; margin-top: 8px; }
   .deltas.band { display: block; }
   .deltas.band > div { max-width: none; text-align: left; }
   /* The bar is pinned on screen, and a pinned box is a known way to get the same
-     strip stamped onto all eleven pages of a PDF, or onto the first one twice. It
-     used to also be six links to anchors that do not exist on paper; it is four
-     links to real pages now, which is a better reason to keep it and still not a
-     good enough one — the rule below prints every /path after its link text, so a
-     printed home page names all three destinations anyway, inside the doors, where
-     a reader is looking. It does not print. */
+     strip stamped onto every page of a PDF. The rule below prints every /path
+     after its link text, so a printed home page names all three destinations
+     anyway, inside the doors, where a reader is looking. It does not print. */
   nav.top, .contact { display: none; }
   a { color: #000; text-decoration: none; }
   a[href^="http"]::after,
   a[href^="/"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
-  /* …and the two rules above have never reached a door or a card, which is the
-     second thing this round found by printing a page instead of asserting about
-     it. The comment under nav.top says a printed home page "names all three
-     destinations anyway, inside the doors, where a reader is looking". It did not.
-     What makes a whole plate clickable is an ::after on the title link, and
-     `.door h3 a::after` outranks `a[href^="/"]::after` by a class, so the overlay's
-     empty content won and every door on the home page and every card on /work/
-     printed its title with no address under it at all. On paper there is no
-     overlay to draw, so the pseudo-element goes back to being what the two rules
-     above make it. */
+  /* …and the two rules above never reach a door or a card without this: what
+     makes a whole plate clickable is an ::after on the title link, and
+     `.door h3 a::after` outranks `a[href^="/"]::after` by a class. On paper
+     there is no overlay to draw. */
   .card h3 a::after, .door h3 a::after {
     position: static; inset: auto; content: " (" attr(href) ")";
     font-size: 9pt; color: #444;
   }
   figure, .card, .plate { break-inside: avoid; }
   figure, .fig-diagram, .fig-plate, .fig-clip, .cards, .pair, .plate { max-width: none; }
+  figure > img, figure > svg, figure > picture > img { border-radius: 0; }
   .plate { background: none; border: 0; padding: 0; }
-  .card { border: 0; padding: 0; display: block; }
+  .card { border: 0; box-shadow: none; border-radius: 0; padding: 0; display: block; }
   .card .ct { max-width: none; }
   .card .go { display: none; }
   .card .shot { display: none; } /* the frame is evidence of motion; paper has none */

@@ -17,13 +17,17 @@
      this round because it is true of all three target roles. A description that
      paraphrases the sentence it describes is how the two drift apart. -->
 <meta name="description" content="Chris Dai builds the measurement layer for data and AI systems: evaluation harnesses, metadata contracts, and pipelines that make an answer checkable.">
+<link rel="preload" href="/assets/fonts/Geist-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/GeistMono-400-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="canonical" href="https://chrisyzd.github.io/">
 </head>
-<!-- No branch scope on this page and none on the 404: the home page is not
-     inside one of the three, it is the place all three are chosen from, so it
-     keeps the palette's blue default and the three hues appear only where they
-     mean something — on the doors, one each. -->
+<!-- No class on <body> on any page any more. The three branch-scope classes that
+     used to sit here (a-work / a-writing / a-exp) carried a per-branch hue, and
+     the hue system came out this round with the rest of the palette — the design
+     authority the site is now built on forbids accents outside ink, grey and its
+     own gradient. What the hue was saying, the bar's aria-current item and the
+     page's own h1 were already saying. See the stylesheet's COLOUR block. -->
 <body>
 
 <!-- The bar. It is a list of pages, not a list of places on this one.
@@ -157,16 +161,22 @@
        opening sentence. -->
   <h2 class="gates-h">What is here</h2>
 
-  <!-- EACH PLATE CARRIES ITS BRANCH'S SCOPE CLASS, and that is the whole of the
-       colour system's user-facing promise: this is the one place on the site
-       where all three hues are visible at once, so it is where they are learned.
-       Press the teal plate and /writing/ is teal — its section label, its margin
-       rails, its focus ring. Press the rust one and /experience/ is rust. The
-       class does nothing but redefine four custom properties (see .a-work etc.
-       in the stylesheet); every rule that draws a plate reads those. -->
+  <!-- THE THREE PLATES ARE ONE COLOUR NOW, AND THAT IS THE POINT. They used to
+       carry a scope class each — teal for Writing, rust for Experience — so that
+       the plate you pressed was the colour of the page you landed on. That
+       system is gone (see the stylesheet's COLOUR block for the three reasons),
+       and the three doors are three identical cards: same ground, same hairline,
+       same corner, same shadow. Identical is the honest shape for them. They are
+       three destinations of equal standing on a page whose only job is to hand a
+       reader to one of them, and the previous arrangement gave the reader a
+       colour to interpret before they had read a word of any of the three.
+       The one mark that is not identical is 3px tall and sits above all three:
+       the heading's rule, which is the only place on this site that carries the
+       design authority's brand gradient. It belongs to the BAND, not to any one
+       door — which is what the gradient is for. -->
   <ul class="doors">
 
-    <li class="door a-work">
+    <li class="door">
       <h3><a href="/work/">Work<span class="arw" aria-hidden="true">&#160;→</span></a></h3>
       <p class="meta">MetaFlow · LLM data flywheel · Cardiac rehabilitation ·
         EMG biofeedback</p>
@@ -183,13 +193,13 @@
          "One essay" goes in, which is the fact this door is actually holding and
          the only one of the three whose count is worth stating. The page's side
          of the same fix is its new lead — /writing/ no longer opens on the h3. -->
-    <li class="door a-writing">
+    <li class="door">
       <h3><a href="/writing/">Writing<span class="arw" aria-hidden="true">&#160;→</span></a></h3>
       <p class="meta">One essay — the loop that makes an NL-to-SQL answer
         checkable. August 2026 · ~9 min.</p>
     </li>
 
-    <li class="door a-exp">
+    <li class="door">
       <h3><a href="/experience/">Experience, education and skills<span class="arw"
         aria-hidden="true">&#160;→</span></a></h3>
       <p class="meta">Lark, ByteDance · Shenzhen Legion Technology · two Michigan
