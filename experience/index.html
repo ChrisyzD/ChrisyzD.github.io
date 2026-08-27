@@ -22,56 +22,70 @@
 </nav>
 
 <!-- ============================ THIS ROUND ============================
-     EXPERIENCE IS FOUR ENTRIES NOW AND IT WAS FIVE, AND THAT IS THE ONLY THING
-     ON THIS PAGE THAT MOVED. No rule, no measure, no margin column, no bullet
-     outside one entry changed.
+     THIS ROUND IS THE MEASURE, THE EXITS, AND ONE PARAGRAPH THAT SHOULD NEVER
+     HAVE BEEN IN THIS FILE. No entry was added, removed or reordered; no fact
+     changed. Four things moved.
 
-     THE FIFTH WAS METAFLOW, LISTED ON ITS OWN. The last round's note here
-     defended that with "MetaFlow is not an organisation and is here anyway".
-     The defence was answering the wrong objection. MetaFlow is the project I
-     am building at Shenzhen Legion Technology — the entry directly above it
-     was Shenzhen Legion Technology — so the page was carrying one employer
-     twice and reading as though the internship had stopped in October 2025
-     and something unrelated had started five months later. What actually
-     happened is the thing a recruiter is scanning this section for and the
-     page was not saying: the internship turned into an ongoing collaboration,
-     and it is still running.
+     (1) THE LINE LENGTH NOW FOLLOWS THE TYPE. Last round dropped an entry's
+     body to 16/24 and its notes to 14 and 13, and left the measure ladder
+     climbing to 840px regardless — so the smaller the type got, the longer its
+     line ran. Measured at 1440: 106 characters on a median bullet line, 132 on
+     a .note, 97 on a .role, against the 75–85 the stylesheet's own header says
+     those widths were tuned for. The two worst lines on the page were the two
+     honest ones — "it was not an employment relationship" and "not a job". The
+     stylesheet caps each register at about eighty characters of its own face at
+     its own size, the entry takes the widest of the three so the date lands on
+     the edge the bullets stop at, and the two section rules follow the entries
+     in under them, because law (a). --prose is untouched and no other page
+     moves — re-measured, not assumed: eight of the nine pages come back to the
+     pixel. The bullets land at 79 characters on a median line and the notes at
+     77, at every width from 768 up. It costs 552px of height at 1440 (3089 →
+     3641) and the height is the cheaper thing: a CV page is scanned, and a
+     132-character disclaimer is the line a scanner skips.
 
-     SO THE TWO ARE ONE ENTRY, Apr 2025 – Present. Its bullets run newest
-     first, which is the order the rest of the section is in: MetaFlow is the
-     current work and takes the first two, the internship year's prompt
-     architecture and evaluation framework is the third. The mono line carries
-     the shape of the relationship — part-time internship, then hybrid
-     collaboration — because a single date range spanning both would otherwise
-     imply sixteen unbroken months of the same thing. MetaFlow keeps its own
-     case page and this entry still links to it.
+     (2) EVERY ENTRY HAS AN EXIT NOW, AND NO TWO OF THEM READ THE SAME. There
+     were four links on this page saying "Full case →" and nothing else, which
+     is one line in a screen reader's link list repeated four times, and PGF had
+     no exit at all. The three that keep the words carry an aria-label naming
+     the case; MetaFlow's says what is behind it; PGF's is the deployed build.
 
-     WHAT THAT MAKES THE SECTION: the four organisations I worked for or with
-     — ByteDance, AISpeech, Shenzhen Legion Technology, PGF Technology Group —
-     and nothing else. Each carries a mark to its own website except one; see
-     the stylesheet under .ext for why that mark is a 12px glyph and not the
-     domain spelled out, and the last round's report for why Legion has none.
+     (3) LEGION HAS A CHECKABLE ANCHOR. It is the only entry with no company
+     website to mark, and it is the entry carrying the current work, so it was
+     the heaviest claim on the page with the least attached to it. MetaFlow in
+     the first bullet is now a link to the case page, which runs the prototype
+     in a browser — the hardest evidence this site owns, one click from the
+     claim rather than four lines under it.
 
-     THE TWO DECISIONS FROM THE LAST ROUND THIS ONE INHERITS UNTOUCHED:
+     (4) THE SKILLS COLUMN POINTS WITH LINKS. Its whole job is saying where each
+     name is used, and three of its five rows said "in Experience above" in
+     prose. The four entries carry ids and those three rows are anchors.
 
-     (a) THE RESEARCH IS A SECTION OF ITS OWN, WITH THE PEOPLE NAMED. Two entries,
-     an advisor line on each. A research post with no advisor on it is the one
-     claim on a CV that a reader cannot begin to check; naming Lavieri, Golbus
-     and Krishnan turns each of them into something a recruiter can look up in
+     WHAT DID NOT CHANGE: the four entries and their order, every number and
+     every honesty note, the two-column spreads under Education and Skills, the
+     absence of a second column beside Experience (two rounds ago that lane was
+     measured empty and closed — do not reopen it), the name note in the margin,
+     and the type ladder itself.
+
+     THE STANDING DECISIONS THIS ROUND INHERITS UNTOUCHED:
+
+     (a) THE SECTION IS FOUR ORGANISATIONS AND NOTHING ELSE — ByteDance,
+     AISpeech, Shenzhen Legion Technology, PGF Technology Group. MetaFlow is not
+     a fifth: it is the current work at Legion, and listing it separately made
+     the page carry one employer twice and read as though the internship had
+     stopped in October 2025. One entry, Apr 2025 – Present, bullets newest
+     first, with the shape of the relationship in the mono line because a single
+     date range spanning both would imply sixteen unbroken months of one thing.
+
+     (b) THE RESEARCH IS A SECTION OF ITS OWN, WITH THE PEOPLE NAMED. Two
+     entries, an advisor line on each. A research post with no advisor on it is
+     the one claim on a CV a reader cannot begin to check; naming Lavieri,
+     Golbus and Krishnan turns each into something a recruiter can look up in
      one search, and the NeuRRo entry links the lab itself.
 
-     (b) THE ENTRIES ARE BULLETS. Every entry used to be one or two paragraphs of
-     18/28 prose, which is the shape of an argument and not the shape of a list
-     of things done — and a reader who has arrived at this page has stopped
-     reading and started scanning. Each bullet is one thing built and what it
-     moved or what it solved, at 16/24 with 6px between; the stylesheet's .bul
+     (c) THE ENTRIES ARE BULLETS, at 16/24 with 6px between — one thing built
+     and what it moved, not a paragraph arguing for it. The stylesheet's .bul
      block has the arithmetic. Nothing here is a new fact: the source for every
-     line is in the round's report, entry by entry.
-
-     WHAT DID NOT CHANGE: the two-column spreads under Education and Skills, the
-     absence of a second column beside Experience (a round ago that lane was
-     measured empty and closed — do not reopen it), the name note in the margin,
-     and the type ladder. -->
+     line is in the round's report, entry by entry. -->
 <h1>Experience, projects, education and skills</h1>
 <!-- IT IS A LEAD NOW AND IT WAS A CAPTION. Same words, and they were set in
      .meta — 15px, grey, the mark this site gives a figure's caption and a date —
@@ -109,7 +123,7 @@
        each, and one fewer entry makes the lane emptier, not fuller. -->
   <div class="compact">
 
-    <article class="item" style="padding-top:0">
+    <article class="item" id="bytedance" style="padding-top:0">
       <div class="row"><h3>ByteDance<a class="ext" href="https://www.bytedance.com"
           target="_blank" rel="noopener"
           aria-label="ByteDance company website (opens in a new tab)"><svg viewBox="0 0 16 16"
@@ -139,7 +153,7 @@
          and in the grey note at the foot of the entry. AISpeech sponsored a
          university capstone; it did not employ me, and an experience list is
          exactly the place a reader would assume otherwise. -->
-    <article class="item">
+    <article class="item" id="aispeech">
       <div class="row"><h3>AISpeech<a class="ext" href="https://www.aispeech.com"
           target="_blank" rel="noopener"
           aria-label="AISpeech company website (opens in a new tab)"><svg viewBox="0 0 16 16"
@@ -167,9 +181,15 @@
           acceptance <strong>72.80% → 82.72%</strong> and the strict multi-turn all-correct
           rate <strong>39.93% → 59.95%</strong>.</li>
       </ul>
+      <!-- THE SECOND HALF OF THIS NOTE IS NEW HERE and was already on the other
+           two pages that quote these numbers. It is the sentence that says the
+           deltas belong to the system and not to the corpus, and it was missing
+           from the one page a recruiter is most likely to read alone. -->
       <p class="note">AISpeech sponsored the capstone; it was not an employment relationship.
-        A teammate owned the model-routing pillar.</p>
-      <p class="golink"><a href="/work/data-flywheel/">Full case →</a></p>
+        A teammate owned the model-routing pillar, and the two deltas above are end-to-end
+        system numbers with the corpus I produced as one input into them.</p>
+      <p class="golink"><a href="/work/data-flywheel/"
+        aria-label="Full case: the LLM data flywheel">Full case →</a></p>
     </article>
 
     <!-- ONE ENTRY, TWO PHASES, AND THE SEAM IS IN THE MONO LINE RATHER THAN IN A
@@ -184,17 +204,17 @@
          The open-source copilot in the third bullet is not named. That is a
          standing decision recorded outside this file, not an oversight, and the
          bullet is written so the description carries the weight the name would. -->
-    <article class="item">
+    <article class="item" id="legion">
       <div class="row"><h3>Shenzhen Legion Technology — Data Engineering &amp; AI Intern,
         now long-term collaborator</h3>
         <span class="when">Apr 2025 – Present</span></div>
       <p class="role">Remote, China · Part-time internship through Oct 2025, hybrid
         collaboration since · Python, FastAPI, PostgreSQL, React/TypeScript, SQL, dbt</p>
       <ul class="bul">
-        <li>Co-developing <strong>MetaFlow</strong>, the company's metadata-centric
-          NL-to-SQL system, with one collaborator: a question resolves through an
-          inspectable relational intermediate representation instead of generated SQL, so a
-          wrong answer has an address you can point at.</li>
+        <li>Co-developing <a href="/work/metaflow/"><strong>MetaFlow</strong></a>, the
+          company's metadata-centric NL-to-SQL system, with one collaborator: a question
+          resolves through an inspectable relational intermediate representation instead of
+          generated SQL, so a wrong answer has an address you can point at.</li>
         <li>I own the metadata layer, the evaluation suite and the studio front end —
           <strong>20</strong> gold-case scenarios pinned across <strong>5</strong> pipeline
           stages, plus data-quality rules and contract-as-test; my collaborator owns the
@@ -209,18 +229,26 @@
           cases instead of eyeballed. I owned feature scope and release priorities there,
           not the upstream codebase.</li>
       </ul>
-      <p class="golink"><a href="/work/metaflow/">Full case →</a></p>
+      <p class="golink"><a href="/work/metaflow/">Full case, and a prototype you can
+        run →</a></p>
     </article>
 
-    <!-- NO LIVE LINK TO THE DEPLOYED TRACKER, and that is a decision with a reason
-         rather than an omission. The build is up and it is honest to say so; its
-         work-order endpoint currently answers without authentication, and the rows
-         behind it carry a real manufacturer's customer names. A clickable link on
-         a public CV page is a link to that. "Deployed on Vercel" is the claim the
-         evidence supports and the one this entry makes; the address is not here
-         until the endpoint is closed. The client's own site is a different thing
-         and is linked. -->
-    <article class="item">
+    <!-- THE DEPLOYED BUILD IS LINKED, and a round ago it was not. What that
+         decision was waiting on is done: the deployment is behind a sign-in and
+         its data is not reachable without one, so the address is evidence a
+         reader can check rather than a door into a client's records. The link
+         lands on the sign-in page, which is where it should land and what its
+         own label says it does — a live build a stranger can put a URL bar
+         around is the strongest thing a software entry carries, and this entry
+         was the only one on the page with no exit at all. The client's own site
+         is a different link and sits on the title.
+         AND THE REASONING THAT USED TO BE HERE IS NOT. It was a paragraph about
+         the state of somebody else's system, written to justify withholding the
+         address, and it shipped in the bytes of every response this page has
+         ever served. A comment is published text. It goes through the same
+         privacy gate as the sentence next to it, and the place for a decision
+         about a third party's system is the round's report, not the document. -->
+    <article class="item" id="pgf">
       <div class="row"><h3>PGF Technology Group<a class="ext" href="https://www.pgftech.com"
           target="_blank" rel="noopener"
           aria-label="PGF Technology Group company website (opens in a new tab)"><svg
@@ -253,6 +281,10 @@
         mine; the four-person team delivered the process analysis, SOPs and implementation
         roadmap together. No pilot was run inside the project timeline, so there is no
         measured before-and-after to quote.</p>
+      <p class="golink"><a href="https://pgf-tracker.vercel.app" target="_blank"
+        rel="noopener"
+        aria-label="Live deployment of the work-order tracker, behind a sign-in (opens in a new tab)"
+        >Live deployment (sign-in) →</a></p>
     </article>
 
   </div>
@@ -284,7 +316,8 @@
           on top of it — <strong>~68%</strong> of that cohort had suboptimal discharge timing
           against the standard 36-session model.</li>
       </ul>
-      <p class="golink"><a href="/work/cardiac-rehab/">Full case →</a></p>
+      <p class="golink"><a href="/work/cardiac-rehab/"
+        aria-label="Full case: the cardiac rehabilitation wearable study">Full case →</a></p>
     </article>
 
     <article class="item">
@@ -305,7 +338,8 @@
         <li>Built the MATLAB muscle-synergy analysis pipeline beside it, also used in those
           experiments.</li>
       </ul>
-      <p class="golink"><a href="/work/emg-biofeedback/">Full case →</a></p>
+      <p class="golink"><a href="/work/emg-biofeedback/"
+        aria-label="Full case: EMG biofeedback and muscle synergy">Full case →</a></p>
     </article>
 
   </div>
@@ -347,14 +381,18 @@
     <span class="lbl">On the three rows above</span>
     <!-- THE ONE PLACE ON THE SITE THAT STILL SAYS THE OTHER NAME, and it is here
          rather than anywhere else for a reason that is about this block and not
-         about the name. Every other page now signs Chris Dai, and the résumé
-         linked from every footer is ChrisDai_Resume.pdf and reads Yizhe Dai on
-         its own first line — a recruiter who downloads it from a site signed
-         Chris has, for a second, somebody else's résumé. The place to answer
-         that is where the formal record is: three degrees, three registrars, and
-         a column whose entire job is already the caveats about them (the joint
-         programme, the overlapping dates). One line, in the margin, in grey, at
-         14px — not on the home page, not in a footer, and not in the bar. -->
+         about the name. The reason written here used to be the résumé — that it
+         was signed Yizhe Dai while the site was signed Chris — and that has not
+         been true for two rounds: the PDF at /assets/ChrisDai_Resume.pdf reads
+         Chris Dai on its own first line, and it was re-checked this round rather
+         than assumed, because a comment that argues from a fact the file no
+         longer contains is a comment nobody can audit.
+         THE LINE STAYS AND THE REASON IS SIMPLER. A stranger who wants to check
+         a degree writes to a registrar, and a registrar has one name on file.
+         Three degrees, three registrars, and a column whose entire job is
+         already the caveats about them — the joint programme, the overlapping
+         dates — is where that belongs. One line, in the margin, in grey, at
+         14px: not on the home page, not in a footer, and not in the bar. -->
     <p><strong>Name.</strong> Chris is the name I go by; Yizhe Dai is the legal name
       on university records.</p>
     <p><strong>Dual degree.</strong> Michigan and SJTU are one joint program; the dates
@@ -392,14 +430,16 @@
         the 20 gold cases across 5 pipeline stages and the contracts endpoint, on the
         <a href="/work/metaflow/">MetaFlow page</a>.</p>
       <p><strong>dbt metadata &amp; lineage</strong> — the evaluation framework for a
-        RAG data-governance copilot serving dbt pipelines and lineage, in Experience above.</p>
+        RAG data-governance copilot serving dbt pipelines and lineage, in the
+        <a href="#legion">Shenzhen Legion entry above</a>.</p>
       <p><strong>Time-series features, imputation, cleaning rules</strong> — 400K+ raw step
         records reconciled onto one per-patient daily timeline, on the
         <a href="/work/cardiac-rehab/">cardiac study page</a>.</p>
       <p><strong>Playwright/CDP, Flask</strong> — driving two Electron clients over Chrome
-        DevTools Protocol for the ByteDance trace schema, in Experience above.</p>
+        DevTools Protocol for the trace schema, in the
+        <a href="#bytedance">ByteDance entry above</a>.</p>
       <p><strong>Next.js, Playwright end-to-end</strong> — the nine-station work-order
-        tracker and its six e2e specs, in the PGF entry above.</p>
+        tracker and its six e2e specs, in the <a href="#pgf">PGF entry above</a>.</p>
     </aside>
   </div>
 </section>

@@ -844,6 +844,52 @@ h1 + section { margin-top: 40px; }
    not. It is .note's 14px grey, and it needs the 8px the list above it gives up. */
 .compact .item > .note { margin: 8px 0 0; }
 
+/* ---------- the measure follows the type, not the window ---------- */
+/* THE LINE LENGTH IN AN ENTRY WAS NOT FOLLOWING THE ENTRY'S OWN TYPE, and the
+   sentence that gives this file away is at the top of it: "At Geist 18px the
+   680px measure is ~75 characters." Nothing inside an entry is 18px. The bullets
+   are 16, the boundary note is 14, the mono line is 13 — and the measure ladder
+   (680 → 720 → 780 → 840) keeps opening regardless, so the smaller the type the
+   longer its line. The two curves run opposite ways and the gap is widest on the
+   biggest screen. Measured at 1440 before this rule, counting characters off the
+   rendered lines rather than off an average glyph width: 106 on a median bullet
+   line, 132 on a .note, 97 on a .role. The band those numbers were tuned for is
+   75–85. The two worst lines on the page were the two most honest ones — the
+   note that says the capstone was not employment, and the note that says the PGF
+   engagement was not a job.
+   THE FIX IS ONE SENTENCE APPLIED THREE TIMES: cap each register at about eighty
+   characters of ITS OWN face at ITS OWN size. That is the whole reason the unit
+   is em and not px, and the reason there are three numbers and not one: 40em of
+   16px Geist, 36em of 14px Geist and 48em of 13px Geist Mono are the same line,
+   because a mono character is 0.6em wide and a proportional one averages 0.48.
+   Give any of these registers another size later and the cap follows it without
+   being re-derived, which is exactly what the ladder does not do.
+   --prose IS NOT TOUCHED. The spine does not move, the h2 rules keep their
+   widths, law (a) still holds, and no other page changes: .compact and .bul
+   exist on /experience/ and nowhere else, and .note and .role are held here by
+   an id so the case pages and the two index pages keep theirs.
+   THE ENTRY TAKES THE WIDEST OF THE THREE, so the date lands on the edge the
+   bullets stop at instead of hanging 200px past them. One right edge per entry;
+   the note and the mono line sit inside it, which is where a note and a label
+   belong anyway.
+   #EDUCATION IS DELIBERATELY OUT, and it was measured before it was left out.
+   Its three .role lines run 82, 92 and 59 characters at 1440 — one of them seven
+   over the band — and it is the one .compact on the page inside a .spread, so
+   narrowing its entries opens a 280px hole between them and the aside pinned to
+   the second grid column. The cost of including it is two wrapped degree rows,
+   one of them orphaning a city name, to buy seven characters on a line that is a
+   single fact rather than a sentence. Recorded so the next pass reads a decision
+   and not an oversight.
+   THE COST IS HEIGHT, and it was accepted: 1440 goes 3089 → 3641px, +18%. Two
+   thirds of that is the bullets simply having more lines to be in; the rest is
+   four entry titles wrapping to two, because the entry cap takes width off the
+   h3 as well as off the text. A CV page is scanned, not read in one screen, and
+   the line a reader actually skips is the 132-character disclaimer. */
+#experience .item, #projects .item { max-width: 640px; }  /* = the .bul cap, in the bullets' size */
+#experience .bul,  #projects .bul  { max-width: 40em; }   /* 16px      → 640px → ~80 characters */
+#experience .note, #projects .note { max-width: 36em; }   /* 14px      → 504px → ~80 characters */
+#experience .role, #projects .role { max-width: 48em; }   /* 13px mono → 624px →  80 characters */
+
 /* The résumé page's four sections. 64px is the site's gap between two sections
    of DIFFERENT kinds — a grid of cards and a band of numbers. These four are one
    kind, four times: the same ruled list of the same dated entries. 48px is the
@@ -1551,6 +1597,13 @@ footer.site a { color: var(--link); }
        track, the wider block is what the rule is framing. */
     section:has(.plate) > h2 { max-width: min(var(--plate), 100%); }
     section:has(.cards, .pair, .deltas.band, .clip, .spread) > h2 { max-width: var(--track); }
+    /* …and law (a) is what makes these two exceptions mandatory rather than
+       optional. Capping an entry at eighty characters of its own type (see
+       "the measure follows the type") moved the last thing under these two
+       headings in to 640px while their rules stayed on the measure — a rule
+       running 200px past its own section, which is the exact failure the law
+       was written to stop. The rule follows the entries. */
+    #experience > h2, #projects > h2 { max-width: 640px; }
   }
 }
 

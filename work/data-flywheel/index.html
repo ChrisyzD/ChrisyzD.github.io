@@ -96,7 +96,7 @@ Python, LLM agents, retrieval</p>
   </div>
   <div>
     <dt>Strict multi-turn all-correct rate</dt>
-    <dd><span class="was">39.9%</span><span class="to">→</span><strong>60.0%</strong></dd>
+    <dd><span class="was">39.9%</span><span class="to">→</span><strong>59.9%</strong></dd>
   </div>
   <div>
     <dt>No-tool false positives</dt>
@@ -158,8 +158,17 @@ judge behind them is the thing I am least comfortable with.</p>
     </div>
     <aside class="side">
       <span class="lbl">Where the numbers come from</span>
-      <p><strong>72.8 → 82.7%</strong> and <strong>39.9 → 60.0%</strong> are the system's
-      before/after on the same evaluation set, scored by the LLM judge described above.</p>
+      <!-- ONE DECIMAL, AND NEVER UPWARD. The band read 60.0% and the source figure is
+           59.95 — the only one of the four whose rounding went up, and it went up in the
+           largest type on the page while /experience/ carried the same number at two
+           decimals. A reader holding the two pages side by side sees 60.0 against 59.95.
+           The rule is now the one a number on a claim should have: truncate, so a
+           rounding can only ever understate. -->
+      <p><strong>72.8 → 82.7%</strong> and <strong>39.9 → 59.9%</strong> are the system's
+      before/after on the same evaluation set, scored by the LLM judge described above.
+      Cut to one decimal and never rounded up: the measured figures are 72.80, 82.72,
+      39.93 and 59.95, and <a href="/experience/#aispeech">the Experience entry</a> carries
+      them at full precision.</p>
       <p><strong>17,200</strong> is a count of dialogues that scored <code>reward = 1</code>.
       The denominator it belongs to — how many were generated to get there — is the number I
       cannot put on this page, and the one I would put on the wall next time.</p>
