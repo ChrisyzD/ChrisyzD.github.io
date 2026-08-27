@@ -3,42 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Writing · Yizhe Dai</title>
+<title>Writing · Chris Dai</title>
 <meta name="description" content="Notes on making an answer checkable: an intermediate representation you can read before anything runs, and turning each fix into a guardrail so the same mistake cannot happen twice.">
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="canonical" href="https://chrisyzd.github.io/writing/">
 </head>
-<body>
+<body class="a-writing">
 
 <nav class="top">
-  <a class="wm" href="/">Yizhe Dai</a><a href="/work/">Work</a><a
+  <a class="wm" href="/">Chris Dai</a><a href="/work/">Work</a><a
     href="/writing/" aria-current="page">Writing</a><a class="more" href="/experience/">Experience</a>
 </nav>
 
-<!-- This page is the home page's old #writing section with an h1 over it instead of an
-     h2, and nothing else changed: same title, same dated line, same paragraph, same
-     diagram in the same figure, same Read link.
-     THERE IS NO LEAD SENTENCE HERE, and that is deliberate. One essay does not need a
-     paragraph introducing the idea of essays, and anything this page could say about
-     itself would be the essay's own second paragraph, said worse and forty pixels
-     higher up. When there is more than one entry the list will be doing that job.
+<!-- ===================== THIS PAGE WAS NEVER DESIGNED AS A PAGE =====================
+     It arrived last round as the home page's old #writing section with an h1 bolted
+     over it, and nothing in it had been looked at since. Measured at 1440 before this
+     round: 1,480px tall, of which the diagram was 752 — 51% of the page was one
+     picture — and the column beside that picture's two-line caption ran 551px of pure
+     white, which is 66px MORE than the hole the last round condemned on the home page
+     and fixed. The entry itself was a 19px blue underlined link with a "Read →" under
+     it, while the four entries on /work/ are black titles on plates you click
+     anywhere. Two index pages, the same object in both, two different grammars.
+     THREE THINGS CHANGED AND THEY ARE ALL THE SAME THING: this page is now the
+     sibling of /work/ it always claimed to be.
 
-     ADDING THE NEXT ONE is one <article class="item"> pasted after this one, and
-     nothing else — no container, no class on the parent, no change to the stylesheet:
+     1. IT OPENS WITH A LEAD, like /work/ does. The old comment here argued there
+        should be none — "one essay does not need a paragraph introducing the idea of
+        essays" — and that argument was good enough to leave the page opening on the
+        essay's own title, in the same twelve words the home page's second door
+        already spends. So the page's first line of type was a transcription of the
+        door that sent you here. What the lead says is the one thing neither the door
+        nor the essay says: what this branch of the site is FOR. It is not a summary
+        of the essay, which is what the old comment was right to refuse.
+     2. THE ENTRY IS A CARD, the same .card the four on /work/ are: the whole plate is
+        the target, the title is black and not underlined, the arrow is in the title,
+        and the diagram is the card's evidence frame in its own column. The 51% figure
+        becomes a 460px frame; the 551px hole has nothing to be a hole in.
+     3. "READ →" IS GONE, because a card has one destination and it had two links to
+        it. It only existed to be the click target the bare <h3> was not.
 
-       <article class="item">
-         <h3><a href="/writing/SLUG/">TITLE</a></h3>
-         <p class="role">MONTH YEAR · ~N min</p>
-         <p>WHAT IT IS ABOUT, and what it cost.</p>
-         <p class="golink"><a href="/writing/SLUG/">Read →</a></p>
-       </article>
+     ADDING THE NEXT ONE is one <li class="card"> pasted after this one — no
+     container, no class on the parent, no change to the stylesheet:
 
-     `.item + .item` already supplies the 40px and the rule between two entries, and
-     that rule runs the track rather than the measure because the entry above it holds
-     a figure that runs the track. A figure is optional: an entry without one is the
-     four lines above and the divider still lands in the right place. Newest first,
-     which is the order the dated line makes checkable. -->
+       <li class="card">
+         <div class="ct">
+           <h3><a href="/writing/SLUG/">TITLE<span class="arw" aria-hidden="true">&#160;→</span></a></h3>
+           <p class="role">MONTH YEAR · ~N min</p>
+           <p>WHAT IT IS ABOUT, and what it cost.</p>
+         </div>
+         <img class="shot" src="…" width="…" height="…" loading="lazy" alt="…">
+       </li>
+
+     A frame is optional: an entry without one is the .ct block alone and the grid
+     gives it the whole width. Newest first, which is the order the dated line makes
+     checkable. -->
 <h1>Writing</h1>
+<!-- What this branch is for, in the site's own vocabulary — the margin is where a
+     note goes on every other page here, and this is the page for the ones that will
+     not fit in one. "One essay so far" is the honest shape of a list with one thing
+     in it; it is also the only line on the page that says so, now that the h2 above
+     the list is plural. -->
+<p class="lead">Where an argument goes when it will not fit in a project page's
+  margin. One essay so far.</p>
 
 <!-- The <section> is here for one number: without it the entry's last line ("Read →")
      ended at exactly the y the footer's rule starts at — zero pixels — and a link 8px
@@ -52,41 +78,39 @@
      the grey line under it on the home page says one, and says how long it is. -->
 <section>
   <h2>Essays</h2>
+  <ul class="cards">
 
-  <article class="item">
-    <h3><a href="/writing/closed-loop/">The loop — notes on making an NL-to-SQL answer
-      checkable</a></h3>
-    <p class="role">August 2026 · ~9 min</p>
-    <p>Most natural-language-to-SQL demos give you a number and no way to tell whether it is
-      right. This is what I changed in my own projects to make that different, and what it cost:
-      an intermediate representation you can read before anything runs, and the step people
-      skip — turning each fix into a guardrail so the same mistake cannot happen twice.</p>
-    <figure class="fig-diagram">
-      <img src="/assets/img/fig-3-closed-loop.svg" width="800" height="752" loading="lazy"
+    <li class="card">
+      <div class="ct">
+        <h3><a href="/writing/closed-loop/">The loop — notes on making an NL-to-SQL answer
+          checkable<span class="arw" aria-hidden="true">&#160;→</span></a></h3>
+        <p class="role">August 2026 · ~9 min</p>
+        <p>Most natural-language-to-SQL demos give you a number and no way to tell whether it is
+          right. This is what I changed in my own projects to make that different, and what it cost:
+          an intermediate representation you can read before anything runs, and the step people
+          skip — turning each fix into a guardrail so the same mistake cannot happen twice.</p>
+      </div>
+      <!-- The same drawing as before, at a fifth of the area. It was a .fig-diagram
+           here AND a .fig-diagram in the essay — the identical 752px SVG, at full
+           size, twice, one click apart — so the index was spending half its height
+           previewing a picture the destination shows again immediately. As a card
+           frame it does what every other frame on an index page does: it is enough
+           of the object to recognise it, and the page that owns it shows it whole.
+           The caption that used to sit beside it (what the loop is drawn from —
+           MetaFlow's gold cases, the capstone's judge) is not lost: it is on the
+           essay page, under the same figure, where it was always also printed. -->
+      <img class="shot" src="/assets/img/fig-3-closed-loop.svg" width="800" height="752"
+           loading="lazy"
            alt="A four-step ring — Measure, Locate, Fix, Add a guardrail — turning around a
            dark card labelled “grows with every failure”. The guardrail step is highlighted in
            blue as the one that gets skipped.">
-      <!-- The column beside a 752px drawing held two lines of caption and 700px of
-           nothing. What went into it is what was already inside the drawing and did not
-           belong there: two dashed cards naming the projects the loop is generalised
-           from. A caption column is for what comments on a figure; the figure is for
-           the thing being drawn. -->
-      <figcaption>
-        <p>The essay's figure: the fourth step is the one that gets skipped, and it is
-          the only one that makes the next run cheaper.</p>
-        <p><span class="lbl">The two it is drawn from</span>
-          <strong>MetaFlow</strong> — twenty gold cases pinned across five pipeline stages,
-          in version control, re-run on every change.</p>
-        <p><strong>The capstone flywheel</strong> — an LLM judge scoring every turn, and the
-          eleven highest-error functions it named.</p>
-      </figcaption>
-    </figure>
-    <p class="golink"><a href="/writing/closed-loop/">Read →</a></p>
-  </article>
+    </li>
+
+  </ul>
 </section>
 
 <footer class="site">
-  <p>Yizhe Dai · Boston, MA ·
+  <p>Chris Dai · Boston, MA ·
     <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
     <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
     <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·

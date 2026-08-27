@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Experience, education and skills · Yizhe Dai</title>
+<title>Experience, education and skills · Chris Dai</title>
 <meta name="description" content="Four roles — Lark at ByteDance, Shenzhen Legion Technology, and two research roles at the University of Michigan — three degrees, and a skills list that says where each name on it is used on this site.">
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="canonical" href="https://chrisyzd.github.io/experience/">
 </head>
-<body>
+<body class="a-exp">
 
 <!-- Experience is the one item in this row marked .more, so on a phone this page is
      the only one whose own name is not in its own bar — the arithmetic is in the
      stylesheet under nav.top .more, and the cost is recorded there rather than hidden.
      The h1 under it says where you are, which is what an h1 is for. -->
 <nav class="top">
-  <a class="wm" href="/">Yizhe Dai</a><a href="/work/">Work</a><a
+  <a class="wm" href="/">Chris Dai</a><a href="/work/">Work</a><a
     href="/writing/">Writing</a><a class="more" href="/experience/" aria-current="page">Experience</a>
 </nav>
 
@@ -29,20 +29,37 @@
      make. Every entry, every date, every number and every margin note below is the home
      page's, moved and not rewritten. -->
 <h1>Experience, education and skills</h1>
-<p class="meta">Four roles, three degrees, and a skills list that says where each name on it
+<!-- IT IS A LEAD NOW AND IT WAS A CAPTION. Same words, and they were set in
+     .meta — 15px, grey, the mark this site gives a figure's caption and a date —
+     directly under a 38px h1, two and a half steps down. That is the same error
+     the home page's intent line was pulled out of last round and named there in
+     writing: the sentence most worth reading, given the weakest mark on the page.
+     All three index pages open the same way now — /work/ always did, /writing/
+     gained one this round, and this is the third. -->
+<p class="lead">Four roles, three degrees, and a skills list that says where each name on it
   is used on this site.</p>
 
 <!-- ============================ EXPERIENCE ============================ -->
 <section id="experience">
   <h2>Experience</h2>
-  <!-- Every other long block on this page has a second column: Education its caveats and
-       awards, Skills the place on this site where each name is being used. This one did
-       not, so it ran as a single left-hand column with 480px of nothing beside it. The
-       material for the column was already here and already set apart: each entry's place
-       and stack, which was the third grey line under a title. It stays where it is in the
-       source, so a phone (and paper, and a reader with no CSS) still meets it directly
-       under the title it belongs to; past 1200px it is placed in the margin instead. -->
-  <div class="compact laned">
+  <!-- THE SECOND COLUMN IS GONE FROM THIS SECTION, and the block that used to open it
+       here made the case for it: "Education has its caveats and awards, Skills has the
+       place on this site where each name is used; this one had 480px of nothing beside
+       it, and the material for the column was already here — each entry's place and
+       stack." The material was here. It was not enough of it. Measured at 1440 with the
+       lane in place: the four lanes held one, one, two and two lines, and the empty
+       plate under them ran 210, 163, 157 and 96px — a 480 × 925px column carrying six
+       lines of grey, which is the hole the lane was opened to close, moved 840px to the
+       right. The stylesheet's own note (under TIER 4) records what else was tried and
+       what each attempt measured; the short version is that the two candidates with
+       enough substance — the numbers — exist in two of these four entries, and a lane
+       that is evidence in two entries and empty in two is the same-row parity failure
+       the /work/ grid was rebuilt to get rid of.
+       So the place-and-stack line goes back under the title, which is where the source
+       order always had it and where a phone, a printer and a reader with no stylesheet
+       have been meeting it all along. Nothing in this section moved in the markup: the
+       only change is that `laned` came off the div. -->
+  <div class="compact">
 
     <article class="item" style="padding-top:0">
       <div class="row"><h3>Lark, ByteDance — AI Solutions Intern</h3>
@@ -130,6 +147,18 @@
 
   <aside class="side">
     <span class="lbl">On the three rows above</span>
+    <!-- THE ONE PLACE ON THE SITE THAT STILL SAYS THE OTHER NAME, and it is here
+         rather than anywhere else for a reason that is about this block and not
+         about the name. Every other page now signs Chris Dai, and the résumé
+         linked from every footer is YizheDai_Resume.pdf and reads Yizhe Dai on
+         its own first line — a recruiter who downloads it from a site signed
+         Chris has, for a second, somebody else's résumé. The place to answer
+         that is where the formal record is: three degrees, three registrars, and
+         a column whose entire job is already the caveats about them (the joint
+         programme, the overlapping dates). One line, in the margin, in grey, at
+         14px — not on the home page, not in a footer, and not in the bar. -->
+    <p><strong>Name.</strong> Chris is the name I go by; university records and the
+      résumé PDF read Yizhe Dai.</p>
     <p><strong>Dual degree.</strong> Michigan and SJTU are one joint program; the dates
       overlap by design.</p>
     <p><strong>Awards.</strong> Dean's Honor List (2024, 2025) · Myun Lee Scholarship
@@ -176,7 +205,7 @@
 </section>
 
 <footer class="site">
-  <p>Yizhe Dai · Boston, MA ·
+  <p>Chris Dai · Boston, MA ·
     <a href="mailto:yizhed7@gmail.com">yizhed7@gmail.com</a> ·
     <a href="https://www.linkedin.com/in/yizhe-dai-61b83a369/">LinkedIn</a> ·
     <a href="/assets/YizheDai_Resume.pdf">Résumé (PDF)</a> ·

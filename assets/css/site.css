@@ -80,11 +80,104 @@
    but the two outer margins. There is no width at which dragging the window
    wider makes the page narrower, and no width at which it makes the page jump. */
 
+/* ============================================================================
+   COLOUR, IN TWO LAYERS — and the law that keeps it from becoming decoration
+   ============================================================================
+   Until this round the whole site was black, four greys and one blue, and the
+   blue was only ever a link. That was defensible and it was also the thing this
+   site's owner objected to in one sentence: it is monotonous. So there is a
+   palette now, and it is a system rather than a coat of paint. Two laws hold it:
+
+   LAW 1 — BLUE MEANS "YOU CAN PRESS THIS". Every link on every page is
+   --link, exactly the blue it has always been (#0B5CAD, the résumé's own
+   linkblue), and nothing that is not operable is ever given it. That is why
+   colour here can never be the only signal for anything: the underline, the
+   arrow, the focus ring and the 44px target all still say it too.
+
+   LAW 2 — A HUE MEANS "THIS IS WHICH PART OF THE SITE YOU ARE IN". The site is
+   three branches — Work, Writing, Experience — and each has one hue. It appears
+   on the branch's door on the home page, and then on every page filed under
+   that branch: the section labels, the margin rails, the focus ring. Press a
+   teal plate, land on a teal page. That is the whole of what colour is doing
+   here, and it is wayfinding rather than mood.
+
+   The two never collide, because they never mark the same thing: a link is
+   blue on a rust page too, and a rust rail is not a link anywhere.
+
+   WHICH THREE HUES, and why these. Blue is not a choice — it is already here
+   and it is the résumé's. The other two are picked to sit in the SAME lightness
+   band as it, so the three read as siblings rather than as three tempers: on
+   white the three -600 values measure 6.67 : 6.46 : 5.52 against a 4.5 floor.
+   Teal is the cool neighbour (Writing, the reflective branch); rust is the one
+   warm value on an otherwise cool page (Experience — the branch that is a
+   record, and the only place on the site where warmth is the right temperature
+   for what is being said). Three hues is the ceiling; there is no fourth.
+
+   HOW MUCH — the 60/30/10 this file is held to is measured, not asserted, and
+   the measurement is a pixel count of every page at two widths with the figures
+   and video hidden, so what is being counted is the DESIGN's ink and not a
+   chart's own palette. Of that ink, 60.5–86.8% is neutral on nine of the ten
+   pages (the home page is the most coloured at 63.3% neutral, /emg/ the least
+   at 86.8%), and of the coloured remainder blue is the majority on every page,
+   because blue is every link. Tinted SURFACE — the plates — is 11.5% of the
+   home page, 1.2% of the MetaFlow page and under a quarter of one percent
+   everywhere else.
+   The one page that is mostly coloured is the 404, at 24.5% neutral, and it was
+   at 26.5% before this round for the same reason: its body is a list of links,
+   and a link is blue. Colour is a mark on this site; it is a SURFACE on exactly
+   three kinds of object — a door, a .tryit, a card's demo button — and all
+   three are things you press. (The full table is in the round's report; the
+   gauge that produced it is output/网站-S13/diag/ink.py.)
+
+   TWO LAYERS, and the reason the base layer exists at all: the six semantic
+   names below (--text, --meta, --rule, --edge, --link, --ground) used to BE the
+   raw values, so there was nowhere to say "this grey and that grey are the same
+   grey" and nowhere to put a hue's own scale. The base layer is the paint; the
+   semantic layer is what the paint is for. Nothing outside this block ever
+   names a base token — every rule in the 1,600 lines below reads a semantic
+   one, which is what makes a hue swappable per branch by four declarations.
+   ============================================================================ */
 :root {
+  /* ---------- base: neutrals ----------
+     Cool-tinted rather than pure grey (a pure #808080 next to a blue reads as a
+     mistake, and this page's blue is 210). Unchanged values, named at last:
+     ink-900 was --text, ink-600 was --meta, ink-300 was --edge, ink-100 was
+     --rule. ink-050 is the one new neutral — see --ground. */
+  --ink-900: #16181d;   /* 17.8:1 on white. Not #000: pure black is too hard here */
+  --ink-600: #5b6068;   /*  6.3:1 on white — AA for body text */
+  --ink-300: #b4b8be;   /*  1.99:1 — a plane's edge, never type */
+  --ink-200: #d7dade;
+  --ink-100: #e3e5e8;   /*  1.26:1 — a rule between two paragraphs */
+  --ink-050: #f3f5f7;   /*  1.09:1 — what a plate sits on */
+
+  /* ---------- base: blue — Work, and every link on the site ----------
+     -600 is the résumé's linkblue and is not up for redesign. The rest of the
+     ramp is that hue held at 210 with lightness stepped. */
+  --blue-700: #08447f;  /* 9.80:1 — a link that is being hovered */
+  --blue-600: #0b5cad;  /* 6.67:1 — every link, at rest */
+  --blue-200: #a9c7e6;  /* 1.75:1 — a 2px margin rail */
+  --blue-100: #d3e2f2;  /* 1.32:1 — a 1px rule under a section label */
+  --blue-070: #e3edf8;  /* 1.18:1 — a plate you can press */
+
+  /* ---------- base: teal — Writing ---------- */
+  --teal-700: #0a4a44;  /* 10.12:1 */
+  --teal-600: #0e6a60;  /*  6.46:1 */
+  --teal-200: #9ecdc6;  /*  1.75:1 */
+  --teal-100: #cfe6e2;  /*  1.31:1 */
+  --teal-070: #dfefeb;  /*  1.19:1 */
+
+  /* ---------- base: rust — Experience ---------- */
+  --rust-700: #7a3d10;  /* 8.39:1 */
+  --rust-600: #a05518;  /* 5.52:1 */
+  --rust-200: #e3bf9b;  /* 1.72:1 */
+  --rust-100: #eedac5;  /* 1.36:1 */
+  --rust-070: #f7e9d9;  /* 1.19:1 */
+
+  /* ---------- semantic ---------- */
   --bg:   #ffffff;
-  --text: #16181d;            /* not pure black: #000 is too hard on white */
-  --meta: #5b6068;            /* 5.9:1 on white — passes AA */
-  --rule: #e3e5e8;
+  --text: var(--ink-900);
+  --meta: var(--ink-600);
+  --rule: var(--ink-100);
   /* The pinned bar's bottom edge, and the only thing that uses it. It was --rule,
      which made the boundary of the whole top plane the same 1px line as the one
      under every section heading — so every h2 that scrolled under the bar produced
@@ -96,9 +189,33 @@
      still reads as a different line at a 3px gap, checked against five candidates
      at exactly that gap. Darker than this and a permanent full-track line starts
      behaving like a border on the window. */
-  --edge: #b4b8be;
-  --link: #0b5cad;            /* identical to the resume's linkblue (HTML 0B5CAD) */
-  --ground: #fafbfc;          /* the one tint on the site: what a plate sits on */
+  --edge: var(--ink-300);
+  --link: var(--blue-600);        /* identical to the resume's linkblue (HTML 0B5CAD) */
+  /* A hovered link used to change only its underline's thickness, which is the
+     one hover state on the site a trackpad user could miss entirely. It gets a
+     colour step too now — one stop darker in its own hue, not a different hue. */
+  --link-strong: var(--blue-700);
+  /* What a plate sits on. It was #fafbfc — 1.04:1 against white, which the last
+     round's own critic recorded as "the plate is carried by its border, not by
+     its ground". It is 1.09:1 now. The reason it could not be raised before was
+     that the doors and the cardiac poster plate shared this one token, and
+     deepening it for the doors would have tinted the ground under two published
+     figures. The doors have their own branch tints now (see --door-*), so this
+     token serves the poster plate alone and can be set for that job: a mounted
+     white figure wants a surround it can be seen against. */
+  --ground: var(--ink-050);
+
+  /* ---------- the branch accent ----------
+     Five values, overridden as a block by .a-work / .a-writing / .a-exp below.
+     The default is blue, which is what the home page, the 404 and anything not
+     filed under a branch get — blue is the site's own colour, not Work's
+     property. Nothing outside those three classes ever redefines these. */
+  --accent:      var(--blue-600);  /* a section label, a focus ring, a hovered edge */
+  --accent-deep: var(--blue-700);  /* the same, being hovered */
+  --accent-rail: var(--blue-200);  /* the 2px rail down the margin column */
+  --accent-line: var(--blue-100);  /* the 1px rule under a section label */
+  --accent-tint: var(--blue-070);  /* the ground of something you can press */
+
   --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
                Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -132,7 +249,32 @@
   --navh: 49px;
 }
 
+/* THE THREE BRANCH SCOPES, and they are scopes rather than page classes on
+   purpose: the same three declarations have to work on a <body> (every page
+   filed under a branch), on a single <li> (the three doors sit on ONE page and
+   each is a different branch), and on a group label (the 404's body is an index
+   of all three). One mechanism, three uses. A page that is not in a branch —
+   the home page, the 404 — simply does not carry one and keeps the blue default.
+   Four lines each and nothing else: everything downstream reads --accent-*, so
+   this is the entire cost of adding a hue to a branch. */
+.a-work    { --accent: var(--blue-600); --accent-deep: var(--blue-700);
+             --accent-rail: var(--blue-200); --accent-line: var(--blue-100);
+             --accent-tint: var(--blue-070); }
+.a-writing { --accent: var(--teal-600); --accent-deep: var(--teal-700);
+             --accent-rail: var(--teal-200); --accent-line: var(--teal-100);
+             --accent-tint: var(--teal-070); }
+.a-exp     { --accent: var(--rust-600); --accent-deep: var(--rust-700);
+             --accent-rail: var(--rust-200); --accent-line: var(--rust-100);
+             --accent-tint: var(--rust-070); }
+
 *, *::before, *::after { box-sizing: border-box; }
+
+/* A selected passage used to come back in the browser's own blue, which is the
+   one colour on the site nobody chose. It takes the page's branch tint instead —
+   the same value the doors and the operable blocks use, so a highlight reads as
+   "this is the page you are on" rather than as an intrusion. --text on any of
+   the three tints measures 14.9–15.0:1. */
+::selection { background: var(--accent-line); color: var(--text); }
 
 html { -webkit-text-size-adjust: 100%; }
 
@@ -189,8 +331,16 @@ body.essay { --prose: 600px; }
    number came from) stops being a parenthesis and becomes the second column.
    Below 1200px there is not enough width for two columns, so the aside simply
    follows the passage, which is what it was before. */
+/* THE RAIL IS THE BRANCH'S, and this is where the hue does most of its work,
+   because this rail is the site's most repeated object: it is down the left of
+   every aside, every scope note, every figure caption in the margin column and
+   every pulled line, on all ten pages. At --rule it was 1.26:1 — a grey thread
+   you had to be told was there. At --accent-rail it is 1.72–1.75:1 and it has a
+   temperature, so the margin column finally reads as a column rather than as
+   text that happens to start 20px further right. It is 2px of tint, not a fill:
+   the type inside it stays --meta on white and nothing about its contrast moves. */
 .side { max-width: var(--prose); margin: 16px 0 0; font-size: 14px; line-height: 1.6;
-        color: var(--meta); border-left: 2px solid var(--rule); padding-left: 18px; }
+        color: var(--meta); border-left: 2px solid var(--accent-rail); padding-left: 18px; }
 .side p { margin: 0 0 8px; }
 .side p:last-child, .side ul:last-child, .side ol:last-child { margin-bottom: 0; }
 .side ul, .side ol { margin: 0 0 8px; padding-left: 18px; }
@@ -200,8 +350,16 @@ body.essay { --prose: 600px; }
    a figure's caption column is the same place doing the same job, and a second
    copy of these five declarations under a second selector is how a stylesheet
    ends up with two labels that drift apart. */
+/* …and it takes the branch's hue for the same reason h2 does, and with more
+   force: this label is 11px, the smallest mark on the site, and it is the thing
+   that names every block in the margin column. It sat at --text, which made it
+   the same colour as the sentence it was labelling — a heading that looks like
+   its own contents. In the hue it is unmistakably a label, and it agrees with
+   the rail two pixels to its left, so the margin column is now one object with a
+   colour rather than three greys in a row. On white: 6.67 / 6.46 / 5.52 against
+   the 4.5 an 11px bold needs. */
 .lbl { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
-       font-weight: 700; color: var(--text); margin-bottom: 6px; }
+       font-weight: 700; color: var(--accent); margin-bottom: 6px; }
 /* One .side is not a note about a passage — it is the header's contact block,
    which was already part of the header before it moved into the column. It
    keeps no rule and no label until there is a column to put it in, so on a
@@ -253,21 +411,44 @@ h1 { font-size: 30px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.01
    The widths are assigned by the :has() cascade at the bottom of this file,
    where the tiers are; below 940px there is only one width and the question
    does not arise. */
+/* IT TAKES THE BRANCH'S HUE, and that is the round's single largest colour
+   decision, so the reason is worth stating. This mark is 13px — the smallest
+   type on the site — and on /experience/ that put the three section headings
+   BELOW the body text they head (13 against 17), which the last round's critic
+   measured as "you can scroll 2,098px and not feel a joint". The fix could have
+   been size, and size was rejected: the mark is uppercase, letterspaced and 700,
+   it is the same mark on all ten pages, and growing it moves every section on
+   the site by a few pixels to solve a problem that only one page has.
+   Colour solves it without moving anything. A rust label over a rust rule reads
+   as a joint at 13px in a way a black label over a grey rule does not — and it
+   is saying something true while it does it, which a size step would not be:
+   this heading belongs to this branch. Measured on white: blue 6.67, teal 6.46,
+   rust 5.52, against the 4.5 a 13px bold needs. The rule under it moves --rule →
+   --accent-line, which is a touch DARKER than the grey it replaces (1.32/1.31/
+   1.36 against 1.26) as well as tinted, so the line gained a little too.
+   Geometry is untouched: same size, same weight, same 1px, same 8px, same 16px. */
 h2 {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: .08em;
   font-weight: 700;
+  color: var(--accent);
   margin: 0 0 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--rule);   /* mirrors \scshape + \titlerule in the resume */
+  border-bottom: 1px solid var(--accent-line);   /* mirrors \scshape + \titlerule in the resume */
 }
 
 /* the essay uses numbered prose headings, not the resume's section rule */
+/* …and they keep the text colour. The rule above colours a LABEL — a mark you
+   read as structure and skip past. These are sentences you read: "3. The step
+   people skip" is prose at 20px, and prose on this site is --text. Colouring
+   them would be the one place a hue stopped meaning "which branch" and started
+   meaning "this is a heading", which is what the size is already for. */
 .essay h2 {
   font-size: 20px;
   text-transform: none;
   letter-spacing: normal;
+  color: var(--text);
   border: 0;
   padding: 0;
   margin: 40px 0 16px;
@@ -297,8 +478,18 @@ code, .mono { font-family: var(--font-mono); font-size: .92em; }
 .lead { font-size: 19px; line-height: 1.5; margin-bottom: 16px; }
 
 a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
-a:hover { text-decoration-thickness: 2px; }
-a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 2px; }
+/* The hover state used to be a one-pixel underline thickening and nothing else —
+   the quietest interactive feedback on the site, and the one a reader is most
+   likely to be looking for. It keeps that and takes a colour step as well: one
+   stop darker in the SAME hue (6.67:1 → 9.80:1), not a different colour. A link
+   that changes hue on hover is a link that looked like the wrong thing at rest. */
+a:hover { text-decoration-thickness: 2px; color: var(--link-strong); }
+/* The ring takes the branch's hue rather than the link blue. It is chrome — it
+   says "the keyboard is here" — and the chrome on this site is now the branch's.
+   All three pass the 3:1 a focus indicator is held to by a wide margin (5.5–6.7),
+   and on the home page each door's ring resolves to its OWN hue, because the ring
+   is drawn on the plate and the plate carries the scope class. */
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 
 ul, ol { margin: 0 0 16px; padding-left: 20px; }
 li { margin-bottom: 4px; }
@@ -737,16 +928,46 @@ h1 + section { margin-top: 40px; }
    16 on a phone rather than the .card's 20, for the reason .plate already drops to
    16/12 there: a 350px line cannot spend 40 of itself on the inside of a box. It
    takes the cards' own 24 from 44rem up, where there is width to spend. */
+/* THE THREE PLATES ARE THREE COLOURS NOW, and this is the one place on the site
+   where that is not decoration but the actual message. Three doors, three
+   destinations: the plate you press is the colour of the page you land on, and
+   that page's section labels, margin rails and focus ring are the same colour.
+   That is the whole payoff of LAW 2 at the top of this file, and it is the only
+   place a reader can see all three hues at once and learn them.
+   WHAT MOVED, exactly:
+     ground   --ground (#fafbfc, 1.04:1 against white) → the branch's --accent-tint
+              (1.18–1.19:1). The last round's critic accepted 1.04 on the grounds
+              that "the 3px blue edge and the 1px border are what carry the plate".
+              That was true and it was also an admission: a plate whose GROUND is
+              invisible is a rectangle drawn in lines. 1.18 is a plate. It is still
+              a whisper — four and a half times the old step, and nowhere near a
+              fill — and it is as deep as the palette can go and keep the hovered
+              title AA on it (rust-600 on rust-070 is 4.63; one stop deeper is 4.40
+              and fails, which is how this value was chosen rather than eyeballed).
+     border   --rule → --accent-line, so the plate's outline belongs to the plate.
+     left 3px --link → --accent. This is the ONE exception to "3px blue means you
+              can operate this", and it is a deliberate one: on the doors the edge
+              is saying both things at once — you can press it, and this is which
+              of the three. .tryit and the demo button keep the blue, they are
+              operable without being branches, and the two never appear on the
+              same page.
+   The grey line under each title stays --meta on all three tints (5.31–5.35:1). */
 .door {
   position: relative;
-  background: var(--ground);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--link);
+  background: var(--accent-tint);
+  border: 1px solid var(--accent-line);
+  border-left: 3px solid var(--accent);
   border-radius: 2px;
   padding: 16px 16px 16px 14px;
   cursor: pointer;
 }
-.door:hover { border-color: var(--link); }
+/* Hover was one thing — the border going blue — on the page whose entire job is
+   to be walked through. It is three now, all in the plate's own hue and none of
+   them moving anything: the outline goes to the full accent, the title goes to
+   it (below, with the cards), and the ground steps one stop darker. The ground
+   step is why this is written as a background rather than a shadow: the plate
+   has to answer the pointer even when the pointer is nowhere near its edge. */
+.door:hover { border-color: var(--accent); background: var(--accent-line); }
 /* One step above body, which is the step .lead takes — a door is the size of the
    sentence that introduces it. Not a new number on the scale: 19 → 21 is .lead's
    own pair. The weight is 600, the site's "this is the thing, not the commentary"
@@ -782,6 +1003,14 @@ h1 + section { margin-top: 40px; }
 
 .cards { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
 
+/* THE CARD'S BORDER STAYS GREY WHILE THE DOOR'S WENT COLOURED, and the line
+   between them is worth naming because it is what keeps the palette from
+   spreading: a plate you PRESS takes a hue, a frame around EVIDENCE does not.
+   Every figure on this site is a 1px --rule rectangle, and a card is a figure
+   with a sentence next to it — giving it a tinted outline would put a colour
+   around four charts on /work/ and none around the same charts on the four pages
+   they came from. The card gets the hue when the pointer is on it, which is when
+   it stops being a frame and starts being a door. */
 .card {
   position: relative;
   display: grid;
@@ -792,13 +1021,21 @@ h1 + section { margin-top: 40px; }
   padding: 20px;
   cursor: pointer;              /* the whole card is the target; say so */
 }
-.card:hover { border-color: var(--link); }
+/* A card is a door with a frame on it, and until this round it said so with one
+   declaration — the border going blue. It grows the door's own 3px left edge as
+   well, in the branch's hue, drawn as an inset shadow so nothing reflows: the
+   3px is painted inside the border box rather than added to it, so a hovered
+   card is exactly the same size as a resting one. The card keeps its white
+   ground, unlike the door — three of the four frames on /work/ are charts on
+   white paper, and a tint behind them would turn each frame into a visible
+   white rectangle floating on a coloured card. */
+.card:hover { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
 /* A door is the same object with the frame taken off, so the six declarations that
    make a card behave — the overlay, the focus ring on the box, the two hover states
    and the arrow — are written once for both rather than copied. A second copy of
    these under a second selector is how a stylesheet ends up with two click targets
    that drift apart, which is the argument .lbl already makes four hundred lines up. */
-.card:focus-within, .door:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
+.card:focus-within, .door:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* Three of the four frames now ship a narrow re-crop as well. The <picture> is
    the grid item, not the <img> — display:contents here would promote its
@@ -828,10 +1065,16 @@ h1 + section { margin-top: 40px; }
 /* the whole card is the click target; the title is the one link that names it */
 .card h3 a::after, .door h3 a::after { content: ""; position: absolute; inset: 0; }
 .card h3 a:focus-visible, .door h3 a:focus-visible { outline: none; }
-.card:hover h3 a, .door:hover h3 a { color: var(--link); text-decoration: underline; }
+/* --accent-deep rather than --accent, for two reasons that happen to agree. It
+   is the same step `a:hover` takes everywhere else on the site (one stop darker
+   in the same hue), so a hovered door behaves like a hovered link; and on the
+   Experience door the hovered title sits on the hovered plate, where --accent
+   would measure 4.06:1 and fail AA. The deep stop measures 6.18–7.74 on all
+   three. This is the kind of value that gets picked by arithmetic, not by eye. */
+.card:hover h3 a, .door:hover h3 a { color: var(--accent-deep); text-decoration: underline; }
 /* The arrow lives in the title, not on a line of its own. */
 .card h3 .arw, .door h3 .arw { color: var(--meta); font-weight: 400; }
-.card:hover h3 .arw, .door:hover h3 .arw { color: var(--link); }
+.card:hover h3 .arw, .door:hover h3 .arw { color: var(--accent-deep); }
 .card p { font-size: 16px; margin-bottom: 0; }
 .card .role { margin-bottom: 8px; }
 /* The text column of a card is wider than the sentence in it needs to be; the
@@ -854,7 +1097,9 @@ h1 + section { margin-top: 40px; }
    prototype. Two destinations, two states. Browsers without :has() keep the old
    behaviour, which is wrong but not broken. */
 @supports selector(:has(*)) {
-  .card:has(.go a:hover) { border-color: var(--rule); }
+  /* …and the 3px edge the card grows on hover has to come back off with the rest
+     of it, or the card would keep claiming to be the thing under the pointer. */
+  .card:has(.go a:hover) { border-color: var(--rule); box-shadow: none; }
   .card:has(.go a:hover) h3 a { color: var(--text); text-decoration: none; }
   .card:has(.go a:hover) h3 .arw { color: var(--meta); }
 }
@@ -887,7 +1132,7 @@ h1 + section { margin-top: 40px; }
    the 2px border plus 18px of padding is exactly the 20px it hangs by, so the
    marked text lands back on the spine with every other sentence on the page. */
 .scope, .thoughts-body, .pull {
-  border-left: 2px solid var(--rule);
+  border-left: 2px solid var(--accent-rail);
   padding-left: 18px;
   margin-left: calc(-1 * var(--hang));
   max-width: calc(var(--prose) + var(--hang));
@@ -897,8 +1142,16 @@ h1 + section { margin-top: 40px; }
 
 /* The one thing on this site a visitor can actually operate. It gets a door near
    the top of the page it belongs to, not a link at 79% scroll depth. */
+/* It keeps the BLUE 3px edge while the doors take their branch's — see LAW 1 at
+   the top of this file. This block is operable and it is not a branch, and the
+   two marks never meet: .tryit exists only on project pages, the doors only on
+   the home page. What it gains is the ground, which is the same tint the doors
+   got and for the same reason: the site's one operable block was a rectangle
+   drawn in lines on white, indistinguishable at a glance from the four figures
+   above it. --text on it measures 15.0:1, the link inside it 5.63:1. */
 .tryit {
-  border: 1px solid var(--rule);
+  background: var(--accent-tint);
+  border: 1px solid var(--accent-line);
   border-left: 3px solid var(--link);
   border-radius: 2px;
   padding: 12px 16px;
@@ -924,8 +1177,13 @@ h1 + section { margin-top: 40px; }
    equal-weight blue lines become three things you can choose between. */
 .linklist { list-style: none; padding: 0; margin: 0 0 24px; }
 .linklist a { display: inline-flex; align-items: center; padding-block: 8px; }
-.linklist + .meta, p.meta + .linklist { margin-top: 0; }
-p.meta + .linklist { margin-top: 4px; }
+/* The three group labels used to be p.meta — the caption mark — while doing the
+   job .lbl is the site's one mark for: naming a block. They are .lbl now, which
+   is what let them take a branch hue with everything else (see the page's own
+   comment), and these two selectors follow them across. .lbl brings its own 6px
+   under it, so the 4px is what the old 15px caption needed and is not repeated. */
+.linklist + .lbl { margin-top: 0; }
+.lbl + .linklist { margin-top: 4px; }
 
 .pager { list-style: none; padding: 0; margin: 0 0 24px; font-size: 15px; }
 .pager li { margin-bottom: 4px; }
@@ -1195,9 +1453,14 @@ footer.site a { color: var(--link); }
      because the site's one operable thing was reached by a 15px blue line
      indistinguishable from the other forty links on the page. Two different kinds
      of destination should be two different-looking things. */
-  .card .go a { min-height: 28px; border: 1px solid var(--rule); border-left: 3px solid var(--link);
+  /* Same treatment as .tryit and for the same reason — it is the same object,
+     the site's one secondary call to action, and a bordered white box on a white
+     card is not a button. Blue edge, blue text, the page's tint underneath. */
+  .card .go a { min-height: 28px; background: var(--accent-tint);
+                border: 1px solid var(--accent-line); border-left: 3px solid var(--link);
                 border-radius: 2px; padding: 5px 12px; text-decoration: none; font-weight: 600; }
-  .card .go a:hover { border-color: var(--link); text-decoration: underline; }
+  .card .go a:hover { border-color: var(--link); background: var(--accent-line);
+                      text-decoration: underline; }
   .cards { gap: 24px; }
   .card { padding: 24px; }
   /* Same step the cards take, and the same 1px arithmetic: 22 + the 3px left
@@ -1235,8 +1498,24 @@ footer.site a { color: var(--link); }
      ends on the track, and the slack between them is one number in all four
      cards rather than four different ones (which is what capping .ct at 640 used
      to produce). */
+  /* align-items goes from start to CENTER here, and it is the fix for a hole this
+     round would otherwise have shipped a fresh copy of. A card's height is set by
+     its frame; its text block is shorter than the frame in every card on the site.
+     At `start` the whole difference lands under the last line as one hole in the
+     bottom-left corner, and the four cards on /work/ measured 293, 305, 150 and
+     83px of it — four different amounts of nothing, which is the objection this
+     stylesheet already makes about horizontal gutters, one axis over. Centred, the
+     same slack sits half above and half below, which is what padding looks like
+     rather than what a fall looks like.
+     It became this round's problem because /writing/'s single entry is now a card
+     too, and it is the shortest text block on the site against a 432px frame: the
+     defect would have been more visible on the page this round rebuilt than on the
+     one it did not touch. Fixing it for one card and not the other four was not an
+     option — it is one declaration and it is the same object.
+     Only inside this tier, because below 940px the card is one column and there is
+     no second item to be level with. */
   .card { grid-template-columns: minmax(0, 680px) var(--card-img); gap: 40px;
-          justify-content: space-between; }
+          justify-content: space-between; align-items: center; }
   /* justify-self ends the frame on the track for a bare <img>; margin-left:auto
      does the same job when the grid item is a <picture> wrapping one. */
   .card > picture { justify-self: end; max-width: 100%; }
@@ -1433,7 +1712,7 @@ footer.site a { color: var(--link); }
   .fig-diagram > img, .fig-diagram > svg { max-width: 800px; }   /* never past native */
   .fig-diagram > figcaption {
     margin-top: 0; max-width: 560px;
-    border-left: 2px solid var(--rule); padding-left: 18px;
+    border-left: 2px solid var(--accent-rail); padding-left: 18px;
   }
 
   /* The other half of "figure captions move into it". A clip's caption is three
@@ -1458,44 +1737,40 @@ footer.site a { color: var(--link); }
   /* One rule down the whole margin column, not one per block: two rules 16px
      apart is the rounding-error reading this file already ruled out once. */
   .clip figcaption > .spec, .clip figcaption > .bound {
-    max-width: 560px; border-left: 2px solid var(--rule); padding-left: 18px; margin: 0;
+    max-width: 560px; border-left: 2px solid var(--accent-rail); padding-left: 18px; margin: 0;
   }
   .clip figcaption > .spec  { padding-bottom: 12px; }
 
-  /* Third instance of the same move, on the résumé-skeleton list. A .compact entry
-     is a title/date row, a grey line naming the place and the stack, and one or two
-     paragraphs — and the grey line is the only part of it that comments on the rest
-     rather than continuing it. When this list was a section of the home page it was
-     the one long block with no second column: 1,150px of single column against 480px
-     of nothing, between four two-column cards above it and two .spread blocks below.
-     It is the top half of /experience/ now and the arrangement is unchanged. The rule
-     between two entries widens with them, because it is still as wide as what it
-     divides. The role line keeps its source position — it is under the title on a
-     phone, on paper and with no stylesheet — and is placed, not moved. */
-  .compact.laned .item {
-    display: grid;
-    grid-template-columns: var(--prose) minmax(0, 1fr);
-    column-gap: 40px;
-    align-items: start;
-    max-width: var(--track);
-  }
-  .compact.laned .item > * { grid-column: 1; }
-  /* Spanning rather than sitting in row 1: a role line that wraps to two lines would
-     otherwise make row 1 taller than the title it shares that row with, and push the
-     first paragraph down by an amount that differs per entry — four different gaps
-     under four titles, which is the objection this file makes about gutters, one
-     axis over. Spanned and top-aligned, it starts level with the title and the left
-     column keeps its own rhythm. */
-  .compact.laned .item > .role {
-    grid-column: 2; grid-row: 1 / span 10; align-self: start;
-    margin: 0; max-width: 560px;
-    border-left: 2px solid var(--rule); padding-left: 18px;
-  }
+  /* THE THIRD LANE IS GONE, AND ITS REMOVAL IS THE ROUND'S ONE PIECE OF SUBTRACTION.
+     It used to be here: `.compact.laned .item` opened the four /experience/ entries
+     into two columns and put each entry's place-and-stack line in the right one, on
+     the argument that "beside is where a note goes when there is somewhere". The
+     argument is right and the material was wrong. Measured at 1440 with the lane in
+     place, the four entries' right-hand lanes held ONE line, ONE line, TWO lines and
+     TWO lines, and the empty plate under them ran 210, 163, 157 and 96px — a
+     480 × 925px column carrying six lines of grey. That is the exact shape this
+     stylesheet spends its length arguing against, built on purpose.
+     WHY IT COULD NOT BE FILLED INSTEAD, which was tried on paper first. The obvious
+     candidates are each entry's own numbers (800+, 400K+, 191, ~68%) and each
+     entry's date. The numbers exist in two of the four entries, so moving them
+     across produces two lanes with evidence in them and two without — the same-row
+     parity failure the card grid on /work/ was rebuilt to get rid of, one page over.
+     The dates have perfect parity and are two words long: four lanes of eighteen
+     characters in 480px is the hole again, with a date in it. The lane is empty
+     because these four entries are SHORT, and no rearrangement fixes a supply
+     problem.
+     So the entries run one column at the measure, the place-and-stack line goes
+     back under the title where the source order always had it, and — by law (a) —
+     the rule over the section stops at the measure too, which is why the
+     `section:has(.compact.laned)` line that used to widen it is gone as well.
+     The Experience section is now 780px of heading over 780px of entries; Education
+     and Skills keep their two columns, because those two have real margin material
+     (the joint-degree caveat, the awards, and the line saying where on this site
+     each skill is being used). Three sections, two of them wide, and the width of
+     each says what is in it. That is the system working rather than being applied. */
 
   @supports selector(:has(*)) {
     section:has(.fig-diagram) > h2 { max-width: var(--track); }
-    /* …and a heading over that list is as wide as the list now is. */
-    section:has(.compact.laned) > h2 { max-width: var(--track); }
   }
 }
 
@@ -1558,7 +1833,7 @@ footer.site a { color: var(--link); }
   .scope, .thoughts-body, .pull, .plate .src, .side, .bio { max-width: none; }
   /* Paper has one column. A margin note prints under the passage it belongs to,
      which is where it sits on a phone too. */
-  .spread, .fig-diagram, .clip figcaption, .compact.laned .item, .home { display: block; }
+  .spread, .fig-diagram, .clip figcaption, .home { display: block; }
   /* The card frames do not print — they are evidence of motion and paper has none.
      A face is not evidence of anything, and a printed page of somebody's work is a
      normal place to have one, so it stays and gets out of the type's way. */
@@ -1577,11 +1852,22 @@ footer.site a { color: var(--link); }
   .clip figcaption > .spec, .clip figcaption > .bound {
     border-left: 0; padding-left: 0; max-width: none; margin: 8px 0 0;
   }
-  .compact.laned .item > .role {
-    border-left: 0; padding-left: 0; max-width: none; margin: 0 0 8px;
-  }
   .side { margin-top: 12px; border-left: 0; padding-left: 0; }
   .side .lbl { color: #444; }
+  /* PAPER DOES NOT GET THE BRANCH HUE, and this rule is the whole of what the
+     colour round costs the print stylesheet. Every colour introduced this round
+     is a screen affordance — a plate you can press, a ring the keyboard is
+     inside, a rail that opens a column paper does not have — and a colour
+     printer would turn all of it into ink somebody paid for. Only three things
+     actually reach paper and they are all reset here: the two labels that
+     acquired a colour (h2 and .lbl, which used to inherit black), the 1px rule
+     under h2 (back to the exact grey it printed before this round), and the
+     tint under the two operable blocks. The rails do not need a line — every one
+     of them is already border-left:0 up above, because a margin rail on a page
+     with one column is a line down the side of nothing. */
+  h2, .lbl { color: #000; }
+  h2 { border-bottom-color: var(--ink-100); }
+  .tryit, .card .go a { background: none; }
   .fig-diagram > figcaption { border-left: 0; padding-left: 0; margin-top: 8px; }
   .deltas.band { display: block; }
   .deltas.band > div { max-width: none; text-align: left; }
